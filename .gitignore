@@ -3,8 +3,6 @@
 
 # Solution
 *.sln
-*.vcxproj
-*.vcxproj.*
 
 # User-specific files
 *.suo
