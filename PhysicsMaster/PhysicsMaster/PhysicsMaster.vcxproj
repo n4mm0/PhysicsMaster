@@ -69,8 +69,10 @@
   <ItemGroup>
     <ClInclude Include="mat4.h" />
     <ClInclude Include="Matrici.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="vec4.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
