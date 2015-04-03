@@ -2,10 +2,16 @@
 /*
 ** Mondo di gioco
 */
-#include "RigidBody.h"
 #include <vector>
+#include "RigidBody.h"
+
+typedef std::vector<RigidBody*> RigidBodyCollection;
 
 class World {
+public:
+	World();
+	~World();
+
 private:
-	std::vector<RigidBody> objects;
+	RigidBodyCollection m_RigidBodies;
 };
