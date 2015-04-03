@@ -86,8 +86,8 @@ public:
 		MoltiplicaVettoreScalare(Vel, dt, v);
 		SommaVettori(v, Pos, Pos);
 
-		RuotaRelative(MRot, Mang, Vang); // Per risolvere problemi di inerzia, raddrizzo il mio
-		// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+		RuotaRelative(MRot, Mang, Vang);	// Per risolvere problemi di inerzia, raddrizzo il mio
+											// oggetto, altrimenti l'inerzia cambierebbe in base a come Ëè disposto l'oggetto
 
 		Vang[0] /= Inerzia[0];
 		Vang[1] /= Inerzia[1];

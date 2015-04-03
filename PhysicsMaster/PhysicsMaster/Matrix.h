@@ -82,7 +82,8 @@ private:
 	float _matrix[Row*Col];
 };
 
-namespace MatrixOp{
+namespace MatrixOp {
+
 	template<int Row, int Col, int secondMatrixCol>
 	void MultiplyMatrix(const Matrix<Row, Col>& first, const Matrix<Col, secondMatrixCol>& second, Matrix<Row, secondMatrixCol>& result)
 	{
@@ -97,6 +98,7 @@ namespace MatrixOp{
 			result.SetRow(i, rowR);
 		}
 	}
+
 	template<int Row, int Col>
 	void RotateAbsolute(Matrix<Row, Col>& Matrix, const float* vector, float * result)
 	{
@@ -113,6 +115,7 @@ namespace MatrixOp{
 			}
 		}
 	}
+
 	template<int Row, int Col>
 	void RotateRelative(Matrix<Row, Col>& Matrix, const float* vector, float * result)
 	{
