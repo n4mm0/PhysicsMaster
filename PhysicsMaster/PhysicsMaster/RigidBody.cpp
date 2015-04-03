@@ -1,6 +1,6 @@
 #include "RigidBody.h"
 
-RigidBody::RigidBody(const Vector3& _Position, float _Mass) : m_Position(_Position), m_Mass(_Mass)
+RigidBody::RigidBody(const Vector3& _Position, float _Mass, int _ID) : m_Position(_Position), m_Mass(_Mass), m_ID(_ID)
 {
 	m_Velocity = Vector3::zeroes();
 	m_Inertia = Vector3::zeroes();
@@ -49,6 +49,11 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 	Vector3 Temp(_PointOfApplication - GetPosition());
 	VectorialProduct(Temp, _Force, Temp);
 	m_MomentumSum += Temp;
+}
+
+int RigidBody::GetID() const
+{
+	return m_ID;
 }
 
 float RigidBody::GetMass() const

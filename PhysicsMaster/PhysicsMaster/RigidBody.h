@@ -9,12 +9,13 @@
 class RigidBody {
 
 public:
-	RigidBody(const Vector3& _Position, float _Mass);
+	RigidBody(const Vector3& _Position, float _Mass, int _ID);
 	~RigidBody();
 	void UpdatePhysic(float _Dt);
 	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);
 
 	// GETTERS
+	int GetID() const;
 	float GetMass() const;
 	Vector3 GetPosition() const;
 	Vector3 GetVelocity() const;
@@ -23,6 +24,7 @@ public:
 	void SetVelocity(const Vector3& _NewVelocity);
 
 private:
+	int				m_ID;
 	float			m_Mass;
 	Vector3			m_Position;
 	Vector3			m_Velocity;
