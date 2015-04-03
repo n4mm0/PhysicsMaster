@@ -10,6 +10,17 @@ class RigidBody {
 
 public:
 	RigidBody(const Vector3& _Position, float _Mass);
+	~RigidBody();
+	void UpdatePhysic(float _Dt);
+	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);
+
+	// GETTERS
+	float GetMass() const;
+	Vector3 GetPosition() const;
+	Vector3 GetVelocity() const;
+	// SETTERS
+	void SetPosition(const Vector3& _NewPosition);
+	void SetVelocity(const Vector3& _NewVelocity);
 
 private:
 	float			m_Mass;
@@ -24,4 +35,5 @@ private:
 	Quaternion		m_Rotation;
 	Matrix<3, 3>	m_RotationMatrix;
 
+	RigidBody(const RigidBody& _Other);		// We don't need that atm
 };

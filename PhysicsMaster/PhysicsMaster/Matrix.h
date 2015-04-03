@@ -81,6 +81,7 @@ private:
 
 	float _matrix[Row*Col];
 };
+
 namespace MatrixOp{
 	template<int Row, int Col, int secondMatrixCol>
 	void MultiplyMatrix(const Matrix<Row, Col>& first, const Matrix<Col, secondMatrixCol>& second, Matrix<Row, secondMatrixCol>& result)
