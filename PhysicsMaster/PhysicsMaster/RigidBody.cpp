@@ -1,22 +1,7 @@
 #include "RigidBody.h"
+#include "Utilities.h"
 #include <iostream>
 
-void Print(const Vector3& v)
-{
-	std::cout << "(" << v.GetX() << ", " << v.GetY() << ", " << v.GetZ() << ")" << std::endl;
-}
-
-void Print(const Quaternion& v)
-{
-	std::cout << "(" << v.GetValue(0) << ", " << v.GetValue(1) << ", " << v.GetValue(2) << ", " << v.GetValue(3) << ")" << std::endl;
-}
-
-void Print(const Matrix<3, 3>& m)
-{
-	std::cout << m.GetElementAt(0) << ", " << m.GetElementAt(1) << ", " << m.GetElementAt(2) << std::endl;
-	std::cout << m.GetElementAt(3) << ", " << m.GetElementAt(4) << ", " << m.GetElementAt(5) << std::endl;
-	std::cout << m.GetElementAt(6) << ", " << m.GetElementAt(7) << ", " << m.GetElementAt(8) << std::endl;
-}
 
 RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) : m_Position(_Position), m_Mass(_Mass), m_ID(_ID)
 {
