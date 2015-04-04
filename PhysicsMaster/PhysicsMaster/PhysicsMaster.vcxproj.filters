@@ -53,5 +53,8 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

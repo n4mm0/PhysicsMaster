@@ -1,8 +1,9 @@
 #include "Quaternion.h"
 #include <math.h>
+
 Quaternion::Quaternion()
 {
-	_values[0] = 0;
+	_values[0] = 1;
 	_values[1] = 0;
 	_values[2] = 0;
 	_values[3] = 0;
@@ -24,6 +25,7 @@ Quaternion::Quaternion(const Quaternion& other)
 	_values[3] = other.GetValue(3);
 
 };
+
 Quaternion& Quaternion::operator = (const Quaternion& other)
 {
 	if (this != &other)
@@ -42,12 +44,14 @@ Quaternion operator+(const Quaternion& first, const Quaternion& second)
 	result += second;
 	return result;
 };
+
 Quaternion operator-(const Quaternion& first, const Quaternion& second)
 {
 	Quaternion result(first);
 	result -= second;
 	return result;
 };
+
 Quaternion& Quaternion::operator+=(const Quaternion& other)
 {
 	_values[0] += other.GetValue(0);
@@ -56,6 +60,7 @@ Quaternion& Quaternion::operator+=(const Quaternion& other)
 	_values[3] += other.GetValue(3);
 	return *this;
 };
+
 Quaternion& Quaternion::operator-=(const Quaternion& other)
 {
 	_values[0] -= other.GetValue(0);
@@ -64,6 +69,7 @@ Quaternion& Quaternion::operator-=(const Quaternion& other)
 	_values[3] -= other.GetValue(3);
 	return *this;
 };
+
 Quaternion& Quaternion::operator/=(float scalar)
 {
 	_values[0] /= scalar;
@@ -103,11 +109,11 @@ float Quaternion::Modulus() const
 	return(sqrt((GetValue(0) * GetValue(0)) + (GetValue(1) * GetValue(1)) + (GetValue(2) * GetValue(2)) + (GetValue(3) * GetValue(3))));
 };
 
-void Normalize(Quaternion& quaternion)
+void Quaternion::Normalize()
 {
-	float a = quaternion.Modulus();
+	float a = Modulus();
 	if (a > 0.000001f) {
-		quaternion /= a;
+		*this /= a;
 	}
 };
 

@@ -1,14 +1,33 @@
 #include "RigidBody.h"
+#include <iostream>
 
-RigidBody::RigidBody(const Vector3& _Position, float _Mass, int _ID) : m_Position(_Position), m_Mass(_Mass), m_ID(_ID)
+void Print(const Vector3& v)
 {
-	m_Velocity = Vector3::zeroes();
-	m_Inertia = Vector3::zeroes();
-	m_AngularVelocity = Vector3::zeroes();
-	m_QuantityOfMotion = Vector3::zeroes();
-	m_AngularMomentum = Vector3::zeroes();
-	m_ForceSum = Vector3::zeroes();
-	m_MomentumSum = Vector3::zeroes();
+	std::cout << "(" << v.GetX() << ", " << v.GetY() << ", " << v.GetZ() << ")" << std::endl;
+}
+
+void Print(const Quaternion& v)
+{
+	std::cout << "(" << v.GetValue(0) << ", " << v.GetValue(1) << ", " << v.GetValue(2) << ", " << v.GetValue(3) << ")" << std::endl;
+}
+
+void Print(const Matrix<3, 3>& m)
+{
+	std::cout << m.GetElementAt(0) << ", " << m.GetElementAt(1) << ", " << m.GetElementAt(2) << std::endl;
+	std::cout << m.GetElementAt(3) << ", " << m.GetElementAt(4) << ", " << m.GetElementAt(5) << std::endl;
+	std::cout << m.GetElementAt(6) << ", " << m.GetElementAt(7) << ", " << m.GetElementAt(8) << std::endl;
+}
+
+RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) : m_Position(_Position), m_Mass(_Mass), m_ID(_ID)
+{
+	m_Velocity = VectorOp::Zero;
+	m_Inertia = _Inertia;
+	m_AngularVelocity = VectorOp::Zero;
+	m_QuantityOfMotion = VectorOp::Zero;
+	m_AngularMomentum = VectorOp::Zero;
+	m_ForceSum = VectorOp::Zero;
+	m_MomentumSum = VectorOp::Zero;
+	m_RotationMatrix = m_Rotation.ToMatrix();
 }
 
 RigidBody::~RigidBody(){}
@@ -16,29 +35,26 @@ RigidBody::~RigidBody(){}
 void RigidBody::UpdatePhysic(float _Dt)
 {
 	Vector3 Temp(m_ForceSum * _Dt);
+
 	m_QuantityOfMotion += Temp;
 	Temp = m_MomentumSum * _Dt;
 	m_AngularMomentum += Temp;
-
 	m_Velocity = m_QuantityOfMotion / m_Mass;
 	Temp = m_Velocity * _Dt;
 	m_Position += Temp;
 
-	float RotVec[3];
-	MatrixOp::RotateRelative(m_RotationMatrix, m_AngularMomentum.GetData(), RotVec);
-	m_AngularVelocity.SetX(RotVec[0] / m_Inertia.getX());
-	m_AngularVelocity.SetY(RotVec[1] / m_Inertia.getY());
-	m_AngularVelocity.SetZ(RotVec[2] / m_Inertia.getZ());
+	MatrixOp::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
+	m_AngularVelocity.SetX(m_AngularVelocity.GetX() / m_Inertia.GetX());
+	m_AngularVelocity.SetY(m_AngularVelocity.GetY() / m_Inertia.GetY());
+	m_AngularVelocity.SetZ(m_AngularVelocity.GetZ() / m_Inertia.GetZ());
 
-	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
-	Normalize(RotQuat);
+	Quaternion RotQuat(1, m_AngularVelocity.GetX() * _Dt / 2, m_AngularVelocity.GetY() * _Dt / 2, m_AngularVelocity.GetZ() * _Dt / 2);
+	
+	RotQuat.Normalize();
 	m_Rotation *= RotQuat;
-	Normalize(m_Rotation);
+	m_Rotation.Normalize();
 
-	MatrixOp::RotateAbsolute(m_RotationMatrix, m_AngularVelocity.GetData(), RotVec);
-	m_AngularVelocity.SetX(RotVec[0]);
-	m_AngularVelocity.SetY(RotVec[1]);
-	m_AngularVelocity.SetZ(RotVec[2]);
+	MatrixOp::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
 
 	m_RotationMatrix = m_Rotation.ToMatrix();
 }
@@ -47,8 +63,36 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 {
 	m_ForceSum += _Force;
 	Vector3 Temp(_PointOfApplication - GetPosition());
-	VectorialProduct(Temp, _Force, Temp);
+	VectorOp::VectorialProduct(Temp, _Force, Temp);
 	m_MomentumSum += Temp;
+}
+
+void RigidBody::ShowStatus()
+{
+	std::cout << "----------------------------- \n" << std::endl;
+	std::cout << "RigidBody: " << m_ID << std::endl;
+	std::cout << "Mass: " << m_Mass << std::endl;
+	std::cout << "Position: ";
+	Print(m_Position);
+	std::cout << "Velocity: ";
+	Print(m_Velocity);
+	std::cout << "Inertia: ";
+	Print(m_Inertia);
+	std::cout << "AngularVelocity: ";
+	Print(m_AngularVelocity);
+	std::cout << "QuantityOfMotion: ";
+	Print(m_QuantityOfMotion);
+	std::cout << "AngularMomentum: ";
+	Print(m_AngularMomentum);
+	std::cout << "ForceSum: ";
+	Print(m_ForceSum);
+	std::cout << "MomentumSum: ";
+	Print(m_MomentumSum);
+	std::cout << "Rotation: ";
+	Print(m_Rotation);
+	std::cout << "RotationMatrix: \n";
+	Print(m_RotationMatrix);
+	std::cout << "----------------------------- \n" << std::endl;
 }
 
 int RigidBody::GetID() const
@@ -70,6 +114,16 @@ Vector3 RigidBody::GetVelocity() const
 {
 	return m_Velocity;
 }
+
+const Matrix<3, 3>& RigidBody::GetRotationMatrix() const
+{
+	return m_RotationMatrix;
+};
+
+const Quaternion& RigidBody::GetRotationQuaternion() const
+{
+	return m_Rotation;
+};
 
 void RigidBody::SetPosition(const Vector3& _NewPosition)
 {

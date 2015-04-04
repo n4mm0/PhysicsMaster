@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Vector3.cpp" />
