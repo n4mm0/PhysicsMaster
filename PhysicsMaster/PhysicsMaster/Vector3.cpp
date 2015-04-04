@@ -2,27 +2,25 @@
 // FOR DEBUG
 #include <iostream>
 
-
-Vector3 operator+(const Vector3& first, const Vector3& second)
+Vector3::Vector3()
 {
-	Vector3 result(first);
-	return result += second;
+	v[0] = 0;
+	v[1] = 0;
+	v[2] = 0;
 }
 
-Vector3 operator*(const Vector3& vector, float scalar)
+Vector3::Vector3(float x, float y, float z)
 {
-	return Vector3(vector.GetX() * scalar, vector.GetY()* scalar, vector.GetZ() * scalar);
+	v[0] = x;
+	v[1] = y;
+	v[2] = z;
 }
 
-Vector3 operator/(const Vector3& vector, float scalar)
+Vector3::Vector3(const Vector3& other)
 {
-	return Vector3(vector.GetX() / scalar, vector.GetY() / scalar, vector.GetZ() / scalar);
-}
-
-Vector3 operator-(const Vector3& first, const Vector3& second)
-{
-	Vector3 result(first);
-	return result -= second;
+	v[0] = other.GetX();
+	v[1] = other.GetY();
+	v[2] = other.GetZ();
 }
 
 inline
@@ -30,11 +28,13 @@ float Vector3::GetX() const
 {
 	return v[0];
 }
+
 inline
 float Vector3::GetY() const
 {
 	return v[1];
 }
+
 inline
 float Vector3::GetZ() const
 {
@@ -61,27 +61,6 @@ void Vector3::Set(float x, float y, float z)
 	v[0] = x;
 	v[1] = y;
 	v[2] = z;
-}
-
-Vector3::Vector3(float x, float y, float z)
-{
-	v[0] = x;
-	v[1] = y;
-	v[2] = z;
-}
-
-Vector3::Vector3()
-{
-	v[0] = 0;
-	v[1] = 0;
-	v[2] = 0;
-}
-
-Vector3::Vector3(const Vector3& other)
-{
-	v[0] = other.GetX();
-	v[1] = other.GetY();
-	v[2] = other.GetZ();
 }
 
 Vector3& Vector3::operator=(const Vector3& other)
@@ -127,14 +106,6 @@ Vector3& Vector3::operator/=(float scalar)
 	return *this;
 }
 
-void Vector3::Normalize()
-{
-	float mod = Modulus();
-	if (mod > 0.000001f) {
-		*this /= mod;
-	}
-}
-
 float Vector3::Modulus() const
 {
 	return(sqrt((v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2])));
@@ -144,6 +115,37 @@ float Vector3::SqrMagnitude() const
 {
 	return (v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]);
 };
+
+void Vector3::Normalize()
+{
+	float mod = Modulus();
+	if (mod > 0.000001f) {
+		*this /= mod;
+	}
+}
+
+Vector3 operator+(const Vector3& first, const Vector3& second)
+{
+	Vector3 result(first);
+	return result += second;
+}
+
+Vector3 operator-(const Vector3& first, const Vector3& second)
+{
+	Vector3 result(first);
+	return result -= second;
+}
+
+Vector3 operator*(const Vector3& vector, float scalar)
+{
+	return Vector3(vector.GetX() * scalar, vector.GetY()* scalar, vector.GetZ() * scalar);
+}
+
+Vector3 operator/(const Vector3& vector, float scalar)
+{
+	return Vector3(vector.GetX() / scalar, vector.GetY() / scalar, vector.GetZ() / scalar);
+}
+
 
 namespace VectorOp
 {

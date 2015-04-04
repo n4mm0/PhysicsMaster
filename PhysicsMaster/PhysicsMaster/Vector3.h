@@ -32,9 +32,9 @@ private:
 
 Vector3 operator+(const Vector3&, const Vector3&);
 Vector3 operator-(const Vector3&, const Vector3&);
-//Vector3 operator*(const Vector3&, const Vector3&);
 Vector3 operator*(const Vector3&, float);
 Vector3 operator/(const Vector3&, float);
+
 namespace VectorOp
 {
 	float DistanceBetween(const Vector3& first, const Vector3& second);
