@@ -9,7 +9,7 @@
 class RigidBody {
 
 public:
-	RigidBody(const Vector3& _Position, const Vector3& Inertia, float _Mass, int _ID);
+	RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID);
 	~RigidBody();
 	void UpdatePhysic(float _Dt);
 	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);

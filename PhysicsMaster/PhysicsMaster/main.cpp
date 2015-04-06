@@ -7,6 +7,10 @@
 //#include <math.h>
 #include "Matrici.h"
 #include <GL/glut.h>
+#include "Matrix.h"
+#include "Utilities.h"
+#include "World.h"
+#include "RigidBody.h"
 
 // Debug
 #include <iostream>
@@ -550,6 +554,12 @@ static void DisegnaTutto()
 
 int main(int argc, char **argv)
 {
+	//Rigidbody creation example
+	/*World world;
+	RigidBody* rb = world.CreateRigidBody(Vector3::Zero, Vector3::Zero, 0, 0);
+	rb->ShowStatus();
+	world.DeleteRigidBody(rb);
+	system("pause");*/
 
 	glutInit(&argc, argv);
 

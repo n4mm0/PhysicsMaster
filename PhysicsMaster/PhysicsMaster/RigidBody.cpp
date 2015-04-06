@@ -3,15 +3,14 @@
 #include <iostream>
 
 
-RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) : m_Position(_Position), m_Mass(_Mass), m_ID(_ID)
+RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) : m_Position(_Position), m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID)
 {
-	m_Velocity = VectorOp::Zero;
-	m_Inertia = _Inertia;
-	m_AngularVelocity = VectorOp::Zero;
-	m_QuantityOfMotion = VectorOp::Zero;
-	m_AngularMomentum = VectorOp::Zero;
-	m_ForceSum = VectorOp::Zero;
-	m_MomentumSum = VectorOp::Zero;
+	m_Velocity = Vector3::Zero;
+	m_AngularVelocity = Vector3::Zero;
+	m_QuantityOfMotion = Vector3::Zero;
+	m_AngularMomentum = Vector3::Zero;
+	m_ForceSum = Vector3::Zero;
+	m_MomentumSum = Vector3::Zero;
 	m_RotationMatrix = m_Rotation.ToMatrix();
 }
 
