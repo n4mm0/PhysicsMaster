@@ -4,7 +4,11 @@
 #include "Quaternion.h"
 #include <math.h>
 
-Quaternion EulerToQuaternion(float _RotX, float _RotY, float _RotZ)
+/*
+All functions should be inline, see: http://stackoverflow.com/questions/6424911/link-error-with-really-simple-functions-c-on-h-file
+*/
+
+inline Quaternion EulerToQuaternion(float _RotX, float _RotY, float _RotZ)
 {
 	/* More info at:
 	** http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/
@@ -22,7 +26,7 @@ Quaternion EulerToQuaternion(float _RotX, float _RotY, float _RotZ)
 	return o_Result;
 }
 
-Vector3 CuboidInertia(float mass, float width, float height, float depth)
+inline Vector3 CuboidInertia(float mass, float width, float height, float depth)
 {
 	/* More info at:
 	** http://en.wikipedia.org/wiki/List_of_moments_of_inertia
@@ -33,7 +37,7 @@ Vector3 CuboidInertia(float mass, float width, float height, float depth)
 	return Vector3(x, y, z);
 }
 
-Vector3 SphereInertia(float mass, float radius)
+inline Vector3 SphereInertia(float mass, float radius)
 {
 	/* More info at:
 	** http://en.wikipedia.org/wiki/List_of_moments_of_inertia
@@ -42,17 +46,17 @@ Vector3 SphereInertia(float mass, float radius)
 	return Vector3(tmp, tmp, tmp);
 }
 
-void Print(const Vector3& v)
+inline void Print(const Vector3& v)
 {
 	std::cout << "(" << v.GetX() << ", " << v.GetY() << ", " << v.GetZ() << ")" << std::endl;
 }
 
-void Print(const Quaternion& v)
+inline void Print(const Quaternion& v)
 {
 	std::cout << "(" << v.GetValue(0) << ", " << v.GetValue(1) << ", " << v.GetValue(2) << ", " << v.GetValue(3) << ")" << std::endl;
 }
 
-void Print(const Matrix<3, 3>& m)
+inline void Print(const Matrix<3, 3>& m)
 {
 	std::cout << m.GetElementAt(0) << ", " << m.GetElementAt(1) << ", " << m.GetElementAt(2) << std::endl;
 	std::cout << m.GetElementAt(3) << ", " << m.GetElementAt(4) << ", " << m.GetElementAt(5) << std::endl;

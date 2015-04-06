@@ -2,6 +2,8 @@
 // FOR DEBUG
 #include <iostream>
 
+const Vector3 Vector3::Zero = Vector3(0, 0, 0);
+
 Vector3::Vector3()
 {
 	v[0] = 0;

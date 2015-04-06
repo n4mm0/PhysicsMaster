@@ -26,6 +26,8 @@ public:
 	float SqrMagnitude() const;
 	void Normalize();
 
+	static const Vector3 Zero;
+
 private:
 	float v[3];
 };
@@ -40,6 +42,4 @@ namespace VectorOp
 	float DistanceBetween(const Vector3& first, const Vector3& second);
 	void VectorialProduct(const Vector3& first, const Vector3& second, Vector3& result);
 	float DotProduct(const Vector3& first, const Vector3& second);
-
-	static const Vector3 Zero;
 }
