@@ -56,7 +56,7 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 
 void RigidBody::ApplyGravity(const Vector3& _Gravity)
 {
-	m_ForceSum += _Gravity;
+	m_ForceSum += _Gravity * m_Mass;
 }
 
 void RigidBody::ShowStatus()
