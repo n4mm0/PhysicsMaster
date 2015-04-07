@@ -69,6 +69,7 @@
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="TypeList.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="World.h" />
