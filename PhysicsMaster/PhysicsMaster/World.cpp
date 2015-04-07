@@ -19,10 +19,10 @@ void World::Update()
 {
 	//Riassunto in base alla funzione IntegraStato() di Cattani...
 
-	//Reset Forza e Momento risultanti (di tutti i rigidbody?)
-	//Applica gravità
+	//Reset Forza e Momento risultanti (di tutti i rigidbody?)	- CHECK
+	//Applica gravità											- CHECK
 	//Calcola e applica collisioni
-	//IntegraStato di tutti i rigidbody
+	//IntegraStato di tutti i rigidbody							- CHECK
 
 	RigidBodyCollection::iterator iter;
 	for (iter == m_RigidBodies.begin(); iter != m_RigidBodies.end(); ++iter)
