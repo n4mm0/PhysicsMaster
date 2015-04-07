@@ -8,7 +8,7 @@ template<int Row, int Col>
 class Matrix
 {
 	template<int, int>
-	friend class Matrix;			// We need this for calling Matrix in non-member functions
+	friend class Matrix;			// We need this to handle different matrices between them
 public:
 
 	Matrix()

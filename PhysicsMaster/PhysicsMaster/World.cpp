@@ -1,5 +1,8 @@
 #include "World.h"
 
+const Vector3 World::m_Gravity = Vector3(0.0f, -9.8f, 0.0f);
+const float World::m_Dt = 0.01f;
+
 World::World()
 {
 	//Initalization
@@ -20,13 +23,14 @@ void World::Update()
 	//Applica gravità
 	//Calcola e applica collisioni
 	//IntegraStato di tutti i rigidbody
-	/*
+
 	RigidBodyCollection::iterator iter;
 	for (iter == m_RigidBodies.begin(); iter != m_RigidBodies.end(); ++iter)
 	{
-		(*iter)->UpdatePhysic(DT);
+		(*iter)->ApplyGravity(m_Gravity);
+		(*iter)->UpdatePhysic(m_Dt);
 	}
-	*/
+
 }
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)

@@ -13,6 +13,7 @@ public:
 	~RigidBody();
 	void UpdatePhysic(float _Dt);
 	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);
+	void ApplyGravity(const Vector3& _Gravity);
 
 	void ShowStatus();
 

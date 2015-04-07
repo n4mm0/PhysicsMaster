@@ -41,6 +41,9 @@ void RigidBody::UpdatePhysic(float _Dt)
 	MatrixOp::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
 
 	m_RotationMatrix = m_Rotation.ToMatrix();
+
+	m_ForceSum = Vector3::Zero;
+	m_MomentumSum = Vector3::Zero;
 }
 
 void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication)
@@ -49,6 +52,11 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 	Vector3 Temp(_PointOfApplication - GetPosition());
 	VectorOp::VectorialProduct(Temp, _Force, Temp);
 	m_MomentumSum += Temp;
+}
+
+void RigidBody::ApplyGravity(const Vector3& _Gravity)
+{
+	m_ForceSum += _Gravity;
 }
 
 void RigidBody::ShowStatus()
