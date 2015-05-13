@@ -71,6 +71,7 @@
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Utilities\Matrix4x4.h" />
+    <ClInclude Include="Utilities\Quaternion.h" />
     <ClInclude Include="Utilities\Utilities.h" />
     <ClInclude Include="Utilities\Vector3.h" />
     <ClInclude Include="Utilities\Vector4.h" />
@@ -82,6 +83,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Utilities\Matrix4x4.cpp" />
+    <ClCompile Include="Utilities\Quaternion.cpp" />
     <ClCompile Include="Utilities\Vector3.cpp" />
     <ClCompile Include="Utilities\Vector4.cpp" />
     <ClCompile Include="World.cpp" />

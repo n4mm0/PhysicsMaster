@@ -60,6 +60,9 @@
     <ClInclude Include="Colliders\BoundingSphere.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\Quaternion.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Colliders\AABB.cpp">
       <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Quaternion.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
