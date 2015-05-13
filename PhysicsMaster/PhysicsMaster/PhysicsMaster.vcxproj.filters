@@ -19,34 +19,43 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{e896466d-c442-4725-849f-f5d939da70d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Colliders">
+      <UniqueIdentifier>{bd00c172-b983-4113-8552-a04417ab8a07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Colliders">
+      <UniqueIdentifier>{9db3c356-0f69-4f17-a346-138ea0d7dca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TRASH">
+      <UniqueIdentifier>{299c0e0e-ea43-42c9-b026-7772d99d96b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Matrici.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Vector3.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Quaternion.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Utilities.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="TypeList.h">
-      <Filter>Header Files\Utils</Filter>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrici.h">
+      <Filter>Header Files\TRASH</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,20 +65,20 @@
     <ClCompile Include="Vector3.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector4.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@
 #include "Utilities.h"
 #include <iostream>
 
-
 RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) : m_Position(_Position), m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID)
 {
 	m_Velocity = Vector3::Zero;
@@ -57,34 +56,6 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 void RigidBody::ApplyGravity(const Vector3& _Gravity)
 {
 	m_ForceSum += _Gravity * m_Mass;
-}
-
-void RigidBody::ShowStatus()
-{
-	std::cout << "----------------------------- \n" << std::endl;
-	std::cout << "RigidBody: " << m_ID << std::endl;
-	std::cout << "Mass: " << m_Mass << std::endl;
-	std::cout << "Position: ";
-	Print(m_Position);
-	std::cout << "Velocity: ";
-	Print(m_Velocity);
-	std::cout << "Inertia: ";
-	Print(m_Inertia);
-	std::cout << "AngularVelocity: ";
-	Print(m_AngularVelocity);
-	std::cout << "QuantityOfMotion: ";
-	Print(m_QuantityOfMotion);
-	std::cout << "AngularMomentum: ";
-	Print(m_AngularMomentum);
-	std::cout << "ForceSum: ";
-	Print(m_ForceSum);
-	std::cout << "MomentumSum: ";
-	Print(m_MomentumSum);
-	std::cout << "Rotation: ";
-	Print(m_Rotation);
-	std::cout << "RotationMatrix: \n";
-	Print(m_RotationMatrix);
-	std::cout << "----------------------------- \n" << std::endl;
 }
 
 int RigidBody::GetID() const

@@ -1,12 +1,13 @@
 #pragma once
 #include "Vector3.h"
-#include "Matrix.h"
+#include "Matrix4x4.h"
 #include "Quaternion.h"
 #include <math.h>
 
 /*
 All functions should be inline, see: http://stackoverflow.com/questions/6424911/link-error-with-really-simple-functions-c-on-h-file
 */
+
 
 inline Quaternion EulerToQuaternion(float _RotX, float _RotY, float _RotZ)
 {
@@ -44,21 +45,4 @@ inline Vector3 SphereInertia(float mass, float radius)
 	*/
 	float tmp = 2 * mass*radius*radius / 5;
 	return Vector3(tmp, tmp, tmp);
-}
-
-inline void Print(const Vector3& v)
-{
-	std::cout << "(" << v.GetX() << ", " << v.GetY() << ", " << v.GetZ() << ")" << std::endl;
-}
-
-inline void Print(const Quaternion& v)
-{
-	std::cout << "(" << v.GetValue(0) << ", " << v.GetValue(1) << ", " << v.GetValue(2) << ", " << v.GetValue(3) << ")" << std::endl;
-}
-
-inline void Print(const Matrix<3, 3>& m)
-{
-	std::cout << m.GetElementAt(0) << ", " << m.GetElementAt(1) << ", " << m.GetElementAt(2) << std::endl;
-	std::cout << m.GetElementAt(3) << ", " << m.GetElementAt(4) << ", " << m.GetElementAt(5) << std::endl;
-	std::cout << m.GetElementAt(6) << ", " << m.GetElementAt(7) << ", " << m.GetElementAt(8) << std::endl;
 }

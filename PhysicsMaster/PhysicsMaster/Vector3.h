@@ -1,5 +1,6 @@
+#pragma once
+
 typedef float scalar;
-typedef Vector3 Point3;
 
 class Vector3
 {
@@ -54,3 +55,5 @@ public:
 	bool operator ==(Vector3 const &other) const;
 	bool operator !=(Vector3 const &other) const;
 };
+
+typedef Vector3 Point3;

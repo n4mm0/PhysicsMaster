@@ -1,4 +1,5 @@
 #include "AABB.h"
+#include <iostream>
 
 //CONSTRUCTOR
 AABB::AABB()
@@ -55,4 +56,14 @@ Point3 AABB::maxPoint() const
 Point3 AABB::minPoint() const
 {
 	return min;
+}
+
+void AABB::Collide(Collider& i_Collider)
+{
+	i_Collider.Collide(*this);
+}
+
+void AABB::Collide(AABB& i_Collider)
+{
+	std::cout << "Collision BoxBox! FIRE!" << std::endl;
 }

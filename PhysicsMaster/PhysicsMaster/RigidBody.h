@@ -2,9 +2,10 @@
 /*
 ** Oggetto base del mondo
 */
+
 #include "Vector3.h"
 #include "Quaternion.h"
-#include "Matrix.h"
+#include "Matrix4x4.h"
 
 class RigidBody {
 
@@ -14,8 +15,6 @@ public:
 	void UpdatePhysic(float _Dt);
 	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);
 	void ApplyGravity(const Vector3& _Gravity);
-
-	void ShowStatus();
 
 	// GETTERS
 	int GetID() const;

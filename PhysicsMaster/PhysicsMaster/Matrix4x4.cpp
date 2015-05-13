@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
 
 #include <cmath>
-#include "Matri4x4x.h"
+#include "Matrix4x4.h"
 
 //CONSTRUCTORS
 Matrix4x4::Matrix4x4()

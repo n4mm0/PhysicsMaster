@@ -7,10 +7,11 @@
 //#include <math.h>
 #include "Matrici.h"
 #include <GL/glut.h>
-#include "Matrix.h"
+#include "Matrix4x4.h"
 #include "Utilities.h"
 #include "World.h"
 #include "RigidBody.h"
+#include "AABB.h"
 
 // Debug
 #include <iostream>
@@ -561,7 +562,7 @@ int main(int argc, char **argv)
 	world.DeleteRigidBody(rb);
 	system("pause");*/
 
-	glutInit(&argc, argv);
+	/*glutInit(&argc, argv);
 
 	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowPosition(600, 100);
@@ -585,7 +586,16 @@ int main(int argc, char **argv)
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
 
-	glutMainLoop();
+	glutMainLoop();*/
 
+	AABB box1;
+	AABB box2;
+
+	Collider& refbox1 = box1;
+	Collider& refbox2 = box2;
+
+	refbox1.Collide(refbox2);
+
+	getchar();
 	return(0);
 }
