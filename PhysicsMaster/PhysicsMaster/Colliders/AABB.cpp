@@ -9,10 +9,16 @@ AABB::AABB()
 	empty = true;
 }
 
+AABB::~AABB()
+{
+	this->clear();
+}
+
 //MEMBER FUNCTION
 void AABB::clear()
 {
 	this->empty = true;
+	this->myBody = nullptr;
 }
 
 void AABB::add(Point3 point)
@@ -21,19 +27,20 @@ void AABB::add(Point3 point)
 		max = min = point;
 	else
 	{
-		if (point.x()<min.x())
-			min.x() = point.x();
-		if (point.y()<min.y())
-			min.y() = point.y();
-		if (point.z()<min.z())
-			min.z() = point.z();
+		if (point.getX()<min.getX())
+			min.setX(point.getX());
+		if (point.getY()<min.getY())
+			min.setY(point.getY());
+		if (point.getZ()<min.getZ())
+			min.setZ(point.getZ());
 
-		if (point.x()>max.x())
-			max.x() = point.x();
-		if (point.y()>max.y())
-			max.y() = point.y();
-		if (point.z()>max.z())
-			max.z() = point.z();
+		if (point.getX()>max.getX())
+			max.setX(point.getX());
+		if (point.getY()>max.getY())
+			max.setY(point.getY());
+		if (point.getZ()>max.getZ())
+			max.setZ(point.getZ());
+
 	}
 	this->empty = false;
 }
@@ -66,4 +73,9 @@ void AABB::Collide(Collider& i_Collider)
 void AABB::Collide(AABB& i_Collider)
 {
 	std::cout << "Collision BoxBox! FIRE!" << std::endl;
+}
+
+void AABB::Collide(BoundingSphere& i_Collider)
+{
+	std::cout << "Collision BoxSphere! FIRE!" << std::endl;
 }

@@ -49,7 +49,7 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 {
 	m_ForceSum += _Force;
 	Vector3 Temp(_PointOfApplication - GetPosition());
-	VectorOp::VectorialProduct(Temp, _Force, Temp);
+	Temp = Temp.cross(_Force);
 	m_MomentumSum += Temp;
 }
 
@@ -78,7 +78,7 @@ Vector3 RigidBody::GetVelocity() const
 	return m_Velocity;
 }
 
-const Matrix<3, 3>& RigidBody::GetRotationMatrix() const
+const Matrix4x4& RigidBody::GetRotationMatrix() const
 {
 	return m_RotationMatrix;
 };
