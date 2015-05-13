@@ -73,18 +73,18 @@ void Vector3::set(scalar x, scalar y, scalar z)
 
 scalar Vector3::dot(const Vector3 &other) const
 {
-	scalar x = this->getX() * other.getX();
-	scalar y = this->getY() * other.getY();
-	scalar z = this->getZ() * other.getZ();
+	scalar x = vector[0] * other.getX();
+	scalar y = vector[1] * other.getY();
+	scalar z = vector[2] * other.getZ();
 	
 	return x + y + z;
 }
 
 Vector3 Vector3::cross(const Vector3 &other) const
 {
-	scalar x = this->getY() * other.getZ() - this->getZ() * other.getY();
-	scalar y = this->getZ() * other.getX() - this->getX() * other.getZ();
-	scalar z = this->getX() * other.getY() - this->getY() * other.getX();
+	scalar x = vector[1] * other.getZ() - vector[2] * other.getY();
+	scalar y = vector[2] * other.getX() - vector[0] * other.getZ();
+	scalar z = vector[0] * other.getY() - vector[1] * other.getX();
 	
 	return Vector3(x, y, z);
 }
@@ -107,7 +107,7 @@ void Vector3::normalize()
 
 bool Vector3::isZero() const
 {
-	return getX() == 0 && getY() == 0 && getZ() == 0;
+	return vector[0] == 0 && vector[1] == 0 && vector[2] == 0;
 }
 
 scalar Vector3::angle(const Vector3 &other)
@@ -249,14 +249,14 @@ Vector3& Vector3::operator /= (const scalar k)
 
 bool Vector3::operator == (Vector3 const &other) const
 {
-	return	this->getX() == other.getX() &&
-			this->getY() == other.getY() &&
-			this->getZ() == other.getZ();
+	return	vector[0] == other.getX() &&
+			vector[1] == other.getY() &&
+			vector[2] == other.getZ();
 }
 
 bool Vector3::operator != (Vector3 const &other) const
 {
-	return	this->getX() != other.getX() ||
-			this->getY() != other.getY() ||
-			this->getZ() != other.getZ();
+	return	vector[0] != other.getX() ||
+			vector[1] != other.getY() ||
+			vector[2] != other.getZ();
 }

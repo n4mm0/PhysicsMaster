@@ -89,10 +89,10 @@ void Vector4::set(scalar x, scalar y, scalar z, scalar w)
 
 scalar Vector4::dot(const Vector4 &other) const
 {
-	scalar x = this->getX() * other.getX();
-	scalar y = this->getY() * other.getY();
-	scalar z = this->getZ() * other.getZ();
-	scalar w = this->getW() * other.getW();
+	scalar x = vector[0] * other.getX();
+	scalar y = vector[1] * other.getY();
+	scalar z = vector[2] * other.getZ();
+	scalar w = vector[3] * other.getW();
 
 	return x + y + z + w;
 }
@@ -115,12 +115,12 @@ void Vector4::normalize()
 
 bool Vector4::isZero() const
 {
-	return getX() == 0 && getY() == 0 && getZ() == 0 && getW() == 0;
+	return vector[0] == 0 && vector[1] == 0 && vector[2] == 0 && vector[3] == 0;
 }
 
 scalar Vector4::angle(const Vector4 &other)
 {
-	assert(this->getW() == 0);
+	assert(vector[3] == 0);
 
 	float angle = acos(this->dot(other) / (this->magnitude() * other.magnitude()));
 	return angle *= 180.0f / M_PI;
@@ -143,7 +143,7 @@ Vector4 Vector4::lerp(const Vector4 &other, float t)
 
 void Vector4::rotationX(const int degree)
 {
-	assert(this->getW() == 0);
+	assert(vector[3] == 0);
 
 	float rad = degree * M_PI / 180.0f;
 
@@ -158,7 +158,7 @@ void Vector4::rotationX(const int degree)
 
 void Vector4::rotationY(const int degree)
 {
-	assert(this->getW() == 0);
+	assert(vector[3] == 0);
 	
 	float rad = degree * M_PI / 180.0f;
 
@@ -173,7 +173,7 @@ void Vector4::rotationY(const int degree)
 
 void Vector4::rotationZ(const int degree)
 {
-	assert(this->getW() == 0);
+	assert(vector[3] == 0);
 
 	float rad = degree * M_PI / 180.0f;
 
@@ -270,16 +270,16 @@ Vector4& Vector4::operator /=(const scalar k)
 
 bool Vector4::operator ==(Vector4 const &other) const
 {
-	return	this->getX() == other.getX() &&
-			this->getY() == other.getY() &&
-			this->getZ() == other.getZ() &&
-			this->getW() == other.getW();
+	return	vector[0] == other.getX() &&
+			vector[1] == other.getY() &&
+			vector[2] == other.getZ() &&
+			vector[3] == other.getW();
 }
 
 bool Vector4::operator !=(Vector4 const &other) const
 {
-	return	this->getX() != other.getX() ||
-			this->getY() != other.getY() ||
-			this->getZ() != other.getZ() ||
-			this->getW() == other.getW();
+	return	vector[0] != other.getX() ||
+			vector[1] != other.getY() ||
+			vector[2] != other.getZ() ||
+			vector[3] == other.getW();
 }
