@@ -1,59 +1,58 @@
 #include "AABB.h"
 
-//COSTRUTTORE
+//CONSTRUCTOR
 AABB::AABB()
 {
-   min = point3(0,0,0);
-   max = point3(0,0,0);
-   empty = true;
+	min = Point3(0, 0, 0);
+	max = Point3(0, 0, 0);
+	empty = true;
 }
 
-//METODI
+//MEMBER FUNCTION
 void AABB::clear()
 {
-    this->empty = true;
+	this->empty = true;
 }
 
-void AABB::add(point3 p)
+void AABB::add(Point3 point)
 {
-    if(isEmpty())
-        max = min = p;
-    else
-    {
-        if(p.x()<min.x())
-            min.x() = p.x();
-        if(p.y()<min.y())
-            min.y() = p.y();
-        if(p.z()<min.z())
-            min.z() = p.z();
+	if (isEmpty())
+		max = min = point;
+	else
+	{
+		if (point.x()<min.x())
+			min.x() = point.x();
+		if (point.y()<min.y())
+			min.y() = point.y();
+		if (point.z()<min.z())
+			min.z() = point.z();
 
-        if(p.x()>max.x())
-            max.x() = p.x();
-        if(p.y()>max.y())
-            max.y() = p.y();
-        if(p.z()>max.z())
-            max.z() = p.z();
-    }
-    this->empty = false;
+		if (point.x()>max.x())
+			max.x() = point.x();
+		if (point.y()>max.y())
+			max.y() = point.y();
+		if (point.z()>max.z())
+			max.z() = point.z();
+	}
+	this->empty = false;
 }
 
 bool AABB::isEmpty() const
 {
-    return empty;
+	return empty;
 }
 
-point3 AABB::center() const
+Point3 AABB::center() const
 {
-    return (max+min)*0.5;
+	return (max + min)*0.5;
 }
 
-point3 AABB::maxP() const
+Point3 AABB::maxPoint() const
 {
-    return max;
+	return max;
 }
 
-point3 AABB::minP() const
+Point3 AABB::minPoint() const
 {
-    return min;
+	return min;
 }
-

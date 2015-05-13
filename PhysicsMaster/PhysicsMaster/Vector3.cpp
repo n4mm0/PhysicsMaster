@@ -1,176 +1,262 @@
+#define _USE_MATH_DEFINES
+
+#include <cmath>
 #include "Vector3.h"
-// FOR DEBUG
-#include <iostream>
 
-const Vector3 Vector3::Zero = Vector3(0, 0, 0);
+//STATIC MEMBER
+const Vector3 Vector3::zero = Vector3();
 
+//CONSTRUCTORS
 Vector3::Vector3()
 {
-	v[0] = 0;
-	v[1] = 0;
-	v[2] = 0;
+	vector[0] = 0;
+	vector[1] = 0;
+	vector[2] = 0;
 }
 
-Vector3::Vector3(float x, float y, float z)
+Vector3::Vector3(scalar x, scalar y, scalar z)
 {
-	v[0] = x;
-	v[1] = y;
-	v[2] = z;
+	vector[0] = x;
+	vector[1] = y;
+	vector[2] = z;
 }
 
 Vector3::Vector3(const Vector3& other)
 {
-	v[0] = other.GetX();
-	v[1] = other.GetY();
-	v[2] = other.GetZ();
+	vector[0] = other.getX();
+	vector[1] = other.getY();
+	vector[2] = other.getZ();
 }
 
-inline
-float Vector3::GetX() const
+//DESTRUCTOR
+Vector3::~Vector3()
 {
-	return v[0];
 }
 
-inline
-float Vector3::GetY() const
+//MEMBER FUNCTION
+scalar Vector3::getX() const
 {
-	return v[1];
+	return vector[0];
 }
 
-inline
-float Vector3::GetZ() const
+scalar Vector3::getY() const
 {
-	return v[2];
+	return vector[1];
 }
 
-void Vector3::SetX(float x)
+scalar Vector3::getZ() const
 {
-	v[0] = x;
+	return vector[2];
 }
 
-void Vector3::SetY(float y)
+void Vector3::setX(scalar x)
 {
-	v[1] = y;
+	vector[0] = x;
 }
 
-void Vector3::SetZ(float z)
+void Vector3::setY(scalar y)
 {
-	v[2] = z;
+	vector[1] = y;
 }
 
-void Vector3::Set(float x, float y, float z)
+void Vector3::setZ(scalar z)
 {
-	v[0] = x;
-	v[1] = y;
-	v[2] = z;
+	vector[2] = z;
 }
 
-Vector3& Vector3::operator=(const Vector3& other)
+void Vector3::set(scalar x, scalar y, scalar z)
+{
+	vector[0] = x;
+	vector[1] = y;
+	vector[2] = z;
+}
+
+scalar Vector3::dot(const Vector3 &other) const
+{
+	scalar x = this->getX() * other.getX();
+	scalar y = this->getY() * other.getY();
+	scalar z = this->getZ() * other.getZ();
+	
+	return x + y + z;
+}
+
+Vector3 Vector3::cross(const Vector3 &other) const
+{
+	scalar x = this->getY() * other.getZ() - this->getZ() * other.getY();
+	scalar y = this->getZ() * other.getX() - this->getX() * other.getZ();
+	scalar z = this->getX() * other.getY() - this->getY() * other.getX();
+	
+	return Vector3(x, y, z);
+}
+
+scalar Vector3::magnitude() const
+{
+	return sqrt(sqrMagnitude());
+}
+
+scalar Vector3::sqrMagnitude() const
+{
+	return this->dot(*this);
+}
+
+void Vector3::normalize()
+{
+	if (!isZero())
+		*this /= this->magnitude();
+}
+
+bool Vector3::isZero() const
+{
+	return getX() == 0 && getY() == 0 && getZ() == 0;
+}
+
+scalar Vector3::angle(const Vector3 &other)
+{
+	float angle = acos(this->dot(other) / (this->magnitude() * other.magnitude()));
+	return angle *= 180.0f / M_PI;
+}
+
+scalar Vector3::distance(const Vector3 &other)
+{
+	Vector3 difference = other - *this;
+	return difference.magnitude();
+}
+
+Vector3 Vector3::lerp(const Vector3 &other, float t)
+{
+	if (t <= 0.0f)
+		return *this;
+	else if (t >= 1.0f)
+		return other;
+	return *this + (other - *this) * t;
+}
+
+void Vector3::rotationX(const int degree)
+{
+	float rad = degree * M_PI / 180.0f;
+
+	float cosines = cos(rad);
+	float sine = sin(rad);
+
+	scalar y = this->dot(Vector3(0, cosines, sine));
+	scalar z = this->dot(Vector3(0, -sine, cosines));
+
+	this->set(0, y, z);
+}
+
+void Vector3::rotationY(const int degree)
+{
+	float rad = degree * M_PI / 180.0f;
+	
+	float cosines = cos(rad);
+	float sine = sin(rad);
+
+	scalar x = this->dot(Vector3(cosines, 0, -sine));
+	scalar z = this->dot(Vector3(sine, 0, cosines));
+	
+	this->set(x, 0, z);
+}
+
+void Vector3::rotationZ(const int degree)
+{
+	float rad = degree * M_PI / 180.0f;
+
+	float cosines = cos(rad);
+	float sine = sin(rad);
+
+	scalar x = this->dot(Vector3(cosines, sine, 0));
+	scalar y = this->dot(Vector3(-sine, cosines, 0));
+
+	this->set(x, y, 0);
+}
+
+//OPERATORS
+Vector3 Vector3::operator +(const Vector3 &other) const
+{
+	Vector3 result = *this;
+	return result += other;
+}
+
+Vector3 Vector3::operator -(const Vector3 &other) const
+{
+	Vector3 result = *this;
+	return result -= other;
+}
+
+Vector3 Vector3::operator *(const scalar k) const
+{
+	Vector3 result = *this;
+	return result *= k;
+}
+
+Vector3 Vector3::operator /(const scalar k) const
+{
+	Vector3 result = *this;
+	return result /= k;
+}
+
+Vector3 Vector3::operator -() const
+{
+	return Vector3(-this->getX(), -this->getY(), -this->getZ());
+}
+
+Vector3& Vector3::operator =(const Vector3 &other)
 {
 	if (this != &other)
 	{
-		v[0] = other.GetX();
-		v[1] = other.GetY();
-		v[2] = other.GetZ();
+		vector[0] = other.getX();
+		vector[1] = other.getY();
+		vector[2] = other.getZ();
 	}
 	return *this;
 }
 
-Vector3& Vector3::operator+=(const Vector3& other)
+Vector3& Vector3::operator += (const Vector3& other)
 {
-	v[0] += other.GetX();
-	v[1] += other.GetY();
-	v[2] += other.GetZ();
+	vector[0] += other.getX();
+	vector[1] += other.getY();
+	vector[2] += other.getZ();
+	
 	return *this;
 }
 
-Vector3& Vector3::operator-=(const Vector3& other)
+Vector3& Vector3::operator -= (const Vector3& other)
 {
-	v[0] -= other.GetX();
-	v[1] -= other.GetY();
-	v[2] -= other.GetZ();
+	vector[0] -= other.getX();
+	vector[1] -= other.getY();
+	vector[2] -= other.getZ();
+	
 	return *this;
 }
 
-Vector3& Vector3::operator*=(float scalar)
+Vector3& Vector3::operator *= (const scalar k)
 {
-	v[0] *= scalar;
-	v[1] *= scalar;
-	v[2] *= scalar;
+	vector[0] *= k;
+	vector[1] *= k;
+	vector[2] *= k;
+	
 	return *this;
 }
 
-Vector3& Vector3::operator/=(float scalar)
+Vector3& Vector3::operator /= (const scalar k)
 {
-	v[0] /= scalar;
-	v[1] /= scalar;
-	v[2] /= scalar;
+	vector[0] /= k;
+	vector[1] /= k;
+	vector[2] /= k;
+	
 	return *this;
 }
 
-float Vector3::Modulus() const
+bool Vector3::operator == (Vector3 const &other) const
 {
-	return(sqrt((v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2])));
-};
-
-float Vector3::SqrMagnitude() const
-{
-	return (v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]);
-};
-
-void Vector3::Normalize()
-{
-	float mod = Modulus();
-	if (mod > 0.000001f) {
-		*this /= mod;
-	}
+	return	this->getX() == other.getX() &&
+			this->getY() == other.getY() &&
+			this->getZ() == other.getZ();
 }
 
-Vector3 operator+(const Vector3& first, const Vector3& second)
+bool Vector3::operator != (Vector3 const &other) const
 {
-	Vector3 result(first);
-	return result += second;
-}
-
-Vector3 operator-(const Vector3& first, const Vector3& second)
-{
-	Vector3 result(first);
-	return result -= second;
-}
-
-Vector3 operator*(const Vector3& vector, float scalar)
-{
-	return Vector3(vector.GetX() * scalar, vector.GetY()* scalar, vector.GetZ() * scalar);
-}
-
-Vector3 operator/(const Vector3& vector, float scalar)
-{
-	return Vector3(vector.GetX() / scalar, vector.GetY() / scalar, vector.GetZ() / scalar);
-}
-
-
-namespace VectorOp
-{
-	void VectorialProduct(const Vector3& first, const Vector3& second, Vector3& result)
-	{
-		//float X = (p3[1] * s3[2]) - (p3[2] * s3[1]);
-		//float Y = (p3[2] * s3[0]) - (p3[0] * s3[2]);
-		//float Z = (p3[0] * s3[1]) - (p3[1] * s3[0]);
-		float X = (first.GetY() * second.GetZ()) - (first.GetZ() * second.GetY());
-		float Y = (first.GetZ() * second.GetX()) - (first.GetX() * second.GetZ());
-		float Z = (first.GetX() * second.GetY()) - (first.GetY() * second.GetX());
-		result.SetX(X);
-		result.SetY(Y);
-		result.SetZ(Z);
-	}
-
-	float DotProduct(const Vector3& first, const Vector3& second)
-	{
-		return((first.GetX() * second.GetX()) + (first.GetY() * second.GetY()) + (first.GetZ() * second.GetZ()));
-	}
-
-	float DistanceBetween(const Vector3& first, const Vector3& second)
-	{
-		return sqrt(pow(first.GetX() + second.GetX(), 2) + pow(first.GetY() + second.GetY(), 2) + pow(first.GetZ() + second.GetZ(), 2));
-	};
+	return	this->getX() != other.getX() ||
+			this->getY() != other.getY() ||
+			this->getZ() != other.getZ();
 }

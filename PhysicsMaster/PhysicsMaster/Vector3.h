@@ -1,45 +1,56 @@
-#pragma once
-#include <math.h>
+typedef float scalar;
+typedef Vector3 Point3;
+
 class Vector3
 {
+private:
+    //MEMBER
+    scalar vector[3];
 
 public:
+	//STATIC MEMBER
+	static const Vector3 zero;
+    
+	//CONSTRUCTORS
 	Vector3();
-	Vector3(float x, float y, float z);
-	Vector3(const Vector3& other);
+	Vector3(scalar x, scalar y, scalar z);
+	Vector3(const Vector3 &other);
 
-	float GetX() const;
-	float GetY() const;
-	float GetZ() const;
-	void SetX(float);
-	void SetY(float);
-	void SetZ(float);
-	void Set(float, float, float);
-	Vector3& operator=(const Vector3& other);
-	Vector3& operator+=(const Vector3& other);
-	Vector3& operator-=(const Vector3& other);
-	Vector3& operator*=(float scalar);
-	Vector3& operator/=(float scalar);
-	const float& operator[](int i)const { return v[i]; };
-	float& operator[](int i){ return v[i]; };
-	float Modulus() const;
-	float SqrMagnitude() const;
-	void Normalize();
+	//DESTRUCTOR
+	~Vector3();
 
-	static const Vector3 Zero;
+    //MEMBER FUNCTION
+	scalar getX() const;
+	scalar getY() const;
+	scalar getZ() const;
+	void setX(scalar x);
+	void setY(scalar y);
+	void setZ(scalar z);
+	void set(scalar x, scalar y, scalar z);
+	scalar dot(const Vector3 &other) const;
+	Vector3 cross(const Vector3 &other) const;
+	scalar magnitude() const;
+	scalar sqrMagnitude() const;
+	void normalize();
+	bool isZero() const;
+	scalar angle(const Vector3 &other);
+	scalar distance(const Vector3 &other);
+	Vector3 lerp(const Vector3 &other, float t);
+	void rotationX(const int degree);
+	void rotationY(const int degree);
+	void rotationZ(const int degree);
 
-private:
-	float v[3];
+	//OPERATORS
+	Vector3 operator +(const Vector3 &other) const;
+	Vector3 operator -(const Vector3 &other) const;
+	Vector3 operator *(const scalar k) const;
+	Vector3 operator /(const scalar k) const;
+	Vector3 operator -() const;
+	Vector3& operator =(const Vector3 &other);
+	Vector3& operator +=(const Vector3& other);
+	Vector3& operator -=(const Vector3& other);
+	Vector3& operator *=(const scalar k);
+	Vector3& operator /=(const scalar k);
+	bool operator ==(Vector3 const &other) const;
+	bool operator !=(Vector3 const &other) const;
 };
-
-Vector3 operator+(const Vector3&, const Vector3&);
-Vector3 operator-(const Vector3&, const Vector3&);
-Vector3 operator*(const Vector3&, float);
-Vector3 operator/(const Vector3&, float);
-
-namespace VectorOp
-{
-	float DistanceBetween(const Vector3& first, const Vector3& second);
-	void VectorialProduct(const Vector3& first, const Vector3& second, Vector3& result);
-	float DotProduct(const Vector3& first, const Vector3& second);
-}
