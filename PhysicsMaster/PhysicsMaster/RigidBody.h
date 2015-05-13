@@ -21,7 +21,7 @@ public:
 	float GetMass() const;
 	Vector3 GetPosition() const;
 	Vector3 GetVelocity() const;
-	const Matrix<3, 3>& GetRotationMatrix() const;
+	const Matrix4x4& GetRotationMatrix() const;
 	const Quaternion& GetRotationQuaternion() const;
 	// SETTERS
 	void SetPosition(const Vector3& _NewPosition);
@@ -39,7 +39,7 @@ private:
 	Vector3			m_ForceSum;
 	Vector3			m_MomentumSum;
 	Quaternion		m_Rotation;
-	Matrix<3, 3>	m_RotationMatrix;
+	Matrix4x4		m_RotationMatrix;
 
 	RigidBody(const RigidBody& _Other);		// We don't need that atm
 };

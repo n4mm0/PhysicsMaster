@@ -10,7 +10,7 @@ private:
 
 public:
 	//STATIC MEMBER
-	static const Vector3 zero;
+	static const Vector3 Zero;
     
 	//CONSTRUCTORS
 	Vector3();

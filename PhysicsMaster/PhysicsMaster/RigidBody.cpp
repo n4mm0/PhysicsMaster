@@ -10,7 +10,7 @@ RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _M
 	m_AngularMomentum = Vector3::Zero;
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
-	m_RotationMatrix = m_Rotation.ToMatrix();
+	m_RotationMatrix = m_Rotation.toMatrix();
 }
 
 RigidBody::~RigidBody(){}
@@ -26,20 +26,20 @@ void RigidBody::UpdatePhysic(float _Dt)
 	Temp = m_Velocity * _Dt;
 	m_Position += Temp;
 
-	MatrixOp::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
-	m_AngularVelocity.SetX(m_AngularVelocity.GetX() / m_Inertia.GetX());
-	m_AngularVelocity.SetY(m_AngularVelocity.GetY() / m_Inertia.GetY());
-	m_AngularVelocity.SetZ(m_AngularVelocity.GetZ() / m_Inertia.GetZ());
+	Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
+	m_AngularVelocity.setX(m_AngularVelocity.getX() / m_Inertia.getX());
+	m_AngularVelocity.setY(m_AngularVelocity.getY() / m_Inertia.getY());
+	m_AngularVelocity.setZ(m_AngularVelocity.getZ() / m_Inertia.getZ());
 
-	Quaternion RotQuat(1, m_AngularVelocity.GetX() * _Dt / 2, m_AngularVelocity.GetY() * _Dt / 2, m_AngularVelocity.GetZ() * _Dt / 2);
+	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
 	
-	RotQuat.Normalize();
+	RotQuat.normalize();
 	m_Rotation *= RotQuat;
-	m_Rotation.Normalize();
+	m_Rotation.normalize();
 
-	MatrixOp::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
+	Matrix4x4::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
 
-	m_RotationMatrix = m_Rotation.ToMatrix();
+	m_RotationMatrix = m_Rotation.toMatrix();
 
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
