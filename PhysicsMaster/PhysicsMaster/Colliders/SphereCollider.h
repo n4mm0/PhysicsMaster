@@ -1,10 +1,10 @@
 #pragma once
 #include "Vector3.h"
 #include "Collider.h"
-#include "AABB.h"
+#include "BoxCollider.h"
 #include "RigidBody.h"
 
-class BoundingSphere : public Collider
+class SphereCollider : public Collider
 {
 private:
 	Point3 center;
@@ -14,11 +14,11 @@ private:
 	RigidBody* myBody;
 
 	void Collide(AABB& i_Collider);
-	void Collide(BoundingSphere& i_Collider);
+	void Collide(SphereCollider& i_Collider);
 
 public:
-	BoundingSphere(Point3 i_Center, float i_Radius);
-	~BoundingSphere();
+	SphereCollider(Point3 i_Center, float i_Radius);
+	~SphereCollider();
 
 	void Clear();
 	void SetCenter(Point3 i_NewCenter);

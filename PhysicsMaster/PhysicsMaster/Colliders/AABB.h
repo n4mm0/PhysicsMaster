@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "Collider.h"
-#include "BoundingSphere.h"
+#include "SphereCollider.h"
 #include "RigidBody.h"
 
 class AABB : public Collider
@@ -15,7 +15,7 @@ private:
 	RigidBody* myBody;
 
 	void Collide(AABB& i_Collider);
-	void Collide(BoundingSphere& i_Collider);
+	void Collide(SphereCollider& i_Collider);
 
 public:
 	//CONSTRUCTOR

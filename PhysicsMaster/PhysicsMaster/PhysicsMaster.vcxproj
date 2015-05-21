@@ -68,7 +68,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Colliders\AABB.h" />
-    <ClInclude Include="Colliders\BoundingSphere.h" />
+    <ClInclude Include="Colliders\BoxCollider.h" />
+    <ClInclude Include="Colliders\SphereCollider.h" />
     <ClInclude Include="Colliders\Collider.h" />
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
@@ -81,7 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Colliders\AABB.cpp" />
-    <ClCompile Include="Colliders\BoundingSphere.cpp" />
+    <ClCompile Include="Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Colliders\SphereCollider.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Utilities\Matrix4x4.cpp" />
