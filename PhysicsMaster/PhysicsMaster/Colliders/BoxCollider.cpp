@@ -1,4 +1,5 @@
 #include "BoxCollider.h"
+#include <iostream>
 
 BoxCollider::BoxCollider() : semiDims(1, 1, 1)
 {}
@@ -17,4 +18,19 @@ void BoxCollider::SetRotation(Quaternion _rotation)
 Quaternion BoxCollider::GetRotation() const
 {
 	return rotation;
+}
+
+void BoxCollider::Collide(Collider& i_Collider)
+{
+	i_Collider.Collide(*this);
+}
+
+void BoxCollider::Collide(BoxCollider& i_Collider)
+{
+	std::cout << "Collision BoxBox! FIRE!" << std::endl;
+}
+
+void BoxCollider::Collide(SphereCollider& i_Collider)
+{
+	std::cout << "Collision BoxSphere! FIRE!" << std::endl;
 }

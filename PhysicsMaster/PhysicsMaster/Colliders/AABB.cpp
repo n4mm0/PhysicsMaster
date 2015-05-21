@@ -75,7 +75,7 @@ void AABB::Collide(AABB& i_Collider)
 	std::cout << "Collision BoxBox! FIRE!" << std::endl;
 }
 
-void AABB::Collide(BoundingSphere& i_Collider)
+void AABB::Collide(SphereCollider& i_Collider)
 {
 	std::cout << "Collision BoxSphere! FIRE!" << std::endl;
 }

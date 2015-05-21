@@ -11,7 +11,7 @@ private:
 	Vector3 semiDims;
 	Quaternion rotation;
 
-	void Collide(AABB& i_Collider);
+	void Collide(BoxCollider& i_Collider);
 	void Collide(SphereCollider& i_Collider);
 
 public:
