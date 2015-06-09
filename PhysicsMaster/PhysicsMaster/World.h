@@ -9,7 +9,8 @@
 
 class RigidBody;
 
-class World {
+class World
+{
 	typedef std::vector<RigidBody*> RigidBodyCollection;
 
 	typedef ColliderType::ColliderTypeList CollidersType;
@@ -32,5 +33,8 @@ public:
 private:
 	RigidBodyCollection m_RigidBodies;
 	CollisionCollection m_CollisionCollection;
+
+//Remove only for debug
+public:
 	ColliderDispatcher m_Dispatcher;
 };

@@ -9,14 +9,31 @@ namespace CollisionAlgorithm
 {
 	template<class T, class U> class CollisionDetectionAlgorithm;
 
+	//Dummy needed for automatic
+	template<> 
+	class	CollisionDetectionAlgorithm<PlaneCollider,PlaneCollider>
+	{
+	public:
+		template<typename T, typename U>
+		static Collision* Fire(Collider& first, Collider& second)
+		{
+			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
+		}
+	private:
+		static Collision* CollisionComputation(PlaneCollider* first, PlaneCollider* second)
+		{
+			return nullptr;
+		}
+	};
+
 	template<>
 	class CollisionDetectionAlgorithm<BoxCollider, BoxCollider>
 	{
 	public:
-		
+		template<typename T, typename U>
 		static Collision* Fire(Collider& first, Collider& second)
 		{
-			return CollisionComputation(static_cast<BoxCollider*>(&first), static_cast<BoxCollider*>(&second));
+			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		}
 	private:
 		
@@ -296,10 +313,10 @@ namespace CollisionAlgorithm
 	class CollisionDetectionAlgorithm<SphereCollider, SphereCollider>
 	{
 	public:
-		
+		template<typename T, typename U>
 		static Collision* Fire(Collider& first, Collider& second)
 		{
-			return CollisionComputation(static_cast<SphereCollider*>(&first), static_cast<SphereCollider*>(&second));
+			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		}
 
 	private:

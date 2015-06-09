@@ -3,7 +3,7 @@
 
 #include <gl\GLUT.H>
 #include <math.h>
-
+#include "World.h"
 int width = 600;
 int height = 600;
 
@@ -228,11 +228,14 @@ void renderIdleScene()
 
 int main(int argc, char **argv)
 {
+	World w;
+//	SphereCollider* c = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
+//	w.m_Dispatcher.Dispatch(*c, *c);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
 	glutInitWindowSize(width, height);
 	glutCreateWindow("Physic Engine");
-	glutFullScreen();
+	//glutFullScreen();
 
 	glutReshapeFunc(changeSize);
 	glutDisplayFunc(renderScene);
@@ -250,6 +253,6 @@ int main(int argc, char **argv)
 	glEnable(GL_NORMALIZE);
 
 	glutMainLoop();
-
+	
 	return 0;
 }

@@ -76,6 +76,7 @@
     <ClInclude Include="Collision\Collision.h" />
     <ClInclude Include="Collision\CollisionAlgorithms.h" />
     <ClInclude Include="Collision\CollisionHandler.h" />
+    <ClInclude Include="Madness.h" />
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Utilities\ColliderUtil.h" />
