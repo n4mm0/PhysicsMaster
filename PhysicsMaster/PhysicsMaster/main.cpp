@@ -77,7 +77,7 @@ void drawSphere(float x, float y, float z, float radius, int lats, int longs)
 	glPopMatrix();
 }
 
-void drawCube(float x, float y, float z, float lX, float lY, float lZ)
+void drawParallelepiped(float x, float y, float z, float lX, float lY, float lZ)
 {
 	GLfloat green[] = { 0.2f, 0.8f, 0.6f, 1.0f };
 	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
