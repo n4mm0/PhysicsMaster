@@ -28,6 +28,12 @@
     <Filter Include="Header Files\TRASH">
       <UniqueIdentifier>{299c0e0e-ea43-42c9-b026-7772d99d96b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Collision">
+      <UniqueIdentifier>{ac0b56b6-5a2c-478a-9a11-fc0be308b71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Collision">
+      <UniqueIdentifier>{1dabcd97-b5b0-4b77-9d49-e6395e2a2b32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RigidBody.h">
@@ -66,6 +72,27 @@
     <ClInclude Include="Colliders\BoxCollider.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\TypeList.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Dispatcher.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionHandler.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionAlgorithms.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Colliders\PlaneCollider.h">
+      <Filter>Header Files\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\ColliderUtil.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -97,6 +124,18 @@
     </ClCompile>
     <ClCompile Include="Colliders\BoxCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Colliders\PlaneCollider.cpp">
+      <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\ColliderUtil.cpp">
+      <Filter>Header Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

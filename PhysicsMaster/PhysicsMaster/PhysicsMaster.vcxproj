@@ -67,12 +67,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionAlgorithms.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionHandler.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Dispatcher.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\TypeList.h" />
     <ClInclude Include="Colliders\AABB.h" />
     <ClInclude Include="Colliders\BoxCollider.h" />
+    <ClInclude Include="Colliders\PlaneCollider.h" />
     <ClInclude Include="Colliders\SphereCollider.h" />
     <ClInclude Include="Colliders\Collider.h" />
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="Utilities\ColliderUtil.h" />
     <ClInclude Include="Utilities\Matrix4x4.h" />
     <ClInclude Include="Utilities\Quaternion.h" />
     <ClInclude Include="Utilities\Utilities.h" />
@@ -81,11 +88,15 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Colliders\AABB.cpp" />
     <ClCompile Include="Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Colliders\PlaneCollider.cpp" />
     <ClCompile Include="Colliders\SphereCollider.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="Utilities\ColliderUtil.cpp" />
     <ClCompile Include="Utilities\Matrix4x4.cpp" />
     <ClCompile Include="Utilities\Quaternion.cpp" />
     <ClCompile Include="Utilities\Vector3.cpp" />

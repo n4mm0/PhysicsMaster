@@ -4,7 +4,7 @@
 #include "Vector3.h"
 
 //STATIC MEMBER
-const Vector3 Vector3::zero = Vector3();
+//const Vector3 Vector3::zero = Vector3();
 
 //CONSTRUCTORS
 Vector3::Vector3()
