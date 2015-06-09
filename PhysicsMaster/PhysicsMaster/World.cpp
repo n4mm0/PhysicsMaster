@@ -1,11 +1,24 @@
 #include "World.h"
 #include "RigidBody.h"
+#include "Collision\CollisionAlgorithms.h"
+
 const Vector3 World::m_Gravity = Vector3(0.0f, -9.8f, 0.0f);
 const float World::m_Dt = 0.01f;
 
 World::World()
 {
 	//Initalization
+	m_Dispatcher.Add<BoxCollider, BoxCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider, BoxCollider>::Fire);
+	m_Dispatcher.Add<BoxCollider, SphereCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider, SphereCollider>::Fire<BoxCollider, SphereCollider>);
+	m_Dispatcher.Add<BoxCollider, PlaneCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider, PlaneCollider>::Fire<BoxCollider, PlaneCollider>);
+
+	m_Dispatcher.Add<SphereCollider, SphereCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<SphereCollider, SphereCollider>::Fire);
+	m_Dispatcher.Add<SphereCollider, BoxCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider,SphereCollider>::Fire<SphereCollider, BoxCollider>);
+	m_Dispatcher.Add<SphereCollider, PlaneCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<SphereCollider, PlaneCollider>::Fire<SphereCollider, PlaneCollider>);
+
+	m_Dispatcher.Add<PlaneCollider, SphereCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<SphereCollider, PlaneCollider>::Fire<PlaneCollider, SphereCollider>);
+	m_Dispatcher.Add<PlaneCollider, BoxCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider,PlaneCollider >::Fire<PlaneCollider, BoxCollider>);
+
 }
 
 //Free all rigidbodies when destroyed
