@@ -1,5 +1,6 @@
 #include "Collider.h"
 #include <iostream>
+
 Collider::Collider(int type, const Vector3& displ) : m_Type(type), m_Displacement(displ)
 {
 };

@@ -25,8 +25,9 @@ void RigidBody::UpdatePhysic(float _Dt)
 	m_Velocity = m_QuantityOfMotion / m_Mass;
 	Temp = m_Velocity * _Dt;
 	m_Position += Temp;
-
-	Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
+	
+	QuaternionRotate(m_Rotation, m_AngularMomentum, m_AngularVelocity);
+	//Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
 	m_AngularVelocity.setX(m_AngularVelocity.getX() / m_Inertia.getX());
 	m_AngularVelocity.setY(m_AngularVelocity.getY() / m_Inertia.getY());
 	m_AngularVelocity.setZ(m_AngularVelocity.getZ() / m_Inertia.getZ());
@@ -34,10 +35,12 @@ void RigidBody::UpdatePhysic(float _Dt)
 	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
 	
 	RotQuat.normalize();
+	
+	QuaternionRotate(m_Rotation, m_AngularVelocity, m_AngularVelocity);
+	//Matrix4x4::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
+
 	m_Rotation *= RotQuat;
 	m_Rotation.normalize();
-
-	Matrix4x4::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
 
 	m_RotationMatrix = m_Rotation.toMatrix();
 

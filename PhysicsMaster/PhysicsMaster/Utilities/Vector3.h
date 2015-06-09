@@ -42,11 +42,9 @@ public:
 	void rotationZ(const int degree);
 
 	//OPERATORS
-	Vector3 operator +(const Vector3 &other) const;
-	Vector3 operator -(const Vector3 &other) const;
-	Vector3 operator *(const scalar k) const;
-	Vector3 operator /(const scalar k) const;
-	Vector3 operator -() const;
+
+
+	Vector3 operator-() const;
 	Vector3& operator =(const Vector3 &other);
 	Vector3& operator +=(const Vector3& other);
 	Vector3& operator -=(const Vector3& other);
@@ -57,3 +55,7 @@ public:
 };
 
 typedef Vector3 Point3;
+Vector3 operator+(const Vector3 &first,const Vector3& second);
+Vector3 operator-(const Vector3 &first, const Vector3& second);
+Vector3 operator*(const Vector3 &vec,const scalar k);
+Vector3 operator/(const Vector3 &vec, const scalar k);

@@ -4,7 +4,7 @@
 #include "Vector3.h"
 
 //STATIC MEMBER
-//const Vector3 Vector3::zero = Vector3();
+const Vector3 Vector3::Zero = Vector3();
 
 //CONSTRUCTORS
 Vector3::Vector3()
@@ -171,29 +171,28 @@ void Vector3::rotationZ(const int degree)
 }
 
 //OPERATORS
-Vector3 Vector3::operator +(const Vector3 &other) const
+Vector3 operator+(const Vector3 &first, const Vector3& second)
 {
-	Vector3 result = *this;
-	return result += other;
-}
+	Vector3 result(first);
+	return result += second;
+};
 
-Vector3 Vector3::operator -(const Vector3 &other) const
+Vector3 operator-(const Vector3 &first, const Vector3& second)
 {
-	Vector3 result = *this;
-	return result -= other;
-}
+	Vector3 result(first);
+	return result -= second;
+};
 
-Vector3 Vector3::operator *(const scalar k) const
+Vector3 operator*(const Vector3 &vector, const scalar k)
 {
-	Vector3 result = *this;
-	return result *= k;
-}
+	return Vector3(vector.getX() * k, vector.getY()* k, vector.getZ() * k);
+};
 
-Vector3 Vector3::operator /(const scalar k) const
+Vector3 operator/(const Vector3 &vector, const scalar k)
 {
-	Vector3 result = *this;
-	return result /= k;
-}
+	return Vector3(vector.getX() / k, vector.getY()/ k, vector.getZ()/ k);
+};
+
 
 Vector3 Vector3::operator -() const
 {

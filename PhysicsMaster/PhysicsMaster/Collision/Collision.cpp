@@ -1,51 +1,52 @@
 #include "Collision.h"
 #include "RigidBody.h"
 #include <iostream>
-#include "Physics.h"
+#include "World.h"
+
 Collision::Collision(float deformation, const Vector3& pointOfApplication, const Vector3& normal)
-: _deformation(deformation), _pointOfApplication(pointOfApplication), _normal(normal)
+: m_deformation(deformation), m_pointOfApplication(pointOfApplication), m_normal(normal)
 {
 }
 
 void Collision::ApplyCollision()
 {
-	//TO DO
+	//TO DO CATTANI STYLE
 	float f;
 	float vn;
 	float modVtang;
-	vn = VectorOp::DotProduct(_force, _normal);
-	Vector3 Vnorm = _normal*vn;
-	Vector3 Vtang = _force - Vnorm;
+	vn = m_force.dot(m_normal);
+	Vector3 Vnorm = m_normal*vn;
+	Vector3 Vtang = m_force - Vnorm;
 	// K = coefficente elastico L = coefficente anaelastico  TO DO
-	f = (0.5f * _deformation) + (5.0f * vn); 
-	_normal *= f;
+	f = (0.5f * m_deformation) + (5.0f * vn); 
+	m_normal *= f;
 	// forza reagente (modulo) -> m = coefficente attrito TO DO
 	f *= 5;	
-	modVtang = Vtang.Modulus();
+	modVtang = Vtang.magnitude();
 	if (f<0)
 		f = 0;
 	Vtang*=f;
-	if (modVtang > 9.8f * Physics::DeltaTime) 
-		Vtang.Normalize();
+	if (modVtang > 9.8f *World::m_Dt)
+		Vtang.normalize();
 	else
-		Vtang /= (9.8f * Physics::DeltaTime);
+		Vtang /= (9.8f)* World::m_Dt;
 	
-	_normal += Vtang;
+	m_normal += Vtang;
 
-	_firstObj->ApplyForce(_normal, _pointOfApplication);
-	_secondObj->ApplyForce(_normal*-1.0f, _pointOfApplication);
+	m_firstObj->ApplyForce(m_normal, m_pointOfApplication);
+	m_secondObj->ApplyForce(m_normal*-1.0f, m_pointOfApplication);
 
 	std::cout << "After Collision Handling" << std::endl;
-	std::cout << "Collision Force: " << "( " << _normal.getX() << ", " << _normal.getY() << ", " << _normal.getZ() << ") " << std::endl;
-	_firstObj->PrintStatus();
-	_secondObj->PrintStatus();
+	std::cout << "Collision Force: " << "( " << m_normal.getX() << ", " << m_normal.getY() << ", " << m_normal.getZ() << ") " << std::endl;
+	//_firstObj->PrintStatus();
+	//_secondObj->PrintStatus();
 
 };
 
 void Collision::SetBodies(RigidBody*first,RigidBody*second)
 {
-	_firstObj = first;
-	_secondObj = second;
-	_force += first->GetVelocity();
-	_force += second->GetVelocity();
+	m_firstObj = first;
+	m_secondObj = second;
+	m_force += first->GetVelocity();
+	m_force += second->GetVelocity();
 }

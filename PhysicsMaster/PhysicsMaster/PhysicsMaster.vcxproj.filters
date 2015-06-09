@@ -60,9 +60,6 @@
     <ClInclude Include="Colliders\Collider.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="Colliders\AABB.h">
-      <Filter>Header Files\Colliders</Filter>
-    </ClInclude>
     <ClInclude Include="Utilities\Quaternion.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -72,25 +69,25 @@
     <ClInclude Include="Colliders\BoxCollider.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\TypeList.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Dispatcher.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionHandler.h">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionAlgorithms.h">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.h">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Colliders\PlaneCollider.h">
       <Filter>Header Files\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\ColliderUtil.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\Collision.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\CollisionAlgorithms.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\CollisionHandler.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Dispatcher.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\TypeList.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,9 +110,6 @@
     <ClCompile Include="Utilities\Vector3.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Colliders\AABB.cpp">
-      <Filter>Source Files\Colliders</Filter>
-    </ClCompile>
     <ClCompile Include="Utilities\Quaternion.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
@@ -125,17 +119,17 @@
     <ClCompile Include="Colliders\BoxCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Colliders\PlaneCollider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Collider.cpp">
+    <ClCompile Include="Utilities\ColliderUtil.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Colliders\Collider.cpp">
       <Filter>Source Files\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="Utilities\ColliderUtil.cpp">
-      <Filter>Header Files\Utils</Filter>
+    <ClCompile Include="Collision\Collision.cpp">
+      <Filter>Source Files\Collision</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

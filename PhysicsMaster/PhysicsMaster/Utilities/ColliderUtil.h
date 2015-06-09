@@ -1,11 +1,9 @@
 #pragma once
 #include "TypeList.h"
-//#include "BoxCollider.h"
-//#include "SphereCollider.h"
-//#include "PlaneCollider.h"
-class BoxCollider;
-class SphereCollider;
-class PlaneCollider;
+#include "BoxCollider.h"
+#include "SphereCollider.h"
+#include "PlaneCollider.h"
+
 
 namespace ColliderType
 {
@@ -19,4 +17,4 @@ namespace ColliderType
 		SPHERE = TL::IndexOf<ColliderTypeList, SphereCollider>::value,
 		PLANE = TL::IndexOf<ColliderTypeList, PlaneCollider>::value
 	};
-s}
+}

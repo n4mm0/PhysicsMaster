@@ -1,10 +1,8 @@
 #pragma once
-#include "BoxCollider.h"
-#include "SphereCollider.h"
-#include "PlaneCollider.h"
+#include "ColliderUtil.h"
 #include "Collision.h"
 #include "Quaternion.h"
-//For debug only
+//debug
 #include <iostream>
 
 namespace CollisionAlgorithm
@@ -30,8 +28,11 @@ namespace CollisionAlgorithm
 			Vector3 SecondCenter(CentersDistance);
 			CentersDistance -= FirstCenter;
 			CentersDistance *= -1.0f;
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondCenter, SecondCenter);
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
+		
+			//TO DO
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondCenter, SecondCenter);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
+			
 			Vector3 radiiSum(first->GetHalfSize());
 			radiiSum += second->GetHalfSize();
 			
@@ -51,8 +52,9 @@ namespace CollisionAlgorithm
 	//		MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
 		//	MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
 			Vector3 SecondHalfSizeInFistSystem(second->GetHalfSize());
-			MatrixOp::Rotate<MatrixOp::ToWorldSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
+			//TO DO
+			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
 
 			//Second vs first
 			//Optimization TO DO
@@ -168,14 +170,15 @@ namespace CollisionAlgorithm
 			}
 			SecondCenter = second->GetWorldPosition();
 			FirstCenter = first->GetWorldPosition();
-
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
+			//TO DO
+//			MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
 
 			Min = SecondCenter - second->GetHalfSize();
 			Max = SecondCenter-second->GetHalfSize();
 			SecondHalfSizeInFistSystem=first->GetHalfSize();
-			MatrixOp::Rotate<MatrixOp::ToWorldSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
+			//TO DO
+			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
 
 			//first vs Second
 			Vertex[0] = (FirstCenter);
@@ -335,11 +338,13 @@ namespace CollisionAlgorithm
 		{
 	
 			Vector3 SphereCenterInBoxSystem(second->GetWorldPosition());
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
+			//TO DO
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
 			Vector3 Min(first->GetWorldPosition() - first->GetHalfSize());
 			Vector3 Max(first->GetWorldPosition() + first->GetHalfSize());
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
-			MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
+			//TO DO
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
 
 			float distance = 0;
 			if (SphereCenterInBoxSystem.getX() < Min.getX())
@@ -442,7 +447,7 @@ namespace CollisionAlgorithm
 }
 
 /*
-Box Box SAT
+Box Box SAT for lol sake
 Vector3 const& CenterOfFirstBox = first->GetWorldPosition();
 Vector3 const* AxisesOfFirstBox[3];
 AxisesOfFirstBox[0] = &first->GetAxis(0);

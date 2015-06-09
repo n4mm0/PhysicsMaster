@@ -1,8 +1,9 @@
 #pragma once
-#pragma once
 #include "Collider.h"
+
 class Quaternion;
 class RigidBody;
+
 class BoxCollider : public Collider
 {
 public:

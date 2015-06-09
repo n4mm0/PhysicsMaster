@@ -46,10 +46,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Giuliano\Desktop\GLUT\GL;C:\Users\Giuliano\Desktop\GLUT;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;GLUT32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Giuliano\Desktop\GLUT;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,33 +69,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionAlgorithms.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\CollisionHandler.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Dispatcher.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\TypeList.h" />
-    <ClInclude Include="Colliders\AABB.h" />
     <ClInclude Include="Colliders\BoxCollider.h" />
     <ClInclude Include="Colliders\PlaneCollider.h" />
     <ClInclude Include="Colliders\SphereCollider.h" />
     <ClInclude Include="Colliders\Collider.h" />
+    <ClInclude Include="Collision\Collision.h" />
+    <ClInclude Include="Collision\CollisionAlgorithms.h" />
+    <ClInclude Include="Collision\CollisionHandler.h" />
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Utilities\ColliderUtil.h" />
+    <ClInclude Include="Utilities\Dispatcher.h" />
     <ClInclude Include="Utilities\Matrix4x4.h" />
     <ClInclude Include="Utilities\Quaternion.h" />
+    <ClInclude Include="Utilities\TypeList.h" />
     <ClInclude Include="Utilities\Utilities.h" />
     <ClInclude Include="Utilities\Vector3.h" />
     <ClInclude Include="Utilities\Vector4.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Desktop\Collider\Collider\Collider\Collision.cpp" />
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="Colliders\AABB.cpp" />
     <ClCompile Include="Colliders\BoxCollider.cpp" />
+    <ClCompile Include="Colliders\Collider.cpp" />
     <ClCompile Include="Colliders\PlaneCollider.cpp" />
     <ClCompile Include="Colliders\SphereCollider.cpp" />
+    <ClCompile Include="Collision\Collision.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Utilities\ColliderUtil.cpp" />

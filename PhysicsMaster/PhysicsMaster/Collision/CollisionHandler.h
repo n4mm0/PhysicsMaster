@@ -1,14 +1,15 @@
 #pragma once
 #include <vector>
 #include "Collision.h"
+//debug
 #include <iostream>
-template<
-	int MaxCollision
->
+template<int MaxCollision>
 class CollisionHandler
 {
+
 	typedef std::vector<Collision*> CollisionCollection;
 	typedef CollisionCollection::iterator Iterator;
+
 public:
 	void HandleCollision() 
 	{

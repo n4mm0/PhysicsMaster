@@ -10,10 +10,10 @@ public:
 	void SetBodies(RigidBody* first,RigidBody* second);
 	void ApplyCollision();
 private:
-	RigidBody* _firstObj;
-	RigidBody* _secondObj;
-	float _deformation;
-	Vector3 _pointOfApplication;
-	Vector3 _force;
-	Vector3 _normal;
+	RigidBody* m_firstObj;
+	RigidBody* m_secondObj;
+	float m_deformation;
+	Vector3 m_pointOfApplication;
+	Vector3 m_force;
+	Vector3 m_normal;
 };
