@@ -6,8 +6,9 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "Matrix4x4.h"
-
-class RigidBody {
+class Collider;
+class RigidBody 
+{
 
 public:
 	RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID);
@@ -23,6 +24,7 @@ public:
 	Vector3 GetVelocity() const;
 	const Matrix4x4& GetRotationMatrix() const;
 	const Quaternion& GetRotationQuaternion() const;
+	Collider* GetCollider() const;
 	// SETTERS
 	void SetPosition(const Vector3& _NewPosition);
 	void SetVelocity(const Vector3& _NewVelocity);
@@ -40,6 +42,12 @@ private:
 	Vector3			m_MomentumSum;
 	Quaternion		m_Rotation;
 	Matrix4x4		m_RotationMatrix;
-
+	Collider*		m_Collider;
 	RigidBody(const RigidBody& _Other);		// We don't need that atm
+	RigidBody& operator=(const RigidBody& _Other);
+};
+
+inline Collider* RigidBody::GetCollider() const
+{
+	return m_Collider;
 };

@@ -3,12 +3,20 @@
 ** Mondo di gioco
 */
 #include <vector>
-#include "RigidBody.h"
-#include "Vector3.h"
+#include "Collision\CollisionHandler.h"
+#include "Utilities\ColliderUtil.h"
+#include "Utilities\Dispatcher.h"
 
-typedef std::vector<RigidBody*> RigidBodyCollection;
+class RigidBody;
 
 class World {
+	typedef std::vector<RigidBody*> RigidBodyCollection;
+
+	typedef ColliderType::ColliderTypeList CollidersType;
+	typedef CollisionHandler<20> CollisionCollection;
+
+	//Need Change
+	typedef Dispatcher<Collider, CollidersType, Collision*> ColliderDispatcher;
 public:
 	World();
 	~World();
@@ -23,5 +31,6 @@ public:
 
 private:
 	RigidBodyCollection m_RigidBodies;
-
+	CollisionCollection m_CollisionCollection;
+	ColliderDispatcher m_Dispatcher;
 };

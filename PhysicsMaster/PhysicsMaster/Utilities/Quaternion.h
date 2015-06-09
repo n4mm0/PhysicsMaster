@@ -1,6 +1,6 @@
 #pragma once
 #include "Matrix4x4.h"
-
+class Vector3;
 class Quaternion
 {
 private:
@@ -42,4 +42,9 @@ public:
 	Quaternion& operator -=(const Quaternion& other);
 	Quaternion& operator *=(const Quaternion& other);
 	Quaternion& operator /=(const float scalar);
+	float& operator[](int index);
+	const float& operator[](int index) const;
 };
+
+void QuaternionRotate (const Quaternion& rot, const Vector3& vec, Vector3& result);
+void QuaternionRotateT(const Quaternion& rot, const Vector3& vec, Vector3& result);

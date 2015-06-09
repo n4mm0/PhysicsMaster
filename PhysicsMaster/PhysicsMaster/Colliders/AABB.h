@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "Vector3.h"
 #include "Collider.h"
@@ -32,3 +33,4 @@ public:
 	void AttachToBody(RigidBody* i_RBody);
 	void Collide(Collider& i_Collider);
 };
+*/

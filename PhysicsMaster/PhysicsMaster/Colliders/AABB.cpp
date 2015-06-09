@@ -1,3 +1,4 @@
+/*
 #include "AABB.h"
 #include <iostream>
 
@@ -79,3 +80,4 @@ void AABB::Collide(SphereCollider& i_Collider)
 {
 	std::cout << "Collision BoxSphere! FIRE!" << std::endl;
 }
+*/

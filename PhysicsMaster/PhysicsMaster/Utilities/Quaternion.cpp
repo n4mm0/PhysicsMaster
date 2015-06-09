@@ -1,6 +1,6 @@
 #include <cmath>
 #include "Quaternion.h"
-
+#include "Vector3.h"
 //CONSTRUCTORS
 Quaternion::Quaternion()
 {
@@ -131,6 +131,7 @@ Matrix4x4 Quaternion::toMatrix() const
 	return result;
 }
 
+
 //OPERATORS
 Quaternion Quaternion::operator +(const Quaternion &other) const
 {
@@ -207,4 +208,54 @@ Quaternion& Quaternion::operator /= (const float scalar)
 	quaternion[3] /= scalar;
 
 	return *this;
+}
+
+float& Quaternion::operator[](int index)
+{
+	return quaternion[index];
+};
+
+const float& Quaternion::operator[](int index) const
+{
+	return quaternion[index];
+};
+
+//TEST
+void QuaternionRotate(const Quaternion& rot, const Vector3& vec,Vector3& result)
+{
+	float X2 = rot[1] * rot[1];
+	float Y2 = rot[2] * rot[2];
+	float Z2 = rot[3] * rot[3];
+	float XY = rot[1] * rot[2];
+	float XZ = rot[1] * rot[3];
+	float YZ = rot[2] * rot[3];
+	float XW = rot[0] * rot[1];
+	float YW = rot[0] * rot[2];
+	float ZW = rot[0] * rot[3];
+	
+	result.set(
+		(1.0f - (2.0f * Y2) - (2.0f * Z2))*vec.getX() + ((2.0f * XY) + (2.0f * ZW))*vec.getY() + ((2.0f * XZ) - (2.0f * YW))*vec.getZ(),
+		((2.0f * XY) - (2.0f * ZW))*vec.getX() + (1.0f - (2.0f * X2) - (2.0f * Z2))*vec.getY() + ((2.0f * YZ) - (2.0f * XW))*vec.getZ(),
+		((2.0f * XZ) + (2.0f * YW))*vec.getX() + ((2.0f * YZ) - (2.0f * XW))*vec.getY() + (1.0f - (2.0f * X2) - (2.0f * Y2))*vec.getZ()
+	);
+}
+
+void QuaternionRotateT(const Quaternion& rot,const Vector3& vec ,Vector3& result)
+{
+	float X2 = rot[1] * rot[1];
+	float Y2 = rot[2] * rot[2];
+	float Z2 = rot[3] * rot[3];
+	float XY = rot[1] * rot[2];
+	float XZ = rot[1] * rot[3];
+	float YZ = rot[2] * rot[3];
+	float XW = rot[0] * rot[1];
+	float YW = rot[0] * rot[2];
+	float ZW = rot[0] * rot[3];
+
+
+	result.set(
+		(1.0f - (2.0f * Y2) - (2.0f * Z2))*vec.getX() + ((2.0f * XY) - (2.0f * ZW))*vec.getY() + ((2.0f * XZ) + (2.0f * YW))*vec.getZ(),
+		((2.0f * XY) + (2.0f * ZW))*vec.getX() + (1.0f - (2.0f * X2) - (2.0f * Z2))*vec.getY() + ((2.0f * YZ) - (2.0f * XW))*vec.getZ(),
+		((2.0f * XZ) - (2.0f * YW))*vec.getX() + ((2.0f * YZ) - (2.0f * XW))*vec.getY() + (1.0f - (2.0f * X2) - (2.0f * Y2))*vec.getZ()
+	);
 }
