@@ -39,7 +39,7 @@ namespace CollisionAlgorithm
 			//SphereTest for early fast reject
 			bool SphereConsideration = (CentersDistance.getX()*CentersDistance.getX()) < (radiiSum.getX()*radiiSum.getX()) &&
 				(CentersDistance.getY()*CentersDistance.getY()) < (radiiSum.getY()*radiiSum.getY()) &&
-				(CentersDistance.getZ()*CentersDistance.getZ()) < (radiiSum.getZ()*radiiSum.getZ()) && (CentersDistance.SqrMagnitude()) < (radiiSum.SqrMagnitude());
+				(CentersDistance.getZ()*CentersDistance.getZ()) < (radiiSum.getZ()*radiiSum.getZ()) && (CentersDistance.sqrMagnitude()) < (radiiSum.sqrMagnitude());
 			
 			if (SphereConsideration)
 			{
@@ -49,8 +49,9 @@ namespace CollisionAlgorithm
 			//Compute Min and Max for first box
 			Vector3 Min(FirstCenter - first->GetHalfSize());
 			Vector3 Max(FirstCenter + first->GetHalfSize());
-	//		MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
-		//	MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
+			//BHO
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
 			Vector3 SecondHalfSizeInFistSystem(second->GetHalfSize());
 			//TO DO
 			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
@@ -111,7 +112,7 @@ namespace CollisionAlgorithm
 					Vertex[i][0] < Max[0] && Vertex[i][1] < Max[1] && Vertex[i][2] < Max[2])
 				{
 					indexes[pointsInside] = i;
-					compenetration[pointsInside] = (Vertex[i] - first->GetWorldPosition()).SqrMagnitude();
+					compenetration[pointsInside] = (Vertex[i] - first->GetWorldPosition()).sqrMagnitude();
 					++pointsInside;
 				}
 			}
@@ -137,7 +138,7 @@ namespace CollisionAlgorithm
 				Vertex[indexes[0]][2] /= CompenetrationSum;
 
 				//Compute normal by clamping on max value
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				float x, y, z;
 				x = CentersDistance.getX();
 				y = CentersDistance.getY();
@@ -146,25 +147,25 @@ namespace CollisionAlgorithm
 				{
 					if (x > z)
 					{
-						CentersDistance.Set(x, 0, 0);
+						CentersDistance.set(x, 0, 0);
 					}
 					else
 					{
-						CentersDistance.Set(0, 0, z);
+						CentersDistance.set(0, 0, z);
 					}
 				}
 				else
 				{
 					if (y > z)
 					{
-						CentersDistance.Set(0, y, 0);
+						CentersDistance.set(0, y, 0);
 					}
 					else
 					{
-						CentersDistance.Set(0, 0, z);
+						CentersDistance.set(0, 0, z);
 					}
 				}
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				//Compute Compenetration
 				return new Collision(compenetration[0], Vertex[indexes[0]], CentersDistance);
 			}
@@ -229,7 +230,7 @@ namespace CollisionAlgorithm
 					Vertex[i][0] < Max[0] && Vertex[i][1] < Max[1] && Vertex[i][2] < Max[2])
 				{
 					indexes[pointsInside] = i;
-					compenetration[pointsInside] = (Vertex[i] - second->GetWorldPosition()).SqrMagnitude();
+					compenetration[pointsInside] = (Vertex[i] - second->GetWorldPosition()).sqrMagnitude();
 					++pointsInside;
 				}
 			}
@@ -255,7 +256,7 @@ namespace CollisionAlgorithm
 				Vertex[indexes[0]][2] /= CompenetrationSum;
 
 				//Compute normal by clamping on max value
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				float x, y, z;
 				x = CentersDistance.getX();
 				y = CentersDistance.getY();
@@ -264,25 +265,25 @@ namespace CollisionAlgorithm
 				{
 					if (x > z)
 					{
-						CentersDistance.Set(x, 0, 0);
+						CentersDistance.set(x, 0, 0);
 					}
 					else
 					{
-						CentersDistance.Set(0, 0, z);
+						CentersDistance.set(0, 0, z);
 					}
 				}
 				else
 				{
 					if (y > z)
 					{
-						CentersDistance.Set(0, y, 0);
+						CentersDistance.set(0, y, 0);
 					}
 					else
 					{
-						CentersDistance.Set(0, 0, z);
+						CentersDistance.set(0, 0, z);
 					}
 				}
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				//Compute Compenetration
 				return new Collision(compenetration[0], Vertex[indexes[0]], CentersDistance);
 			}
@@ -306,12 +307,12 @@ namespace CollisionAlgorithm
 		static Collision* CollisionComputation(SphereCollider* first, SphereCollider* second)
 		{
 			Vector3 CentersDistance = first->GetWorldPosition() -  second->GetWorldPosition();
-			float distance = VectorOp::DotProduct(CentersDistance, CentersDistance);
+			float distance = CentersDistance.dot(CentersDistance);
 			float radiiSum = first->GetRadius() + second->GetRadius();
 			if (distance < radiiSum*radiiSum)
 			{
 				float compenetrarion = radiiSum - sqrtf(distance);
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				return new Collision(compenetrarion, CentersDistance*first->GetRadius(),CentersDistance);
 			}
 			return nullptr;
@@ -383,7 +384,7 @@ namespace CollisionAlgorithm
 			if (distance< second->GetRadius()*second->GetRadius()){
 				distance = second->GetRadius() - sqrtf(distance);
 				Vector3 CentersDistance = first->GetWorldPosition() - second->GetWorldPosition();
-				CentersDistance.Normalize();
+				CentersDistance.normalize();
 				return new Collision(distance, CentersDistance*second->GetRadius(), CentersDistance);
 			}
 

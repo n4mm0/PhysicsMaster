@@ -52,6 +52,8 @@ public:
 	Vector3& operator /=(const scalar k);
 	bool operator ==(Vector3 const &other) const;
 	bool operator !=(Vector3 const &other) const;
+	scalar& operator[](int index);
+	const scalar& operator[](int index) const;
 };
 
 typedef Vector3 Point3;

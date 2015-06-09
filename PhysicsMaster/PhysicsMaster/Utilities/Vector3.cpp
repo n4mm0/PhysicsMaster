@@ -259,3 +259,12 @@ bool Vector3::operator != (Vector3 const &other) const
 			vector[1] != other.getY() ||
 			vector[2] != other.getZ();
 }
+
+scalar& Vector3::operator[](int index)
+{
+	return vector[index];
+};
+const scalar& Vector3::operator[](int index) const
+{
+	return vector[index];
+};
