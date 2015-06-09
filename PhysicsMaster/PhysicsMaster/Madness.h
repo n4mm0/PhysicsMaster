@@ -2,6 +2,7 @@
 #include "Utilities\TypeList.h"
 #include "Collision\CollisionAlgorithms.h"
 
+//CUSTOM FOR COLLISIONDISPATCHER
 
 template<typename Class,typename L1, typename L2>
 struct AutomaticInsert
@@ -13,6 +14,7 @@ struct AutomaticInsert
 		AutomaticInsert<Class, L1, L2::Tail>::Init(d);
 	};
 };
+
 template<typename Class, typename L1>
 struct AutomaticInsert<Class,L1,L1>
 {
@@ -23,6 +25,8 @@ struct AutomaticInsert<Class,L1,L1>
 		AutomaticInsert<Class, L1::Tail, L1::Tail>::Init(d);
 	};
 };
+
+//BASE CASE
 template<typename Class, typename L1> 
 struct AutomaticInsert<Class, L1, NullType>
 {

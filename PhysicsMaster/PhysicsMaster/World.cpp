@@ -1,5 +1,6 @@
 #include "World.h"
 #include "RigidBody.h"
+#include "GameObject.h"
 #include "Collision\CollisionAlgorithms.h"
 #include "Madness.h"
 const Vector3 World::m_Gravity = Vector3(0.0f, -9.8f, 0.0f);
@@ -50,15 +51,20 @@ void World::Update()
 		(*iter)->ApplyGravity(m_Gravity);
 		(*iter)->UpdatePhysic(m_Dt);
 	}
+
+	//Collision Detect N vs N
 	bool MaxCollisionReached = false;
 	for (iter = m_RigidBodies.begin(); iter != end - 1&&!MaxCollisionReached; ++iter)
 	{
 		for (RigidBodyCollection::iterator second = iter + 1; second != end&&!MaxCollisionReached; ++second)
 		{
-			MaxCollisionReached = m_CollisionCollection.AddCollision(m_Dispatcher.Dispatch(*((*iter)->GetCollider()), *((*second)->GetCollider())), (*iter), (*second));
-
+			//THIS CRASH TO DO
+			MaxCollisionReached = m_CollisionCollection.AddCollision(m_Dispatcher.Dispatch(*((*iter)->GetOwner()->GetChild<Collider>()), *((*second)->GetOwner()->GetChild<Collider>())), (*iter), (*second));
 		}
 	}
+
+	//Collision Responce
+	m_CollisionCollection.HandleCollision();
 }
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)
@@ -70,6 +76,7 @@ RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Iner
 
 void World::DeleteRigidBody(RigidBody* _body)
 {
+
 	RigidBodyCollection::iterator iter;
 	for (iter = m_RigidBodies.begin(); iter != m_RigidBodies.end(); )
 	{

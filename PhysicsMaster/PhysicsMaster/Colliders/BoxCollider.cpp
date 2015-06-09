@@ -2,7 +2,7 @@
 #include "ColliderUtil.h"
 #include "RigidBody.h"
 
-const int BoxCollider::_BoxColliderType = ColliderType::TypeIndex::BOX;
+const int BoxCollider::_BoxColliderType = TL::IndexOf<ColliderType::ColliderTypeList, BoxCollider>::value;
 
 const int  BoxCollider::getType()
 {

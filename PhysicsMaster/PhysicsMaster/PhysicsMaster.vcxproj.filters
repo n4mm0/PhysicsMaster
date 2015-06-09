@@ -19,12 +19,6 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{e896466d-c442-4725-849f-f5d939da70d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Colliders">
-      <UniqueIdentifier>{bd00c172-b983-4113-8552-a04417ab8a07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Colliders">
-      <UniqueIdentifier>{9db3c356-0f69-4f17-a346-138ea0d7dca6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\TRASH">
       <UniqueIdentifier>{299c0e0e-ea43-42c9-b026-7772d99d96b4}</UniqueIdentifier>
     </Filter>
@@ -34,11 +28,20 @@
     <Filter Include="Source Files\Collision">
       <UniqueIdentifier>{1dabcd97-b5b0-4b77-9d49-e6395e2a2b32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{c52bbffc-bf88-45ae-9bbe-cbc11af25cf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{8b9de36f-4485-4b13-a7d5-26408263b306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components\Colliders">
+      <UniqueIdentifier>{bd00c172-b983-4113-8552-a04417ab8a07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\Colliders">
+      <UniqueIdentifier>{9db3c356-0f69-4f17-a346-138ea0d7dca6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RigidBody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -58,19 +61,19 @@
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Colliders\Collider.h">
-      <Filter>Header Files\Colliders</Filter>
+      <Filter>Header Files\Components\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\Quaternion.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Colliders\SphereCollider.h">
-      <Filter>Header Files\Colliders</Filter>
+      <Filter>Header Files\Components\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Colliders\BoxCollider.h">
-      <Filter>Header Files\Colliders</Filter>
+      <Filter>Header Files\Components\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Colliders\PlaneCollider.h">
-      <Filter>Header Files\Colliders</Filter>
+      <Filter>Header Files\Components\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\ColliderUtil.h">
       <Filter>Header Files\Utils</Filter>
@@ -93,12 +96,24 @@
     <ClInclude Include="Madness.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentList.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
@@ -117,22 +132,28 @@
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Colliders\SphereCollider.cpp">
-      <Filter>Source Files\Colliders</Filter>
+      <Filter>Source Files\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Colliders\BoxCollider.cpp">
-      <Filter>Source Files\Colliders</Filter>
+      <Filter>Source Files\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Colliders\PlaneCollider.cpp">
-      <Filter>Source Files\Colliders</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities\ColliderUtil.cpp">
-      <Filter>Source Files\Utils</Filter>
+      <Filter>Source Files\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Colliders\Collider.cpp">
-      <Filter>Source Files\Colliders</Filter>
+      <Filter>Source Files\Components\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="Collision\Collision.cpp">
       <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

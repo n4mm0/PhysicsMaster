@@ -1,7 +1,8 @@
 #pragma once
 #include "Vector3.h"
+#include "Component.h"
 
-class Collider abstract
+class Collider abstract :public Component
 {
 public:
 	int GetType() const;

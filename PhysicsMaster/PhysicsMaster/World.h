@@ -33,8 +33,5 @@ public:
 private:
 	RigidBodyCollection m_RigidBodies;
 	CollisionCollection m_CollisionCollection;
-
-//Remove only for debug
-public:
 	ColliderDispatcher m_Dispatcher;
 };

@@ -2,7 +2,8 @@
 #include "ColliderUtil.h"
 #include "RigidBody.h"
 
-const int PlaneCollider::_PlaneColliderType = ColliderType::TypeIndex::PLANE;
+const int PlaneCollider::_PlaneColliderType = TL::IndexOf<ColliderType::ColliderTypeList, PlaneCollider>::value;
+
 
 const int PlaneCollider::getType()
 {
