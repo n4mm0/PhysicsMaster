@@ -215,7 +215,7 @@ void renderScene()
 	drawFloor(-6.0f, 20.0f);
 	drawWallXZ(-20.0f, 6.0f, 20.0f);
 	drawWallXZ(20.0f, 6.0f, 20.0f);
-	drawCube(10.0f, 0.0f, 0.0f, 1.0f, 2.0f, 1.0f);
+	drawParallelepiped(10.0f, 0.0f, 0.0f, 1.0f, 2.0f, 1.0f);
 	drawSphere(-10.0f, 0.0f, 0.0f, 1.0f, 64, 64);
 
 	glutSwapBuffers();
