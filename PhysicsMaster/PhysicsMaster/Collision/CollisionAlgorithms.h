@@ -2,27 +2,42 @@
 #include "ColliderUtil.h"
 #include "Collision.h"
 #include "Quaternion.h"
+#include "Constants.h"
+#include "GameObject.h"
 //debug
 #include <iostream>
 
 namespace CollisionAlgorithm
 {
+	/*MAH
+	class Caster
+	{
+	public:
+		template<typename T, typename U>
+		static int Fire(Collider& first, Collider& second)
+		{
+			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
+		}
+
+	};
+	*/
 	template<class T, class U> class CollisionDetectionAlgorithm;
 
 	//Dummy needed for automatic
 	template<> 
-	class	CollisionDetectionAlgorithm<PlaneCollider,PlaneCollider>
+	class	CollisionDetectionAlgorithm<PlaneCollider,PlaneCollider> 
 	{
 	public:
+		
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		}
 	private:
-		static Collision* CollisionComputation(PlaneCollider* first, PlaneCollider* second)
+		static int CollisionComputation(PlaneCollider* first, PlaneCollider* second)
 		{
-			return nullptr;
+			return 0;
 		}
 	};
 
@@ -31,13 +46,13 @@ namespace CollisionAlgorithm
 	{
 	public:
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		}
 	private:
 		
-		static Collision* CollisionComputation(BoxCollider* first, BoxCollider* second)
+		static int CollisionComputation(BoxCollider* first, BoxCollider* second)
 		{
 			//Compute Collision on first axis system so first can be seen as an AABB
 			Vector3 CentersDistance(second->GetWorldPosition());
@@ -60,7 +75,7 @@ namespace CollisionAlgorithm
 			
 			if (SphereConsideration)
 			{
-				return nullptr;
+				return 0;
 			}
 			
 			//Compute Min and Max for first box
@@ -184,7 +199,11 @@ namespace CollisionAlgorithm
 				}
 				CentersDistance.normalize();
 				//Compute Compenetration
-				return new Collision(compenetration[0], Vertex[indexes[0]], CentersDistance);
+//				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+			//	collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				return 1;
 			}
 			SecondCenter = second->GetWorldPosition();
 			FirstCenter = first->GetWorldPosition();
@@ -302,10 +321,15 @@ namespace CollisionAlgorithm
 				}
 				CentersDistance.normalize();
 				//Compute Compenetration
-				return new Collision(compenetration[0], Vertex[indexes[0]], CentersDistance);
+//				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+			//	collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+
+				return 1;
 			}
 			//If i'm here FUCK THAT
-			return nullptr;
+			return 0;
 		};
 	};
 
@@ -314,25 +338,30 @@ namespace CollisionAlgorithm
 	{
 	public:
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		}
 
 	private:
 		
-		static Collision* CollisionComputation(SphereCollider* first, SphereCollider* second)
+		static int CollisionComputation(SphereCollider* first, SphereCollider* second)
 		{
 			Vector3 CentersDistance = first->GetWorldPosition() -  second->GetWorldPosition();
 			float distance = CentersDistance.dot(CentersDistance);
 			float radiiSum = first->GetRadius() + second->GetRadius();
 			if (distance < radiiSum*radiiSum)
 			{
-				float compenetrarion = radiiSum - sqrtf(distance);
+				float compenetration = radiiSum - sqrtf(distance);
 				CentersDistance.normalize();
-				return new Collision(compenetrarion, CentersDistance*first->GetRadius(),CentersDistance);
+				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(compenetration, CentersDistance*first->GetRadius(), CentersDistance);
+		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+
+//				collision.Init(compenetration, CentersDistance*first->GetRadius(),CentersDistance);
+				return 1;
 			}
-			return nullptr;
+			return 0;
 		};
 	};
 
@@ -341,18 +370,18 @@ namespace CollisionAlgorithm
 	{
 	public:
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
 		};
 		//for symmetry sake
 		template<>
-		static Collision* Fire<SphereCollider, BoxCollider>(Collider& first, Collider& second)
+		static int Fire<SphereCollider, BoxCollider>(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<BoxCollider*>(&second), static_cast<SphereCollider*>(&first));
-		}
+		};
 	private:
-		static Collision* CollisionComputation(BoxCollider* first, SphereCollider* second)
+		static int CollisionComputation(BoxCollider* first, SphereCollider* second)
 		{
 	
 			Vector3 SphereCenterInBoxSystem(second->GetWorldPosition());
@@ -402,10 +431,15 @@ namespace CollisionAlgorithm
 				distance = second->GetRadius() - sqrtf(distance);
 				Vector3 CentersDistance = first->GetWorldPosition() - second->GetWorldPosition();
 				CentersDistance.normalize();
-				return new Collision(distance, CentersDistance*second->GetRadius(), CentersDistance);
+				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(distance, CentersDistance*second->GetRadius(), CentersDistance);
+		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+
+//				collision.Init(distance, CentersDistance*second->GetRadius(), CentersDistance);
+				return 1;
 			}
 
-			return nullptr;
+			return 0;
 		};
 	};
 
@@ -414,21 +448,21 @@ namespace CollisionAlgorithm
 	{
 	public:
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
-		};
+		}
 		//for symmetry sake
 		template<>
-		static Collision* Fire<PlaneCollider, BoxCollider>(Collider& first, Collider& second)
+		static int Fire<PlaneCollider, BoxCollider>(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<BoxCollider*>(&second), static_cast<PlaneCollider*>(&first));
 		}
 	private:
-		static Collision* CollisionComputation(BoxCollider* first, PlaneCollider* second)
+		static int CollisionComputation(BoxCollider* first, PlaneCollider* second)
 		{
 			//TO DO
-			return nullptr;
+			return 0;
 		};
 	};
 
@@ -437,18 +471,18 @@ namespace CollisionAlgorithm
 	{
 	public:
 		template<typename T, typename U>
-		static Collision* Fire(Collider& first, Collider& second)
+		static int Fire(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
-		};
+		}
 		//for symmetry sake
 		template<>
-		static Collision* Fire<SphereCollider, PlaneCollider>(Collider& first, Collider& second)
+		static int Fire<SphereCollider, PlaneCollider>(Collider& first, Collider& second)
 		{
 			return CollisionComputation(static_cast<PlaneCollider*>(&second), static_cast<SphereCollider*>(&first));
 		}
 	private:
-		static Collision* CollisionComputation(PlaneCollider* first, SphereCollider* second)
+		static int CollisionComputation(PlaneCollider* first, SphereCollider* second )
 		{
 
 			Vector3 SphereCenter(second->GetWorldPosition());
@@ -456,10 +490,13 @@ namespace CollisionAlgorithm
 
 			//TO DO
 			if (distance< second->GetRadius()*second->GetRadius()){
-				return new Collision(distance, SphereCenter, first->GetPlaneNormal());
+				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(distance, SphereCenter, first->GetPlaneNormal());
+		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				//collision.Init(distance, SphereCenter, first->GetPlaneNormal());
+				return 1;
 			}
-
-			return nullptr;
+			return 0;
 		};
 	};
 }

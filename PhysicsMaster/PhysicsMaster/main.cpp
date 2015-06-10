@@ -1,9 +1,10 @@
 //GRAFICA FATTA DI MERDA SENZA SBATTI
 #define _USE_MATH_DEFINES
-
+#include "Singleton.h"
 #include <gl\GLUT.H>
 #include <math.h>
 #include "World.h"
+#include "RigidBody.h"
 int width = 600;
 int height = 600;
 
@@ -226,11 +227,14 @@ void renderIdleScene()
 	glutPostRedisplay();
 }
 
+
 int main(int argc, char **argv)
 {
+	/*---TEST---*/
 	World w;
-//	SphereCollider* c = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
-//	w.m_Dispatcher.Dispatch(*c, *c);
+	SphereCollider* c = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
+	w.m_Dispatcher.Dispatch(*c, *c);
+	/*---END TEST---*/
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
 	glutInitWindowSize(width, height);

@@ -79,9 +79,11 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentList.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="Madness.h" />
     <ClInclude Include="Matrici.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Utilities\ColliderUtil.h" />
     <ClInclude Include="Utilities\Dispatcher.h" />

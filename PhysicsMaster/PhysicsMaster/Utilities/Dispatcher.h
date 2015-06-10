@@ -15,9 +15,10 @@ public:
 	template<class LeftArg,class RightArg>
 	void Add(CallbackType funcPtr)
 	{
-		std::cout << LeftArg::getType() << " - " << RightArg::getType() << std::endl;
+		
 		int leftIndex = LeftArg::getType();
 		int rightIndex = RightArg::getType();
+		std::cout << leftIndex << " - " << rightIndex << std::endl;
 		//with upper triangular matrix 
 		//_callbacks[leftIndex + rightIndex] = funcPtr;
 		

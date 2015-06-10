@@ -30,7 +30,7 @@ void RigidBody::UpdatePhysic(float _Dt)
 	Temp = m_Velocity * _Dt;
 	
 	//m_Position += Temp;
-	GetOwner()->GetChild<Transform>()->EditPosition() += Temp;
+	EditOwner()->EditChild<Transform>()->EditPosition() += Temp;
 
 	//Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
 	//QuaternionRotateT(m_Rotation, m_AngularMomentum, m_AngularVelocity);
@@ -49,10 +49,10 @@ void RigidBody::UpdatePhysic(float _Dt)
 	QuaternionRotate(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularVelocity, m_AngularVelocity);
 
 	// m_Rotation *= RotQuat;
-	GetOwner()->GetChild<Transform>()->EditRotation() *= RotQuat;
+	EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
 	
 	//m_Rotation.normalize();
-	GetOwner()->GetChild<Transform>()->EditRotation().normalize();
+	EditOwner()->EditChild<Transform>()->EditRotation().normalize();
 	//m_RotationMatrix = m_Rotation.toMatrix();
 
 	m_ForceSum = Vector3::Zero;

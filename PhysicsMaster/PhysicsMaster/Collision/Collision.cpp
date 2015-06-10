@@ -3,14 +3,20 @@
 #include <iostream>
 #include "World.h"
 
-Collision::Collision(float deformation, const Vector3& pointOfApplication, const Vector3& normal)
-: m_deformation(deformation), m_pointOfApplication(pointOfApplication), m_normal(normal)
+Collision::Collision()
 {
-}
+};
+void Collision::Init(float deformation, const Vector3& pointOfApplication, const Vector3& normal)
+{
+	m_deformation = deformation;
+	m_pointOfApplication=pointOfApplication; 
+	m_normal=normal;
+};
 
 void Collision::ApplyCollision()
 {
 	//TO DO CATTANI STYLE
+	
 	float f;
 	float vn;
 	float modVtang;

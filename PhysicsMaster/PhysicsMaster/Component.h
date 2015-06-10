@@ -12,6 +12,10 @@ public:
 	{
 		return m_oOwner;
 	};
+	GameObject* EditOwner() 
+	{
+		return m_oOwner;
+	};
 private:
 	GameObject* m_oOwner;
 };

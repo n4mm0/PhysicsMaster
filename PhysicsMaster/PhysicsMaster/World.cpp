@@ -3,15 +3,21 @@
 #include "GameObject.h"
 #include "Collision\CollisionAlgorithms.h"
 #include "Madness.h"
+
+
 const Vector3 World::m_Gravity = Vector3(0.0f, -9.8f, 0.0f);
 const float World::m_Dt = 0.01f;
 
 World::World()
 {
-	//Initalization
+	typedef AutomaticInsert<ColliderDispatcher, CollidersType, CollidersType, CollisionAlgorithm::CollisionDetectionAlgorithm> DispatcherInitializer;
+	
+	//Initalization 
+	//Maybe not so Singleton need test
+	CollisionList::Init();
 
 	//Automatic initialization of Double dispatch 
-	AutomaticInsert<ColliderDispatcher, CollidersType,CollidersType>::Init(m_Dispatcher);
+	DispatcherInitializer::Init(m_Dispatcher);
 	
 	//NO MORE HUE HUE
 	/*m_Dispatcher.Add<BoxCollider, BoxCollider>(CollisionAlgorithm::CollisionDetectionAlgorithm<BoxCollider, BoxCollider>::Fire);
@@ -37,6 +43,7 @@ World::~World()
 //Update Physic World
 void World::Update()
 {
+	
 	//Riassunto in base alla funzione IntegraStato() di Cattani...
 
 	//Reset Forza e Momento risultanti (di tutti i rigidbody?)	- CHECK
@@ -54,17 +61,22 @@ void World::Update()
 
 	//Collision Detect N vs N
 	bool MaxCollisionReached = false;
+	int tmp = 0;
 	for (iter = m_RigidBodies.begin(); iter != end - 1&&!MaxCollisionReached; ++iter)
 	{
 		for (RigidBodyCollection::iterator second = iter + 1; second != end&&!MaxCollisionReached; ++second)
 		{
-			//THIS CRASH TO DO
-			MaxCollisionReached = m_CollisionCollection.AddCollision(m_Dispatcher.Dispatch(*((*iter)->GetOwner()->GetChild<Collider>()), *((*second)->GetOwner()->GetChild<Collider>())), (*iter), (*second));
+			//THIS LEAD TO CRASH TO DO
+			tmp = m_Dispatcher.Dispatch(*((*iter)->EditOwner()->EditChild<Collider>()), *((*second)->EditOwner()->EditChild<Collider>()));
+			CollisionList::GetSingleton().EditCollision().SetBodies(*iter, *second);
+			CollisionList::GetSingleton().EditCollisionDetected() += tmp;
+			MaxCollisionReached = CollisionList::GetSingleton().MaxCollisionNumberReached();
 		}
 	}
-
+	
 	//Collision Responce
-	m_CollisionCollection.HandleCollision();
+	CollisionList::GetSingleton().HandleCollision();
+//	m_CollisionCollection.HandleCollision();
 }
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)

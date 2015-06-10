@@ -6,10 +6,13 @@ class RigidBody;
 class Collision
 {
 public:
-	Collision(float deformation, const Vector3& pointOfApplication, const Vector3& normal);
+	Collision();
+	void Init(float deformation, const Vector3& pointOfApplication, const Vector3& normal);
 	void SetBodies(RigidBody* first,RigidBody* second);
 	void ApplyCollision();
 private:
+	Collision(const Collision& other);
+	Collision& operator=(const Collision& other);
 	RigidBody* m_firstObj;
 	RigidBody* m_secondObj;
 	float m_deformation;

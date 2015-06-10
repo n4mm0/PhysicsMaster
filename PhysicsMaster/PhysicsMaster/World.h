@@ -6,18 +6,16 @@
 #include "Collision\CollisionHandler.h"
 #include "Utilities\ColliderUtil.h"
 #include "Utilities\Dispatcher.h"
-
+#include "Collision\CollisionAlgorithms.h"
+#include "Constants.h"
 class RigidBody;
 
 class World
 {
 	typedef std::vector<RigidBody*> RigidBodyCollection;
-
 	typedef ColliderType::ColliderTypeList CollidersType;
-	typedef CollisionHandler<20> CollisionCollection;
-
-	//Need Change
-	typedef Dispatcher<Collider, CollidersType, Collision*> ColliderDispatcher;
+	typedef Dispatcher<Collider, CollidersType, int> ColliderDispatcher;
+	typedef Constants::CollisionsCollection CollisionList;
 public:
 	World();
 	~World();
@@ -32,6 +30,9 @@ public:
 
 private:
 	RigidBodyCollection m_RigidBodies;
-	CollisionCollection m_CollisionCollection;
+	//CollisionCollection m_CollisionCollection;
+
+	//test
+public:
 	ColliderDispatcher m_Dispatcher;
 };
