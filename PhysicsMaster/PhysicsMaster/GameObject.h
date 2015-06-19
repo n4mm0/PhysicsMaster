@@ -3,6 +3,7 @@
 #include "Utilities\TypeList.h"
 #include "ComponentList.h"
 #include "Transform.h"
+
 class Component;
 
 
@@ -31,13 +32,12 @@ public:
 	GameObject()
 	{
 		++m_iID;
-		m_vpChilds.reserve(Components::ComponentListLength::value);
-		AddChild<Transform>( Transform(Vector3::Zero, Quaternion(0,0,0,0) ) );
+		AddChild<Transform>( Transform(Vector3::Zero, Quaternion(1,0,0,0) ) );
 	};
 
 private:
 	static int m_iID;
 	GameObject(const GameObject& other);
 	GameObject& operator=(const GameObject& other);
-	std::vector<Component*> m_vpChilds;
+	Component* m_vpChilds[Components::ComponentListLength::value];
 };
