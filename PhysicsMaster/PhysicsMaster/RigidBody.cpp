@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include <iostream>
 
-RigidBody::RigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID) :/* m_Position(_Position), */m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID)
+RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, float _Mass, int _ID) :/* m_Position(_Position), */m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID)
 {
 	m_Velocity = Vector3::Zero;
 	m_AngularVelocity = Vector3::Zero;

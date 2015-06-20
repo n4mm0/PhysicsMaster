@@ -118,15 +118,15 @@ Matrix4x4 Quaternion::toMatrix() const
 	
 	Matrix4x4 result;
 
-	result.setElementAt(0, 0, 1.0f - (2.0f * Y2) - (2.0f * Z2));
-	result.setElementAt(0, 1, (2.0f * XY) - (2.0f * ZW));
-	result.setElementAt(0, 2, (2.0f * XZ) + (2.0f * YW));
-	result.setElementAt(1, 0, (2.0f * XY) + (2.0f * ZW));
-	result.setElementAt(1, 1, 1.0f - (2.0f * X2) - (2.0f * Z2));
-	result.setElementAt(1, 2, (2.0f * YZ) - (2.0f * XW));
-	result.setElementAt(2, 0, (2.0f * XZ) - (2.0f * YW));
-	result.setElementAt(2, 1, (2.0f * YZ) - (2.0f * XW));
-	result.setElementAt(2, 2, 1.0f - (2.0f * X2) - (2.0f * Y2));
+	result.setElementAt(0, 0, 1.0f - (2.0f * (Y2 - Z2)));
+	result.setElementAt(0, 1, (2.0f * (XY - ZW)));
+	result.setElementAt(0, 2, (2.0f * (XZ + YW)));
+	result.setElementAt(1, 0, (2.0f * (XY + ZW)));
+	result.setElementAt(1, 1, 1.0f - (2.0f * (X2 - Z2)));
+	result.setElementAt(1, 2, (2.0f * (YZ - XW)));
+	result.setElementAt(2, 0, (2.0f * (XZ - YW)));
+	result.setElementAt(2, 1, (2.0f * (YZ - XW)));
+	result.setElementAt(2, 2, 1.0f - (2.0f * (X2 - Y2)));
 
 	return result;
 }

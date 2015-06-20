@@ -1,12 +1,35 @@
 //GRAFICA FATTA DI MERDA SENZA SBATTI
 #define _USE_MATH_DEFINES
-#include "Singleton.h"
 #include <gl\GLUT.H>
 #include <math.h>
+#include "Singleton.h"
 #include "World.h"
 #include "RigidBody.h"
+#include "GameObject.h"
+#include <iostream>>
+
 int width = 600;
 int height = 600;
+
+GameObject gameObj[2];
+
+Transform *transform1 = gameObj[0].EditChild<Transform>();
+Vector3 position1 = transform1->EditPosition();
+Matrix4x4 rotationMatrix1 = transform1->GetRotationMatrix();
+GLfloat rotationGL1[16];
+
+Transform *transform2 = gameObj[1].EditChild<Transform>();
+Vector3 position2 = transform2->EditPosition();
+Matrix4x4 rotationMatrix2 = transform2->GetRotationMatrix();
+GLfloat rotationGL2[16];
+
+World w;
+
+void MatrixToGLFloat(Matrix4x4 &matrix, GLfloat *m)
+{
+	for (int index = 0; index < 16; ++index)
+		m[index] = matrix.getElementAt((index / 4), (index % 4));
+}
 
 void processKeys(unsigned char key, int x, int y)
 {
@@ -37,14 +60,16 @@ void changeSize(int w, int h)
 	glTranslatef(0, 0, -20);
 }
 
-void drawSphere(float x, float y, float z, float radius, int lats, int longs)
+void drawSphere(Vector3 &position, Matrix4x4 rotation, float radius, int lats, int longs)
 {
 	GLfloat blue[] = { 0.4f, 0.4f, 1.0f, 1.0f };
 	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glTranslatef(x, y, z);
+	glTranslatef(position.getX(), position.getY(), position.getZ());
+	MatrixToGLFloat(rotation, rotationGL1);
+	glMultMatrixf(rotationGL1);
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, blue);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
@@ -78,14 +103,16 @@ void drawSphere(float x, float y, float z, float radius, int lats, int longs)
 	glPopMatrix();
 }
 
-void drawParallelepiped(float x, float y, float z, float lX, float lY, float lZ)
+void drawParallelepiped(Vector3 &position, Matrix4x4 rotation, float lX, float lY, float lZ)
 {
 	GLfloat green[] = { 0.2f, 0.8f, 0.6f, 1.0f };
 	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glTranslatef(x, y, z);
+	glTranslatef(position.getX() + 2.0f, position.getY(), position.getZ());
+	MatrixToGLFloat(rotation, rotationGL2);
+	glMultMatrixf(rotationGL2);
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, green);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
@@ -212,18 +239,26 @@ void renderScene()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, sLite);
 	glLightfv(GL_LIGHT0, GL_POSITION, posLight);
 
-	drawFloor(6.0f, 20.0f);
+	//drawFloor(6.0f, 20.0f);
 	drawFloor(-6.0f, 20.0f);
-	drawWallXZ(-20.0f, 6.0f, 20.0f);
+	/*drawWallXZ(-20.0f, 6.0f, 20.0f);
 	drawWallXZ(20.0f, 6.0f, 20.0f);
-	drawParallelepiped(10.0f, 0.0f, 0.0f, 1.0f, 2.0f, 1.0f);
-	drawSphere(-10.0f, 0.0f, 0.0f, 1.0f, 64, 64);
+	*/
+	drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
+	drawParallelepiped(position2, rotationMatrix2, 1.0f, 2.0f, 1.0f);
 
 	glutSwapBuffers();
 }
 
 void renderIdleScene()
 {
+	w.Update();
+	position1 = gameObj[0].EditChild<Transform>()->EditPosition();
+	position2 = gameObj[1].EditChild<Transform>()->EditPosition();
+	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(1, 1, 1), Vector3(5, 10, 2));
+
+	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
+	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
 	glutPostRedisplay();
 }
 
@@ -231,9 +266,22 @@ void renderIdleScene()
 int main(int argc, char **argv)
 {
 	/*---TEST---*/
-	World w;
-	SphereCollider* c = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
-	w.m_Dispatcher.Dispatch(*c, *c);
+	
+	RigidBody* r1 = new RigidBody(Vector3(1,1,1),10,0);
+	RigidBody* r2 = new RigidBody(Vector3(1, 1, 1),15,1);
+		
+	SphereCollider* c1 = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
+	BoxCollider* c2 = new BoxCollider(Vector3(0, 0, 0), Vector3(0, 0, 0),Quaternion(1,0,0,0));
+
+	gameObj[0].AddChild<RigidBody>(*r1);
+	gameObj[1].AddChild<RigidBody>(*r2);
+
+	gameObj[0].AddChild<Collider>(*c1);
+	gameObj[1].AddChild<Collider>(*c2);
+
+	w.addRigidBody(r1);
+	w.addRigidBody(r2);
+
 	/*---END TEST---*/
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);

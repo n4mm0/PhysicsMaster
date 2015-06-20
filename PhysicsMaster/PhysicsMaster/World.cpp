@@ -5,7 +5,7 @@
 #include "Madness.h"
 
 
-const Vector3 World::m_Gravity = Vector3(0.0f, -9.8f, 0.0f);
+const Vector3 World::m_Gravity = Vector3(0.0f, 0.0f, 0.0f);
 const float World::m_Dt = 0.01f;
 
 World::World()
@@ -81,7 +81,7 @@ void World::Update()
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)
 {
-	RigidBody* newRB = new RigidBody(_Position, _Inertia, _Mass, _ID);
+	RigidBody* newRB = new RigidBody(/*_Position,*/ _Inertia, _Mass, _ID);
 	m_RigidBodies.push_back(newRB);
 	return newRB;
 }
@@ -108,3 +108,9 @@ void World::DeleteRigidBody(RigidBody* _body)
 
 	delete _body; //Destroy the body, regardless if it was inside the vector
 }
+
+
+void World::addRigidBody(RigidBody* body)
+{
+	m_RigidBodies.push_back(body);
+};

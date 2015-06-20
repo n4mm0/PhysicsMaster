@@ -32,7 +32,7 @@ public:
 	GameObject()
 	{
 		++m_iID;
-		AddChild<Transform>( Transform(Vector3::Zero, Quaternion(1,0,0,0) ) );
+		AddChild<Transform>(*(new Transform(Vector3(0.0f, 0.0f, 0.0f), Quaternion(1.0f, 0.0f, 0.0f, 0.0f))));
 	};
 
 private:

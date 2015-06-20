@@ -24,7 +24,7 @@ public:
 
 	RigidBody* CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID);
 	void DeleteRigidBody(RigidBody* _body);
-
+	void addRigidBody(RigidBody* body);
 	static const Vector3 m_Gravity;
 	static const float m_Dt;
 

@@ -5,5 +5,5 @@ namespace Constants
 	static const int MAX_COLLISION = 20;
 	typedef CollisionHandler<Constants::MAX_COLLISION> CollisionsCollection;
 
-	
+	const float DeltaTime = 0.01f;
 };
