@@ -462,53 +462,19 @@ namespace CollisionAlgorithm
 	private:
 		static int CollisionComputation(BoxCollider* first, PlaneCollider* second)
 		{
-			
-			Vector3 CentersDistance1 = first->GetWorldPosition() - second->GetWorldPosition();
-			Vector3 ClosestPoint(second->GetPlaneNormal()*-1.0f);
-			QuaternionRotate(first->GetRotation(), ClosestPoint, ClosestPoint);
-			std::cout << "RotatedNormal(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
-
-			
-			ClosestPoint[0] = ClosestPoint[0] * first->GetHalfSize()[0];
-			ClosestPoint[1] = ClosestPoint[1] * first->GetHalfSize()[1];
-			ClosestPoint[2] = ClosestPoint[2] * first->GetHalfSize()[2];
-
-			std::cout << "CPointHalf(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
-
-			ClosestPoint += first->GetWorldPosition();
-
-			std::cout << "CPointPos(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
-
-			CentersDistance1 = ClosestPoint - second->GetWorldPosition();
-			float distance1 = CentersDistance1.dot(second->GetPlaneNormal());
-			std::cout <<"distance: " <<distance1 << std::endl;
-			/*
-			Vector3 PointOnPlane(second->GetWorldPosition());
-			QuaternionRotate(first->GetRotation(), PointOnPlane, PointOnPlane);
-			Vector3 CentersDistance = first->GetWorldPosition() - PointOnPlane;
-			Vector3 RotatedNormal(second->GetPlaneNormal());
-			QuaternionRotate(first->GetRotation(), RotatedNormal, RotatedNormal);
-		
-			float distance = CentersDistance.dot(RotatedNormal);
-			std::cout <<"distanceR: "<< distance << std::endl;
-
-			Vector3 da(first->GetWorldPosition());
-			Vector3 aa(second->GetWorldPosition());
-			QuaternionRotateT(first->GetRotation(), da, da);
-			QuaternionRotate(first->GetRotation(), aa, aa);
-			CentersDistance1 = da - aa;
-			float distance2 = CentersDistance1.dot(RotatedNormal);
-			std::cout << "distanceR2: " << distance2 << std::endl;
-
-			system("pause");
-			*/
-			if (distance1 < 0)
+			Vector3 PlaneNormal(second->GetPlaneNormal());		
+			float Distance = (first->GetWorldPosition()-second->GetWorldPosition()).dot(PlaneNormal);
+			QuaternionRotate(first->GetRotation(), PlaneNormal, PlaneNormal);
+			const Vector3& HalfSize = first->GetHalfSize();
+			float Radius = abs(HalfSize[0] * PlaneNormal[0]) + abs(HalfSize[1] * PlaneNormal[1]) + abs(HalfSize[2] * PlaneNormal[2]);
+			std::cout << "Radius: " << Radius << std::endl;
+			std::cout << "Distance: " << abs(Distance) << std::endl;
+			if (abs(Distance)<Radius)
 			{
-
-				float compenetration = first->GetHalfSize()[0] - distance1;
-				CentersDistance1.normalize();
+				Distance -= Radius;
+				Distance *= -1.0f;
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(compenetration, ClosestPoint, second->GetPlaneNormal());
+				collision.Init(Distance, (first->GetWorldPosition() - second->GetPlaneNormal()*Radius), second->GetPlaneNormal());
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
