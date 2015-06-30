@@ -235,7 +235,7 @@ void QuaternionRotateT(const Quaternion& rot, const Vector3& vec,Vector3& result
 	
 	result.set(
 		(1.0f - (2.0f * Y2) - (2.0f * Z2))*vec.getX() + ((2.0f * XY) + (2.0f * ZW))*vec.getY() + ((2.0f * XZ) - (2.0f * YW))*vec.getZ(),
-		((2.0f * XY) - (2.0f * ZW))*vec.getX() + (1.0f - (2.0f * X2) - (2.0f * Z2))*vec.getY() + ((2.0f * YZ) - (2.0f * XW))*vec.getZ(),
+		((2.0f * XY) - (2.0f * ZW))*vec.getX() + (1.0f - (2.0f * X2) - (2.0f * Z2))*vec.getY() + ((2.0f * YZ) + (2.0f * XW))*vec.getZ(),
 		((2.0f * XZ) + (2.0f * YW))*vec.getX() + ((2.0f * YZ) - (2.0f * XW))*vec.getY() + (1.0f - (2.0f * X2) - (2.0f * Y2))*vec.getZ()
 	);
 }
@@ -256,6 +256,6 @@ void QuaternionRotate(const Quaternion& rot,const Vector3& vec ,Vector3& result)
 	result.set(
 		(1.0f - (2.0f * Y2) - (2.0f * Z2))*vec.getX() + ((2.0f * XY) - (2.0f * ZW))*vec.getY() + ((2.0f * XZ) + (2.0f * YW))*vec.getZ(),
 		((2.0f * XY) + (2.0f * ZW))*vec.getX() + (1.0f - (2.0f * X2) - (2.0f * Z2))*vec.getY() + ((2.0f * YZ) - (2.0f * XW))*vec.getZ(),
-		((2.0f * XZ) - (2.0f * YW))*vec.getX() + ((2.0f * YZ) - (2.0f * XW))*vec.getY() + (1.0f - (2.0f * X2) - (2.0f * Y2))*vec.getZ()
+		((2.0f * XZ) - (2.0f * YW))*vec.getX() + ((2.0f * YZ) + (2.0f * XW))*vec.getY() + (1.0f - (2.0f * X2) - (2.0f * Y2))*vec.getZ()
 	);
 }

@@ -55,7 +55,7 @@ void Collision::ApplyCollision()
 	std::cout << "After Collision Handling" << std::endl;
 	std::cout << "Point Of Application: " << m_pointOfApplication[0] << " " << m_pointOfApplication[1] << " " << m_pointOfApplication[2] << std::endl;
 	std::cout << "Collision Force: " << "( " << m_normal.getX() << ", " << m_normal.getY() << ", " << m_normal.getZ() << ") " << std::endl;
-	system("pause");
+	//system("pause");
 };
 
 void Collision::SetBodies(RigidBody*first,RigidBody*second)

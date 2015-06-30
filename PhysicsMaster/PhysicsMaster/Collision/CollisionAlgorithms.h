@@ -45,83 +45,82 @@ namespace CollisionAlgorithm
 		static int CollisionComputation(BoxCollider* first, BoxCollider* second)
 		{
 			//Compute Collision on first axis system so first can be seen as an AABB
-			Vector3 CentersDistance(second->GetWorldPosition());
-			Vector3 FirstCenter(first->GetWorldPosition());
-			Vector3 SecondCenter(CentersDistance);
-			CentersDistance -= FirstCenter;
-			CentersDistance *= -1.0f;
-		
-			//TO DO
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondCenter, SecondCenter);
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
 			
+			const Vector3& FirstCenter=first->GetWorldPosition();
+			const Vector3& SecondCenter=second->GetWorldPosition();
+			Vector3 CentersDistance;
+			CentersDistance = FirstCenter - SecondCenter;
+			
+			/*
 			Vector3 radiiSum(first->GetHalfSize());
 			radiiSum += second->GetHalfSize();
-			
+
 			//SphereTest for early fast reject
 			bool SphereConsideration = (CentersDistance.getX()*CentersDistance.getX()) < (radiiSum.getX()*radiiSum.getX()) &&
 				(CentersDistance.getY()*CentersDistance.getY()) < (radiiSum.getY()*radiiSum.getY()) &&
 				(CentersDistance.getZ()*CentersDistance.getZ()) < (radiiSum.getZ()*radiiSum.getZ()) && (CentersDistance.sqrMagnitude()) < (radiiSum.sqrMagnitude());
 			
-			if (SphereConsideration)
+			if (!SphereConsideration)
 			{
+				std::cout << "SphereRejection" << std::endl;
 				return 0;
-			}
-			
+			}*/
+
 			//Compute Min and Max for first box
 			Vector3 Min(FirstCenter - first->GetHalfSize());
 			Vector3 Max(FirstCenter + first->GetHalfSize());
-			//BHO
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
-			Vector3 SecondHalfSizeInFistSystem(second->GetHalfSize());
-			//TO DO
-			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
+			
+			//second box in first obj space
+			Vector3 CenterInOtherSystem(SecondCenter);
+			Vector3 HalfSizeInOtherSystem(second->GetHalfSize());
+		
+			QuaternionRotate(first->GetRotation(), CenterInOtherSystem, CenterInOtherSystem);
+			QuaternionRotate(second->GetRotation(), HalfSizeInOtherSystem, HalfSizeInOtherSystem);
+			QuaternionRotate(first->GetRotation(), HalfSizeInOtherSystem, HalfSizeInOtherSystem);
 
 			//Second vs first
 			//Optimization TO DO
 			//0 1 3 7 6 4 5 2
 			Vector3 Vertex[8];
-			Vertex[0] = (SecondCenter);
-			Vertex[0][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[0][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[0][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[0] = (CenterInOtherSystem);
+			Vertex[0][0] += HalfSizeInOtherSystem[0];
+			Vertex[0][1] += HalfSizeInOtherSystem[1];
+			Vertex[0][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[1] = (SecondCenter);
-			Vertex[1][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[1][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[1][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[1] = (CenterInOtherSystem);
+			Vertex[1][0] += HalfSizeInOtherSystem[0];
+			Vertex[1][1] += HalfSizeInOtherSystem[1];
+			Vertex[1][2] -= HalfSizeInOtherSystem[2];
 
-			Vertex[2] = (SecondCenter);
-			Vertex[2][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[2][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[2][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[2] = (CenterInOtherSystem);
+			Vertex[2][0] += HalfSizeInOtherSystem[0];
+			Vertex[2][1] -= HalfSizeInOtherSystem[1];
+			Vertex[2][2] += HalfSizeInOtherSystem[2];
 			
-			Vertex[3] = (SecondCenter);
-			Vertex[3][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[3][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[3][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[3] = (CenterInOtherSystem);
+			Vertex[3][0] += HalfSizeInOtherSystem[0];
+			Vertex[3][1] -= HalfSizeInOtherSystem[1];
+			Vertex[3][2] -= HalfSizeInOtherSystem[2];
 
-			Vertex[4] = (SecondCenter);
-			Vertex[4][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[4][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[4][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[4] = (CenterInOtherSystem);
+			Vertex[4][0] -= HalfSizeInOtherSystem[0];
+			Vertex[4][1] += HalfSizeInOtherSystem[1];
+			Vertex[4][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[5] = (SecondCenter);
-			Vertex[5][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[5][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[5][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[5] = (CenterInOtherSystem);
+			Vertex[5][0] -= HalfSizeInOtherSystem[0];
+			Vertex[5][1] += HalfSizeInOtherSystem[1];
+			Vertex[5][2] -= HalfSizeInOtherSystem[2];
 		
-			Vertex[6] = (SecondCenter);
-			Vertex[6][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[6][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[6][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[6] = (CenterInOtherSystem);
+			Vertex[6][0] -= HalfSizeInOtherSystem[0];
+			Vertex[6][1] -= HalfSizeInOtherSystem[1];
+			Vertex[6][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[7] = (SecondCenter);
-			Vertex[7][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[7][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[7][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[7] = (CenterInOtherSystem);
+			Vertex[7][0] -= HalfSizeInOtherSystem[0];
+			Vertex[7][1] -= HalfSizeInOtherSystem[1];
+			Vertex[7][2] -= HalfSizeInOtherSystem[2];
 			
 			//Compute points inside
 			int indexes[8];
@@ -134,7 +133,7 @@ namespace CollisionAlgorithm
 					Vertex[i][0] < Max[0] && Vertex[i][1] < Max[1] && Vertex[i][2] < Max[2])
 				{
 					indexes[pointsInside] = i;
-					compenetration[pointsInside] = (Vertex[i] - first->GetWorldPosition()).sqrMagnitude();
+					compenetration[pointsInside] = (Vertex[i] - FirstCenter).sqrMagnitude();
 					++pointsInside;
 				}
 			}
@@ -149,6 +148,7 @@ namespace CollisionAlgorithm
 				//centroid of points which is the point of collision impact
 				for (unsigned int i = 1; i < pointsInside; ++i)
 				{
+					Vertex[indexes[i]] *= compenetration[i];
 					Vertex[indexes[0]][0] += Vertex[indexes[i]][0];
 					Vertex[indexes[0]][1] += Vertex[indexes[i]][1];
 					Vertex[indexes[0]][2] += Vertex[indexes[i]][2];
@@ -160,94 +160,81 @@ namespace CollisionAlgorithm
 				Vertex[indexes[0]][2] /= CompenetrationSum;
 
 				//Compute normal by clamping on max value
+				//function to do
+				//Clamp(CentersDistance);
 				CentersDistance.normalize();
-				float x, y, z;
-				x = CentersDistance.getX();
-				y = CentersDistance.getY();
-				z = CentersDistance.getZ();
-				if (x > y)
-				{
-					if (x > z)
-					{
-						CentersDistance.set(x, 0, 0);
-					}
-					else
-					{
-						CentersDistance.set(0, 0, z);
-					}
-				}
-				else
-				{
-					if (y > z)
-					{
-						CentersDistance.set(0, y, 0);
-					}
-					else
-					{
-						CentersDistance.set(0, 0, z);
-					}
-				}
+				float max = CentersDistance[0];
+				max = abs(max)>CentersDistance[1] ? max : CentersDistance[1];
+				max = abs(max)>CentersDistance[2] ? max : CentersDistance[2];
+	
+				CentersDistance[0] = CentersDistance[0] == max ? max : 0;
+				CentersDistance[1] = CentersDistance[1] == max ? max : 0;
+				CentersDistance[2] = CentersDistance[2] == max ? max : 0;
 				CentersDistance.normalize();
-				//Compute Compenetration
-				//collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+				std::cout << "Box Collision" << std::endl;
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
-				//collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
-			SecondCenter = second->GetWorldPosition();
-			FirstCenter = first->GetWorldPosition();
+		
+			//First Against Second
 			//TO DO
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
-
-			Min = SecondCenter - second->GetHalfSize();
-			Max = SecondCenter-second->GetHalfSize();
-			SecondHalfSizeInFistSystem=first->GetHalfSize();
 			
+			Min = SecondCenter - second->GetHalfSize();
+			Max = SecondCenter - second->GetHalfSize();
+			
+			CenterInOtherSystem = FirstCenter;
+			HalfSizeInOtherSystem = first->GetHalfSize();
+
+			QuaternionRotate(second->GetRotation(), CenterInOtherSystem, CenterInOtherSystem);
+			QuaternionRotate(first->GetRotation(), HalfSizeInOtherSystem, HalfSizeInOtherSystem);
+			QuaternionRotate(second->GetRotation(), HalfSizeInOtherSystem, HalfSizeInOtherSystem);
+
 			//TO DO
 			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
 			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
 
 			//first vs Second
-			Vertex[0] = (FirstCenter);
-			Vertex[0][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[0][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[0][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[0] = (CenterInOtherSystem);
+			Vertex[0][0] += HalfSizeInOtherSystem[0];
+			Vertex[0][1] += HalfSizeInOtherSystem[1];
+			Vertex[0][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[1] = (FirstCenter);
-			Vertex[1][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[1][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[1][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[1] = (CenterInOtherSystem);
+			Vertex[1][0] += HalfSizeInOtherSystem[0];
+			Vertex[1][1] += HalfSizeInOtherSystem[1];
+			Vertex[1][2] -= HalfSizeInOtherSystem[2];
 
-			Vertex[2] = (FirstCenter);
-			Vertex[2][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[2][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[2][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[2] = (CenterInOtherSystem);
+			Vertex[2][0] += HalfSizeInOtherSystem[0];
+			Vertex[2][1] -= HalfSizeInOtherSystem[1];
+			Vertex[2][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[3] = (FirstCenter);
-			Vertex[3][0] += SecondHalfSizeInFistSystem[0];
-			Vertex[3][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[3][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[3] = (CenterInOtherSystem);
+			Vertex[3][0] += HalfSizeInOtherSystem[0];
+			Vertex[3][1] -= HalfSizeInOtherSystem[1];
+			Vertex[3][2] -= HalfSizeInOtherSystem[2];
 
-			Vertex[4] = (FirstCenter);
-			Vertex[4][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[4][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[4][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[4] = (CenterInOtherSystem);
+			Vertex[4][0] -= HalfSizeInOtherSystem[0];
+			Vertex[4][1] += HalfSizeInOtherSystem[1];
+			Vertex[4][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[5] = (FirstCenter);
-			Vertex[5][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[5][1] += SecondHalfSizeInFistSystem[1];
-			Vertex[5][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[5] = (CenterInOtherSystem);
+			Vertex[5][0] -= HalfSizeInOtherSystem[0];
+			Vertex[5][1] += HalfSizeInOtherSystem[1];
+			Vertex[5][2] -= HalfSizeInOtherSystem[2];
 
-			Vertex[6] = (FirstCenter);
-			Vertex[6][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[6][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[6][2] += SecondHalfSizeInFistSystem[2];
+			Vertex[6] = (CenterInOtherSystem);
+			Vertex[6][0] -= HalfSizeInOtherSystem[0];
+			Vertex[6][1] -= HalfSizeInOtherSystem[1];
+			Vertex[6][2] += HalfSizeInOtherSystem[2];
 
-			Vertex[7] = (FirstCenter);
-			Vertex[7][0] -= SecondHalfSizeInFistSystem[0];
-			Vertex[7][1] -= SecondHalfSizeInFistSystem[1];
-			Vertex[7][2] -= SecondHalfSizeInFistSystem[2];
+			Vertex[7] = (CenterInOtherSystem);
+			Vertex[7][0] -= HalfSizeInOtherSystem[0];
+			Vertex[7][1] -= HalfSizeInOtherSystem[1];
+			Vertex[7][2] -= HalfSizeInOtherSystem[2];
 
 			
 			pointsInside = 0;
@@ -283,40 +270,23 @@ namespace CollisionAlgorithm
 				Vertex[indexes[0]][2] /= CompenetrationSum;
 
 				//Compute normal by clamping on max value
+				//function to do
+				//Clamp(CentersDistance);
 				CentersDistance.normalize();
-				float x, y, z;
-				x = CentersDistance.getX();
-				y = CentersDistance.getY();
-				z = CentersDistance.getZ();
-				if (x > y)
-				{
-					if (x > z)
-					{
-						CentersDistance.set(x, 0, 0);
-					}
-					else
-					{
-						CentersDistance.set(0, 0, z);
-					}
-				}
-				else
-				{
-					if (y > z)
-					{
-						CentersDistance.set(0, y, 0);
-					}
-					else
-					{
-						CentersDistance.set(0, 0, z);
-					}
-				}
-				CentersDistance.normalize();
-				//Compute Compenetration
-				//collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
-				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
-				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				float max = CentersDistance[0];
+				max = abs(max)>CentersDistance[1] ? max : CentersDistance[1];
+				max = abs(max)>CentersDistance[2] ? max : CentersDistance[2];
 
+				CentersDistance[0] = CentersDistance[0] == max ? max : 0;
+				CentersDistance[1] = CentersDistance[1] == max ? max : 0;
+				CentersDistance[2] = CentersDistance[2] == max ? max : 0;
+				CentersDistance.normalize();
+				std::cout << "Box Collision" << std::endl;
+
+				//Compute Compenetration
+				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(-1.0f*compenetration[0], Vertex[indexes[0]], CentersDistance*-1.0f);
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 			//If i'm here FUCK THAT
@@ -374,7 +344,7 @@ namespace CollisionAlgorithm
 		{
 	
 			Vector3 SphereCenterInBoxSystem(second->GetWorldPosition());
-			QuaternionRotateT(first->GetRotation(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
+			QuaternionRotate(first->GetRotation(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
 			Vector3 Min(first->GetWorldPosition() - first->GetHalfSize());
 			Vector3 Max(first->GetWorldPosition() + first->GetHalfSize());
 
@@ -388,54 +358,15 @@ namespace CollisionAlgorithm
 			closestPoint[2] += ((SphereCenterInBoxSystem.getZ() - Max.getZ() > 0) ? SphereCenterInBoxSystem.getZ() - Max.getZ() : 0);
 	
 			float distance = closestPoint.dot(closestPoint);
+
+			if (distance < second->GetRadius()*second->GetRadius())
+			{
 				
-			/*
-			if (SphereCenterInBoxSystem.getX() - Min.getX()<0)
-			{
-				if (SphereCenterInBoxSystem.getX() - Min.getX()>-second->GetRadius())
-				distance += (SphereCenterInBoxSystem.getX() - Min.getX()) *(SphereCenterInBoxSystem.getX() - Min.getX());
-			}
-			else
-			{
-				if (SphereCenterInBoxSystem.getX()-Max.getX()>0)
-				{
-					distance += (SphereCenterInBoxSystem.getX() - Max.getX()) *(SphereCenterInBoxSystem.getX() - Max.getX());
-				}
-			}
-			if (SphereCenterInBoxSystem.getY() - Min.getY()<0)
-			{
-				distance += (SphereCenterInBoxSystem.getY() - Min.getY()) *(SphereCenterInBoxSystem.getY() - Min.getY());
-			}
-			else
-			{
-				if (SphereCenterInBoxSystem.getY() - Max.getY()>0)
-				{
-					distance += (SphereCenterInBoxSystem.getY() - Max.getY()) *(SphereCenterInBoxSystem.getY() - Max.getY());
-				}
-			}
-			if (SphereCenterInBoxSystem.getZ() - Min.getZ()<0)
-			{
-				distance += (SphereCenterInBoxSystem.getZ() - Min.getZ()) *(SphereCenterInBoxSystem.getZ() - Min.getZ());
-			}
-			else
-			{
-				if (SphereCenterInBoxSystem.getZ() - Max.getZ()>0)
-				{
-					distance += (SphereCenterInBoxSystem.getZ() - Max.getZ()) *(SphereCenterInBoxSystem.getZ() - Max.getZ());
-				}
-			}
-			distance = (distance)-(second->GetRadius())*(second->GetRadius());
-			*/
-
-			if (distance < second->GetRadius())
-			{
-
-			//	distance = sqrt(distance);
 				Vector3 CentersDistance = first->GetWorldPosition() - SphereCenterInBoxSystem;
 				CentersDistance.normalize();
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
 
-				collision.Init(second->GetRadius() - distance, CentersDistance*second->GetRadius(), CentersDistance);
+				collision.Init(second->GetRadius() - sqrt(distance), CentersDistance*second->GetRadius(), CentersDistance);
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
@@ -467,8 +398,6 @@ namespace CollisionAlgorithm
 			QuaternionRotate(first->GetRotation(), PlaneNormal, PlaneNormal);
 			const Vector3& HalfSize = first->GetHalfSize();
 			float Radius = abs(HalfSize[0] * PlaneNormal[0]) + abs(HalfSize[1] * PlaneNormal[1]) + abs(HalfSize[2] * PlaneNormal[2]);
-			std::cout << "Radius: " << Radius << std::endl;
-			std::cout << "Distance: " << abs(Distance) << std::endl;
 			if (abs(Distance)<Radius)
 			{
 				Distance -= Radius;

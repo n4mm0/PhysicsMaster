@@ -267,7 +267,8 @@ void renderScene()
 	/*drawWallXZ(-20.0f, 6.0f, 20.0f);
 	drawWallXZ(20.0f, 6.0f, 20.0f);
 	*/
-	drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
+	drawParallelepiped(position1, rotationMatrix1, 1.0f, 1.0f, 1.0f);
+	//drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
 	drawParallelepiped(position2, rotationMatrix2, 1.0f, 1.0f, 1.0f);
 	//drawSphere(position2, rotationMatrix2, 1.0f, 64, 64);
 
@@ -299,16 +300,24 @@ int main(int argc, char **argv)
 	gameObj[1].AddChild<RigidBody>(*r2);
 	gameObj[2].AddChild<RigidBody>(*r3);
 
-	SphereCollider* c1 = new SphereCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
+	BoxCollider* c1 = new BoxCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0, 0, 0), r1->GetOwner()->GetChild<Transform>()->GetRotation(), Vector3(1.0f, 1.0f, 1.0f));
+	//SphereCollider* c1 = new SphereCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
 	BoxCollider* c2 = new BoxCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0, 0, 0), r2->GetOwner()->GetChild<Transform>()->GetRotation(), Vector3(1.0f, 1.0f, 1.0f));
 	//SphereCollider* c2 = new SphereCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
 	PlaneCollider* c3 = new PlaneCollider(r3->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0.0f, -6.0f, 0.0f),Vector3(0,1,0));
 
-	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 1.90f;
+	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 5.10f;
 	gameObj[0].EditChild<Transform>()->EditPosition()[1] -= 0.0f;
 	gameObj[0].EditChild<Transform>()->EditPosition()[2] -= 0.0f;
 
-	
+	gameObj[0].EditChild<Transform>()->EditRotation()[0] = 0.11f;
+	gameObj[0].EditChild<Transform>()->EditRotation()[1] = 0.833f;
+	gameObj[0].EditChild<Transform>()->EditRotation()[2] = 0.23f;
+	gameObj[0].EditChild<Transform>()->EditRotation()[3] = 0.1f;
+	gameObj[0].EditChild<Transform>()->EditRotation().normalize();
+
+
+
 	gameObj[1].EditChild<Transform>()->EditRotation()[0] = 0.6781f;
 	gameObj[1].EditChild<Transform>()->EditRotation()[1] = 0.8563f;
 	gameObj[1].EditChild<Transform>()->EditRotation()[2] = 0.7f;
@@ -320,9 +329,9 @@ int main(int argc, char **argv)
 	gameObj[1].AddChild<Collider>(*c2);
 	gameObj[2].AddChild<Collider>(*c3);
 
-	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(0, 1, 0), Vector3(0, -1, 0));
+//	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(0, 1, 0), Vector3(0, -1, 0));
 
-	//w.addRigidBody(r1);
+	w.addRigidBody(r1);
 	w.addRigidBody(r2);
 	w.addRigidBody(r3);
 
