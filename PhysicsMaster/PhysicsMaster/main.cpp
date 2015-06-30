@@ -6,12 +6,12 @@
 #include "World.h"
 #include "RigidBody.h"
 #include "GameObject.h"
-#include <iostream>>
+#include <iostream>
 
 int width = 600;
 int height = 600;
 
-GameObject gameObj[2];
+GameObject gameObj[3];
 
 Transform *transform1 = gameObj[0].EditChild<Transform>();
 Vector3 position1 = transform1->EditPosition();
@@ -29,14 +29,36 @@ void MatrixToGLFloat(Matrix4x4 &matrix, GLfloat *m)
 {
 	for (int index = 0; index < 16; ++index)
 		m[index] = matrix.getElementAt((index / 4), (index % 4));
+	/*
+	std::cout << std::endl;
+	for (int index = 0; index < 4; ++index)
+	{
+		for (int index2 = 0; index2 < 4; ++index2)
+			std::cout << m[index * 4 + index2] << ", ";
+		std::cout<<std::endl;
+	}
+	*/
+	
 }
-
+static bool stopped = false;
 void processKeys(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
 	case 27: // Escape key
 		exit(EXIT_SUCCESS);
+		break;
+				case 32:
+	if (!stopped)
+		{
+			stopped = !stopped;
+			system("pause");
+		}
+		else
+		{
+			stopped = !stopped;
+			system("play");
+		}
 		break;
 	}
 }
@@ -110,8 +132,9 @@ void drawParallelepiped(Vector3 &position, Matrix4x4 rotation, float lX, float l
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glTranslatef(position.getX() + 2.0f, position.getY(), position.getZ());
+	glTranslatef(position.getX(), position.getY(), position.getZ());
 	MatrixToGLFloat(rotation, rotationGL2);
+//	glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
 	glMultMatrixf(rotationGL2);
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, green);
@@ -245,7 +268,8 @@ void renderScene()
 	drawWallXZ(20.0f, 6.0f, 20.0f);
 	*/
 	drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
-	drawParallelepiped(position2, rotationMatrix2, 1.0f, 2.0f, 1.0f);
+	drawParallelepiped(position2, rotationMatrix2, 1.0f, 1.0f, 1.0f);
+	//drawSphere(position2, rotationMatrix2, 1.0f, 64, 64);
 
 	glutSwapBuffers();
 }
@@ -255,7 +279,7 @@ void renderIdleScene()
 	w.Update();
 	position1 = gameObj[0].EditChild<Transform>()->EditPosition();
 	position2 = gameObj[1].EditChild<Transform>()->EditPosition();
-	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(1, 1, 1), Vector3(5, 10, 2));
+	//gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(1, 1, 1), Vector3(5, 10, 2));
 
 	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
 	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
@@ -267,27 +291,47 @@ int main(int argc, char **argv)
 {
 	/*---TEST---*/
 	
-	RigidBody* r1 = new RigidBody(Vector3(1,1,1),10,0);
-	RigidBody* r2 = new RigidBody(Vector3(1, 1, 1),15,1);
-		
-	SphereCollider* c1 = new SphereCollider(Vector3(0, 0, 0), Vector3(0, 0, 0), 5);
-	BoxCollider* c2 = new BoxCollider(Vector3(0, 0, 0), Vector3(0, 0, 0),Quaternion(1,0,0,0));
+	RigidBody* r1 = new RigidBody(Vector3(1, 1, 1), 1.0f, 0, true);
+	RigidBody* r2 = new RigidBody(Vector3(1, 1, 1), 1.0f, 1, true);
+	RigidBody* r3 = new RigidBody(Vector3(1, 1, 1), 1.0f, 2, false);
 
 	gameObj[0].AddChild<RigidBody>(*r1);
 	gameObj[1].AddChild<RigidBody>(*r2);
+	gameObj[2].AddChild<RigidBody>(*r3);
+
+	SphereCollider* c1 = new SphereCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
+	BoxCollider* c2 = new BoxCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0, 0, 0), r2->GetOwner()->GetChild<Transform>()->GetRotation(), Vector3(1.0f, 1.0f, 1.0f));
+	//SphereCollider* c2 = new SphereCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
+	PlaneCollider* c3 = new PlaneCollider(r3->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0.0f, -6.0f, 0.0f),Vector3(0,1,0));
+
+	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 1.90f;
+	gameObj[0].EditChild<Transform>()->EditPosition()[1] -= 0.0f;
+	gameObj[0].EditChild<Transform>()->EditPosition()[2] -= 0.0f;
+
+	
+	gameObj[1].EditChild<Transform>()->EditRotation()[0] = 0.6781f;
+	gameObj[1].EditChild<Transform>()->EditRotation()[1] = 0.8563f;
+	gameObj[1].EditChild<Transform>()->EditRotation()[2] = 0.7f;
+	gameObj[1].EditChild<Transform>()->EditRotation()[3] = 0.024f;
+	gameObj[1].EditChild<Transform>()->EditRotation().normalize();
+	
 
 	gameObj[0].AddChild<Collider>(*c1);
 	gameObj[1].AddChild<Collider>(*c2);
+	gameObj[2].AddChild<Collider>(*c3);
 
-	w.addRigidBody(r1);
+	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(0, 1, 0), Vector3(0, -1, 0));
+
+	//w.addRigidBody(r1);
 	w.addRigidBody(r2);
+	w.addRigidBody(r3);
 
 	/*---END TEST---*/
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
 	glutInitWindowSize(width, height);
 	glutCreateWindow("Physic Engine");
-	//glutFullScreen();
+//	glutFullScreen();
 
 	glutReshapeFunc(changeSize);
 	glutDisplayFunc(renderScene);

@@ -24,7 +24,6 @@ public:
 		*/
 		for (int i = 0; i < m_iCollisionDetected; ++i)
 		{
-			std::cout << "bho collisione bho bla bla bla si no";
 			m_aoCollisionList[i].ApplyCollision();
 		}
 		m_iCollisionDetected = 0;

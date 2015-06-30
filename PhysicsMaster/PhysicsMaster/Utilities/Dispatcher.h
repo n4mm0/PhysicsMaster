@@ -18,7 +18,7 @@ public:
 		
 		int leftIndex = LeftArg::getType();
 		int rightIndex = RightArg::getType();
-		std::cout << leftIndex << " - " << rightIndex << std::endl;
+	//	std::cout << leftIndex << " - " << rightIndex << std::endl;
 		//with upper triangular matrix 
 		//_callbacks[leftIndex + rightIndex] = funcPtr;
 		

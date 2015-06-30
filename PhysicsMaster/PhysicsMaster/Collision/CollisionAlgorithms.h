@@ -6,21 +6,11 @@
 #include "GameObject.h"
 //debug
 #include <iostream>
+#include <algorithm>
 
 namespace CollisionAlgorithm
 {
-	/*MAH
-	class Caster
-	{
-	public:
-		template<typename T, typename U>
-		static int Fire(Collider& first, Collider& second)
-		{
-			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
-		}
 
-	};
-	*/
 	template<class T, class U> class CollisionDetectionAlgorithm;
 
 	//Dummy needed for automatic
@@ -199,20 +189,21 @@ namespace CollisionAlgorithm
 				}
 				CentersDistance.normalize();
 				//Compute Compenetration
-//				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+				//collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
-			//	collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				//collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 			SecondCenter = second->GetWorldPosition();
 			FirstCenter = first->GetWorldPosition();
 			//TO DO
-//			MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
+			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), FirstCenter, FirstCenter);
 
 			Min = SecondCenter - second->GetHalfSize();
 			Max = SecondCenter-second->GetHalfSize();
 			SecondHalfSizeInFistSystem=first->GetHalfSize();
+			
 			//TO DO
 			//MatrixOp::Rotate<MatrixOp::ToWorldSpace>(first->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
 			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(second->GetRotation().ToMatrix(), SecondHalfSizeInFistSystem, SecondHalfSizeInFistSystem);
@@ -321,10 +312,10 @@ namespace CollisionAlgorithm
 				}
 				CentersDistance.normalize();
 				//Compute Compenetration
-//				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
+				//collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(compenetration[0], Vertex[indexes[0]], CentersDistance);
-			//	collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 
 				return 1;
 			}
@@ -356,9 +347,7 @@ namespace CollisionAlgorithm
 				CentersDistance.normalize();
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(compenetration, CentersDistance*first->GetRadius(), CentersDistance);
-		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
-
-//				collision.Init(compenetration, CentersDistance*first->GetRadius(),CentersDistance);
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 			return 0;
@@ -385,57 +374,69 @@ namespace CollisionAlgorithm
 		{
 	
 			Vector3 SphereCenterInBoxSystem(second->GetWorldPosition());
-			//TO DO
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
+			QuaternionRotateT(first->GetRotation(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
 			Vector3 Min(first->GetWorldPosition() - first->GetHalfSize());
 			Vector3 Max(first->GetWorldPosition() + first->GetHalfSize());
-			//TO DO
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Min, Min);
-			//MatrixOp::Rotate<MatrixOp::ToObjSpace>(first->GetRotation().ToMatrix(), Max, Max);
 
-			float distance = 0;
-			if (SphereCenterInBoxSystem.getX() < Min.getX())
+			Vector3 closestPoint;
+			
+			closestPoint[0] = ((Min.getX() - SphereCenterInBoxSystem.getX()> 0) ? Min.getX() - SphereCenterInBoxSystem.getX() : 0);
+			closestPoint[1] = ((Min.getY() - SphereCenterInBoxSystem.getY()> 0) ? Min.getY() - SphereCenterInBoxSystem.getY() : 0);
+			closestPoint[2] = ((Min.getZ() - SphereCenterInBoxSystem.getZ()> 0) ? Min.getZ() - SphereCenterInBoxSystem.getZ() : 0);
+			closestPoint[0] += ((SphereCenterInBoxSystem.getX() - Max.getX() > 0) ? SphereCenterInBoxSystem.getX() - Max.getX() : 0);
+			closestPoint[1] += ((SphereCenterInBoxSystem.getY() - Max.getY() > 0) ? SphereCenterInBoxSystem.getY() - Max.getY() : 0);
+			closestPoint[2] += ((SphereCenterInBoxSystem.getZ() - Max.getZ() > 0) ? SphereCenterInBoxSystem.getZ() - Max.getZ() : 0);
+	
+			float distance = closestPoint.dot(closestPoint);
+				
+			/*
+			if (SphereCenterInBoxSystem.getX() - Min.getX()<0)
 			{
+				if (SphereCenterInBoxSystem.getX() - Min.getX()>-second->GetRadius())
 				distance += (SphereCenterInBoxSystem.getX() - Min.getX()) *(SphereCenterInBoxSystem.getX() - Min.getX());
 			}
 			else
 			{
-				if (SphereCenterInBoxSystem.getX() > Max.getX())
+				if (SphereCenterInBoxSystem.getX()-Max.getX()>0)
 				{
 					distance += (SphereCenterInBoxSystem.getX() - Max.getX()) *(SphereCenterInBoxSystem.getX() - Max.getX());
 				}
 			}
-			if (SphereCenterInBoxSystem.getY() < Min.getY())
+			if (SphereCenterInBoxSystem.getY() - Min.getY()<0)
 			{
 				distance += (SphereCenterInBoxSystem.getY() - Min.getY()) *(SphereCenterInBoxSystem.getY() - Min.getY());
 			}
 			else
 			{
-				if (SphereCenterInBoxSystem.getY() > Max.getY())
+				if (SphereCenterInBoxSystem.getY() - Max.getY()>0)
 				{
 					distance += (SphereCenterInBoxSystem.getY() - Max.getY()) *(SphereCenterInBoxSystem.getY() - Max.getY());
 				}
 			}
-			if (SphereCenterInBoxSystem.getZ() < Min.getZ())
+			if (SphereCenterInBoxSystem.getZ() - Min.getZ()<0)
 			{
 				distance += (SphereCenterInBoxSystem.getZ() - Min.getZ()) *(SphereCenterInBoxSystem.getZ() - Min.getZ());
 			}
 			else
 			{
-				if (SphereCenterInBoxSystem.getZ() > Max.getZ())
+				if (SphereCenterInBoxSystem.getZ() - Max.getZ()>0)
 				{
 					distance += (SphereCenterInBoxSystem.getZ() - Max.getZ()) *(SphereCenterInBoxSystem.getZ() - Max.getZ());
 				}
 			}
-			if (distance< second->GetRadius()*second->GetRadius()){
-				distance = second->GetRadius() - sqrtf(distance);
-				Vector3 CentersDistance = first->GetWorldPosition() - second->GetWorldPosition();
+			distance = (distance)-(second->GetRadius())*(second->GetRadius());
+			*/
+
+			if (distance < second->GetRadius())
+			{
+
+			//	distance = sqrt(distance);
+				Vector3 CentersDistance = first->GetWorldPosition() - SphereCenterInBoxSystem;
 				CentersDistance.normalize();
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(distance, CentersDistance*second->GetRadius(), CentersDistance);
-		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 
-//				collision.Init(distance, CentersDistance*second->GetRadius(), CentersDistance);
+				collision.Init(second->GetRadius() - distance, CentersDistance*second->GetRadius(), CentersDistance);
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 
@@ -461,7 +462,57 @@ namespace CollisionAlgorithm
 	private:
 		static int CollisionComputation(BoxCollider* first, PlaneCollider* second)
 		{
-			//TO DO
+			
+			Vector3 CentersDistance1 = first->GetWorldPosition() - second->GetWorldPosition();
+			Vector3 ClosestPoint(second->GetPlaneNormal()*-1.0f);
+			QuaternionRotate(first->GetRotation(), ClosestPoint, ClosestPoint);
+			std::cout << "RotatedNormal(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
+
+			
+			ClosestPoint[0] = ClosestPoint[0] * first->GetHalfSize()[0];
+			ClosestPoint[1] = ClosestPoint[1] * first->GetHalfSize()[1];
+			ClosestPoint[2] = ClosestPoint[2] * first->GetHalfSize()[2];
+
+			std::cout << "CPointHalf(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
+
+			ClosestPoint += first->GetWorldPosition();
+
+			std::cout << "CPointPos(" << ClosestPoint[0] << ", " << ClosestPoint[1] << ", " << ClosestPoint[2] << ") " << std::endl;
+
+			CentersDistance1 = ClosestPoint - second->GetWorldPosition();
+			float distance1 = CentersDistance1.dot(second->GetPlaneNormal());
+			std::cout <<"distance: " <<distance1 << std::endl;
+			/*
+			Vector3 PointOnPlane(second->GetWorldPosition());
+			QuaternionRotate(first->GetRotation(), PointOnPlane, PointOnPlane);
+			Vector3 CentersDistance = first->GetWorldPosition() - PointOnPlane;
+			Vector3 RotatedNormal(second->GetPlaneNormal());
+			QuaternionRotate(first->GetRotation(), RotatedNormal, RotatedNormal);
+		
+			float distance = CentersDistance.dot(RotatedNormal);
+			std::cout <<"distanceR: "<< distance << std::endl;
+
+			Vector3 da(first->GetWorldPosition());
+			Vector3 aa(second->GetWorldPosition());
+			QuaternionRotateT(first->GetRotation(), da, da);
+			QuaternionRotate(first->GetRotation(), aa, aa);
+			CentersDistance1 = da - aa;
+			float distance2 = CentersDistance1.dot(RotatedNormal);
+			std::cout << "distanceR2: " << distance2 << std::endl;
+
+			system("pause");
+			*/
+			if (distance1 < 0)
+			{
+
+				float compenetration = first->GetHalfSize()[0] - distance1;
+				CentersDistance1.normalize();
+				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
+				collision.Init(compenetration, ClosestPoint, second->GetPlaneNormal());
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				return 1;
+			}
+			
 			return 0;
 		};
 	};
@@ -484,16 +535,15 @@ namespace CollisionAlgorithm
 	private:
 		static int CollisionComputation(PlaneCollider* first, SphereCollider* second )
 		{
-
-			Vector3 SphereCenter(second->GetWorldPosition());
-			float distance = 0;
-
-			//TO DO
+			const Vector3& planeNormal = first->GetPlaneNormal();
+			const Vector3& SphereCenter = second->GetWorldPosition();
+			Vector3 d(SphereCenter - first->GetWorldPosition());
+			float distance = d.dot(planeNormal);;
 			if (distance< second->GetRadius()*second->GetRadius()){
+				distance = sqrt(distance) - second->GetRadius();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(distance, SphereCenter, first->GetPlaneNormal());
-		//		collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
-				//collision.Init(distance, SphereCenter, first->GetPlaneNormal());
+				collision.Init(distance, SphereCenter*second->GetRadius(), planeNormal);
+				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 			return 0;

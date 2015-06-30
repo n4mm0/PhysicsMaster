@@ -2,7 +2,7 @@
 
 #include <cmath>
 #include "Vector3.h"
-
+#include <iostream>
 //STATIC MEMBER
 const Vector3 Vector3::Zero = Vector3();
 

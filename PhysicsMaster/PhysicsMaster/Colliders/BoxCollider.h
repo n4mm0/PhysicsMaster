@@ -22,7 +22,7 @@ public:
 	const Vector3& GetHalfSize() const;
 	float GetSecondSize() const;
 	float GetThirdSize() const;
-
+	~BoxCollider(){};
 private:
 	static const int _BoxColliderType;
 	const Quaternion* _Rotation;

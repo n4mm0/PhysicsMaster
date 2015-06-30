@@ -5,13 +5,13 @@
 #include "Madness.h"
 
 
-const Vector3 World::m_Gravity = Vector3(0.0f, 0.0f, 0.0f);
-const float World::m_Dt = 0.01f;
+const Vector3 World::m_Gravity = Vector3(0.0f, -3.0f, 0.0f);
+const float World::m_Dt = Constants::DeltaTime;
 
 World::World()
 {
 	typedef AutomaticInsert<ColliderDispatcher, CollidersType, CollidersType, CollisionAlgorithm::CollisionDetectionAlgorithm> DispatcherInitializer;
-	
+
 	//Initalization 
 	//Maybe not so Singleton need test
 	CollisionList::Init();
@@ -68,7 +68,7 @@ void World::Update()
 		{
 			//THIS LEAD TO CRASH TO DO
 			tmp = m_Dispatcher.Dispatch(*((*iter)->EditOwner()->EditChild<Collider>()), *((*second)->EditOwner()->EditChild<Collider>()));
-			CollisionList::GetSingleton().EditCollision().SetBodies(*iter, *second);
+		//	CollisionList::GetSingleton().EditCollision().SetBodies(*iter, *second);
 			CollisionList::GetSingleton().EditCollisionDetected() += tmp;
 			MaxCollisionReached = CollisionList::GetSingleton().MaxCollisionNumberReached();
 		}
@@ -81,7 +81,7 @@ void World::Update()
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)
 {
-	RigidBody* newRB = new RigidBody(/*_Position,*/ _Inertia, _Mass, _ID);
+	RigidBody* newRB = new RigidBody(/*_Position,*/ _Inertia, _Mass, _ID,true);
 	m_RigidBodies.push_back(newRB);
 	return newRB;
 }

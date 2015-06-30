@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include <iostream>
 
-RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, float _Mass, int _ID) :/* m_Position(_Position), */m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID)
+RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, float _Mass, int _ID, bool _Static) :/* m_Position(_Position), */m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID), m_IsStatic(_Static)
 {
 	m_Velocity = Vector3::Zero;
 	m_AngularVelocity = Vector3::Zero;
@@ -12,6 +12,7 @@ RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, floa
 	m_AngularMomentum = Vector3::Zero;
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
+
 	//m_RotationMatrix = m_Rotation.toMatrix();
 }
 
@@ -21,6 +22,8 @@ RigidBody::~RigidBody()
 
 void RigidBody::UpdatePhysic(float _Dt)
 {
+	if (m_IsStatic)
+	{
 	Vector3 Temp(m_ForceSum * _Dt);
 
 	m_QuantityOfMotion += Temp;
@@ -57,14 +60,18 @@ void RigidBody::UpdatePhysic(float _Dt)
 
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
+	}
 }
 
 void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication)
 {
-	m_ForceSum += _Force;
-	Vector3 Temp(_PointOfApplication - GetOwner()->GetChild<Transform>()->GetPosition());
-	Temp = Temp.cross(_Force);
-	m_MomentumSum += Temp;
+	if (m_IsStatic)
+	{
+		m_ForceSum += _Force;
+		Vector3 Temp(_PointOfApplication - GetOwner()->GetChild<Transform>()->GetPosition());
+		Temp = Temp.cross(_Force);
+		m_MomentumSum += Temp;
+	}
 }
 
 void RigidBody::ApplyGravity(const Vector3& _Gravity)

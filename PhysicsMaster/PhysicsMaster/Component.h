@@ -16,6 +16,7 @@ public:
 	{
 		return m_oOwner;
 	};
+	virtual ~Component(){};
 private:
 	GameObject* m_oOwner;
 };

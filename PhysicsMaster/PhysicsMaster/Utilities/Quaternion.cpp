@@ -103,7 +103,7 @@ bool Quaternion::isZero() const
 {
 	return quaternion[0] == 0 && quaternion[1] == 0 && quaternion[2] == 0 && quaternion[3] == 0;
 }
-
+#include <iostream>
 Matrix4x4 Quaternion::toMatrix() const
 {
 	float X2 = quaternion[1] * quaternion[1];
@@ -118,15 +118,15 @@ Matrix4x4 Quaternion::toMatrix() const
 	
 	Matrix4x4 result;
 
-	result.setElementAt(0, 0, 1.0f - (2.0f * (Y2 - Z2)));
+	result.setElementAt(0, 0, 1.0f - (2.0f * (Y2 + Z2)));
 	result.setElementAt(0, 1, (2.0f * (XY - ZW)));
 	result.setElementAt(0, 2, (2.0f * (XZ + YW)));
 	result.setElementAt(1, 0, (2.0f * (XY + ZW)));
-	result.setElementAt(1, 1, 1.0f - (2.0f * (X2 - Z2)));
+	result.setElementAt(1, 1, 1.0f - (2.0f * (X2 + Z2)));
 	result.setElementAt(1, 2, (2.0f * (YZ - XW)));
 	result.setElementAt(2, 0, (2.0f * (XZ - YW)));
-	result.setElementAt(2, 1, (2.0f * (YZ - XW)));
-	result.setElementAt(2, 2, 1.0f - (2.0f * (X2 - Y2)));
+	result.setElementAt(2, 1, (2.0f * (YZ + XW)));
+	result.setElementAt(2, 2, 1.0f - (2.0f * (X2 + Y2)));
 
 	return result;
 }
@@ -221,7 +221,7 @@ const float& Quaternion::operator[](int index) const
 };
 
 //TEST
-void QuaternionRotate(const Quaternion& rot, const Vector3& vec,Vector3& result)
+void QuaternionRotateT(const Quaternion& rot, const Vector3& vec,Vector3& result)
 {
 	float X2 = rot[1] * rot[1];
 	float Y2 = rot[2] * rot[2];
@@ -240,7 +240,7 @@ void QuaternionRotate(const Quaternion& rot, const Vector3& vec,Vector3& result)
 	);
 }
 
-void QuaternionRotateT(const Quaternion& rot,const Vector3& vec ,Vector3& result)
+void QuaternionRotate(const Quaternion& rot,const Vector3& vec ,Vector3& result)
 {
 	float X2 = rot[1] * rot[1];
 	float Y2 = rot[2] * rot[2];

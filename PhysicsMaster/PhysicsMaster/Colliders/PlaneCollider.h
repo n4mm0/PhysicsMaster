@@ -14,7 +14,7 @@ public:
 	};
 	
 	static const int getType();
-
+	~PlaneCollider(){};
 private:
 	const Vector3 m_Normal;
 	static const int _PlaneColliderType;

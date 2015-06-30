@@ -14,7 +14,7 @@ class RigidBody : public Component
 
 public:
 	RigidBody(){};
-	RigidBody(/*const Vector3& _Position,*/ const Vector3& _Inertia, float _Mass, int _ID);
+	RigidBody(/*const Vector3& _Position,*/ const Vector3& _Inertia, float _Mass, int _ID, bool _Static);
 	~RigidBody();
 	void UpdatePhysic(float _Dt);
 	void ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication);
@@ -44,6 +44,7 @@ private:
 	Vector3			m_AngularMomentum;
 	Vector3			m_ForceSum;
 	Vector3			m_MomentumSum;
+	bool			m_IsStatic;
 	//Moved To Tranform
 	/*
 	Vector3			m_Position;
