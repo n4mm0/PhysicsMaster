@@ -42,7 +42,6 @@ void RigidBody::UpdatePhysic(float _Dt)
 	m_AngularVelocity.setX(m_AngularVelocity.getX() / m_Inertia.getX());
 	m_AngularVelocity.setY(m_AngularVelocity.getY() / m_Inertia.getY());
 	m_AngularVelocity.setZ(m_AngularVelocity.getZ() / m_Inertia.getZ());
-
 	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
 	
 	RotQuat.normalize();
@@ -56,8 +55,8 @@ void RigidBody::UpdatePhysic(float _Dt)
 	
 	//m_Rotation.normalize();
 	EditOwner()->EditChild<Transform>()->EditRotation().normalize();
-	//m_RotationMatrix = m_Rotation.toMatrix();
 
+	//m_RotationMatrix = m_Rotation.toMatrix();
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
 	}

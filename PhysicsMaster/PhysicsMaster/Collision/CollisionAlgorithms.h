@@ -415,6 +415,7 @@ namespace CollisionAlgorithm
 				CollisionPoint[1] = HalfSize[1] * CollisionPoint[1];
 				CollisionPoint[2] = HalfSize[2] * CollisionPoint[2];
 				QuaternionRotate(first->GetRotation(), CollisionPoint, CollisionPoint);
+				CollisionPoint += first->GetWorldPosition();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(Distance, CollisionPoint, second->GetPlaneNormal());
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
