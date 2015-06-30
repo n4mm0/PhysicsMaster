@@ -13,7 +13,7 @@ int height = 600;
 
 GameObject gameObj[3];
 
-Transform *transform1 = gameObj[0].EditChild<Transform>();
+Transform* transform1 = gameObj[0].EditChild<Transform>();
 Vector3 position1 = transform1->EditPosition();
 Matrix4x4 rotationMatrix1 = transform1->GetRotationMatrix();
 GLfloat rotationGL1[16];
@@ -284,6 +284,7 @@ void renderIdleScene()
 
 	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
 	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
+	system("pause");
 	glutPostRedisplay();
 }
 
@@ -306,7 +307,7 @@ int main(int argc, char **argv)
 	//SphereCollider* c2 = new SphereCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
 	PlaneCollider* c3 = new PlaneCollider(r3->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0.0f, -6.0f, 0.0f),Vector3(0,1,0));
 
-	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 5.10f;
+	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 1.90f;
 	gameObj[0].EditChild<Transform>()->EditPosition()[1] -= 0.0f;
 	gameObj[0].EditChild<Transform>()->EditPosition()[2] -= 0.0f;
 
@@ -331,7 +332,7 @@ int main(int argc, char **argv)
 
 //	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(0, 1, 0), Vector3(0, -1, 0));
 
-	w.addRigidBody(r1);
+//	w.addRigidBody(r1);
 	w.addRigidBody(r2);
 	w.addRigidBody(r3);
 

@@ -67,16 +67,13 @@ void World::Update()
 		for (RigidBodyCollection::iterator second = iter + 1; second != end&&!MaxCollisionReached; ++second)
 		{
 			//THIS LEAD TO CRASH IFF GAMEOBJ DOESN'T HAVE A COLLIDER 
-			tmp = m_Dispatcher.Dispatch(*((*iter)->EditOwner()->EditChild<Collider>()), *((*second)->EditOwner()->EditChild<Collider>()));
-		//	CollisionList::GetSingleton().EditCollision().SetBodies(*iter, *second);
-			CollisionList::GetSingleton().EditCollisionDetected() += tmp;
+			m_Dispatcher.Dispatch(*((*iter)->EditOwner()->EditChild<Collider>()), *((*second)->EditOwner()->EditChild<Collider>()));
 			MaxCollisionReached = CollisionList::GetSingleton().MaxCollisionNumberReached();
 		}
 	}
 	
 	//Collision Responce
 	CollisionList::GetSingleton().HandleCollision();
-//	m_CollisionCollection.HandleCollision();
 }
 
 RigidBody* World::CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID)

@@ -18,7 +18,7 @@ void Collision::Init(float deformation,const Vector3& pointOfApplication, const 
 void Collision::ApplyCollision()
 {
 	//TO DO CATTANI STYLE
-	std::cout << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[0] << ", " << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[1] << ", " << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[2] << std::endl;
+	//std::cout << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[0] << ", " << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[1] << ", " << m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()[2] << std::endl;
 
 	float f;
 	float vn;
@@ -30,7 +30,7 @@ void Collision::ApplyCollision()
 	Vector3 Vtang = m_force - Vnorm;
 
 	// K = coefficente elastico L = coefficente anaelastico  TO DO
-	f = (600.0f * m_deformation) + (10.0f * vn); 
+	f = (5.0f * m_deformation) +  (10.0f*vn); 
 	m_normal *= f;
 
 	// forza reagente (modulo) -> m = coefficente attrito TO DO
@@ -55,7 +55,7 @@ void Collision::ApplyCollision()
 	std::cout << "After Collision Handling" << std::endl;
 	std::cout << "Point Of Application: " << m_pointOfApplication[0] << " " << m_pointOfApplication[1] << " " << m_pointOfApplication[2] << std::endl;
 	std::cout << "Collision Force: " << "( " << m_normal.getX() << ", " << m_normal.getY() << ", " << m_normal.getZ() << ") " << std::endl;
-	//system("pause");
+//	system("pause");
 };
 
 void Collision::SetBodies(RigidBody*first,RigidBody*second)

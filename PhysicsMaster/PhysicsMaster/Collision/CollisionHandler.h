@@ -32,7 +32,7 @@ public:
 	Collision& EditCollision()
 	{
 		assert(m_iCollisionDetected < MaxCollision && "CRASH! FIX WORLD TOO MANY COLLISION ");
-		return m_aoCollisionList[m_iCollisionDetected];
+		return m_aoCollisionList[m_iCollisionDetected++];
 	}
 	
 	int& EditCollisionDetected()
