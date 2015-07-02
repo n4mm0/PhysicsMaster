@@ -175,8 +175,8 @@ void Vector3::clamp(clamping clamping)
 	if (clamping == Vector3::clamping::MAX)
 	{
 		float max = vector[0];
-		max = abs(max)>vector[1] ? max : vector[1];
-		max = abs(max)>vector[2] ? max : vector[2];
+		max = abs(max)>abs(vector[1]) ? max : vector[1];
+		max = abs(max)>abs(vector[2]) ? max : vector[2];
 
 		vector[0] = vector[0] == max ? max : 0;
 		vector[1] = vector[1] == max ? max : 0;
@@ -185,8 +185,8 @@ void Vector3::clamp(clamping clamping)
 	else
 	{
 		float min = vector[0];
-		min = abs(min)<vector[1] ? min : vector[1];
-		min = abs(min)<vector[2] ? min : vector[2];
+		min = abs(min)<abs(vector[1]) ? min : vector[1];
+		min = abs(min)<abs(vector[2]) ? min : vector[2];
 
 		vector[0] = vector[0] == min ? min : 0;
 		vector[1] = vector[1] == min ? min : 0;
