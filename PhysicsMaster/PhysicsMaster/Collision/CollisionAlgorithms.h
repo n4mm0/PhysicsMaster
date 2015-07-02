@@ -163,13 +163,14 @@ namespace CollisionAlgorithm
 				//function to do
 				//Clamp(CentersDistance);
 				CentersDistance.normalize();
-				float max = CentersDistance[0];
+				/*float max = CentersDistance[0];
 				max = abs(max)>CentersDistance[1] ? max : CentersDistance[1];
 				max = abs(max)>CentersDistance[2] ? max : CentersDistance[2];
 	
 				CentersDistance[0] = CentersDistance[0] == max ? max : 0;
 				CentersDistance[1] = CentersDistance[1] == max ? max : 0;
-				CentersDistance[2] = CentersDistance[2] == max ? max : 0;
+				CentersDistance[2] = CentersDistance[2] == max ? max : 0;*/
+				CentersDistance.clamp(Vector3::clamping::MAX);
 				CentersDistance.normalize();
 				std::cout << "Box Collision" << std::endl;
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
@@ -273,13 +274,14 @@ namespace CollisionAlgorithm
 				//function to do
 				//Clamp(CentersDistance);
 				CentersDistance.normalize();
-				float max = CentersDistance[0];
+				/*float max = CentersDistance[0];
 				max = abs(max)>CentersDistance[1] ? max : CentersDistance[1];
 				max = abs(max)>CentersDistance[2] ? max : CentersDistance[2];
 
 				CentersDistance[0] = CentersDistance[0] == max ? max : 0;
 				CentersDistance[1] = CentersDistance[1] == max ? max : 0;
-				CentersDistance[2] = CentersDistance[2] == max ? max : 0;
+				CentersDistance[2] = CentersDistance[2] == max ? max : 0;*/
+				CentersDistance.clamp(Vector3::clamping::MAX);
 				CentersDistance.normalize();
 				std::cout << "Box Collision" << std::endl;
 

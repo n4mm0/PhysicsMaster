@@ -11,6 +11,7 @@ private:
 public:
 	//STATIC MEMBER
 	static const Vector3 Zero;
+	static const enum clamping { MAX = 0, MIN = 1 };
     
 	//CONSTRUCTORS
 	Vector3();
@@ -40,6 +41,7 @@ public:
 	void rotationX(const int degree);
 	void rotationY(const int degree);
 	void rotationZ(const int degree);
+	void clamp(clamping clamping);
 
 	//OPERATORS
 
