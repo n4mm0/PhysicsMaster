@@ -24,6 +24,37 @@ void RigidBody::UpdatePhysic(float _Dt)
 {
 	if (m_IsStatic)
 	{
+		/*
+		Assi Dell'oggetto Normalizzati Nello Spazio del mondo
+			Ax, Ay, Az;
+		Se l'oggetto per ipotesi un Cubo ha gli Assi:
+			Ax = (1, 0, 0)
+			Ay = (0, 1, 0)
+			Az = (0, 0, 1)
+
+			Ai = Ai * Rt
+			i = { x, y, z }
+		Dove Rt Ë la matrice / quaternione di rotazione dell'oggetto
+
+			Scompongo la velocit‡ normalizzata e di segno opposto dell'oggetto lungo i tre assi
+			cx = Ax dot Velocit‡;
+		cy = Ay dot Velocit‡;
+		cz = Az dot Velocit‡;
+
+		Calcolo L'attrito 
+			Fa = 0.5*rho*v ^ 2 * coeffAttrito*Area
+
+			Quindi la velocit‡ diventa
+			Velocit‡Oggetto.x = Velocit‡Oggetto.x*(Fa*cx);
+		Velocit‡Oggetto.y = Velocit‡Oggetto.y*(Fa*cy);
+		Velocit‡Oggetto.z = Velocit‡Oggetto.z*(Fa*cz);
+
+		CosÏ la forza di attrito Ë una ma viene ridimensionata in base
+			a quanta superficie viene esposta al contatto col fluido
+			questo Ë dato dal coefficiente ci i{ x, y, z }
+		
+	*/
+	
 	Vector3 Temp(m_ForceSum * _Dt);
 
 	m_QuantityOfMotion += Temp;
@@ -64,6 +95,7 @@ void RigidBody::UpdatePhysic(float _Dt)
 
 void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication)
 {
+
 	if (m_IsStatic)
 	{
 		m_ForceSum += _Force;
