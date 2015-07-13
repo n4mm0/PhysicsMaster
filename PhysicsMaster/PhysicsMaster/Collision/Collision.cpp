@@ -8,7 +8,7 @@ Collision::Collision()
 };
 void Collision::Init(float deformation,const Vector3& pointOfApplication, const Vector3& normal)
 {
-	m_deformation = deformation;
+	m_deformation = deformation;// *500.0f;
 	m_pointOfApplication = pointOfApplication; 
 	m_normal = normal;
 	m_force = m_normal*m_deformation;
@@ -30,20 +30,21 @@ void Collision::ApplyCollision()
 	Vector3 Vtang = m_force - Vnorm;
 
 	// K = coefficente elastico L = coefficente anaelastico  TO DO
-	f = (0.50f * m_deformation) +  (0.50f*vn); 
-	m_normal *= f;
-
-	// forza reagente (modulo) -> m = coefficente attrito TO DO
-	f *=0.50f;	
-	modVtang = Vtang.magnitude();
+	f = (600.0f * m_deformation) +  (100.0f*vn); 
 
 	if (f<0)
 		f = 0;
+	m_normal *= f;
+
+	// forza reagente (modulo) -> m = coefficente attrito TO DO
+	f *=500.0f;	
+	modVtang = Vtang.sqrMagnitude();
+
 
 	Vtang*=f;
 
 	if (modVtang > 3.0f *World::m_Dt)
-		Vtang.normalize();
+		Vtang /= modVtang;
 	else
 		Vtang /= (3.0f)* World::m_Dt;
 	
@@ -55,13 +56,13 @@ void Collision::ApplyCollision()
 	//std::cout << "After Collision Handling" << std::endl;
 	std::cout << "Point Of Application: " << m_pointOfApplication[0] << " " << m_pointOfApplication[1] << " " << m_pointOfApplication[2] << std::endl;
 	std::cout << "Collision Force: " << "( " << m_normal.getX() << ", " << m_normal.getY() << ", " << m_normal.getZ() << ") " << std::endl;
-	system("pause");
+	//system("pause");
 };
 
 void Collision::SetBodies(RigidBody*first,RigidBody*second)
 {
 	m_firstObj = first;
 	m_secondObj = second;
-	m_force = m_firstObj->GetVelocity() + m_secondObj->GetVelocity();
-	m_force *= 2.0f*m_deformation;
+	//m_force = m_firstObj->GetVelocity() + m_secondObj->GetVelocity();
+	//m_force *= 2.0f*m_deformation;
 }

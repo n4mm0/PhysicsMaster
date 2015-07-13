@@ -283,7 +283,7 @@ void renderIdleScene()
 
 	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
 	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
-//	system("pause");
+	system("pause");
 	glutPostRedisplay();
 }
 
@@ -295,8 +295,8 @@ Vector3 CubeInertia(float mass,float semidim)
 int main(int argc, char **argv)
 {
 	/*---TEST---*/
-	RigidBody* r1 = new RigidBody(CubeInertia(1.0f,1.0f), 1.0f, 0, true);
-	RigidBody* r2 = new RigidBody(CubeInertia(1.0f, 1.0f), 1.0f, 1, true);
+	RigidBody* r1 = new RigidBody(CubeInertia(10.0f,1.0f), 10.0f, 0, true);
+	RigidBody* r2 = new RigidBody(CubeInertia(10.0f, 1.0f), 10.0f, 1, true);
 	RigidBody* r3 = new RigidBody(Vector3(1, 1, 1), 1.0f, 2, false);
 
 	gameObj[0].AddChild<RigidBody>(*r1);

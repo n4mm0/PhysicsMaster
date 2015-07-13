@@ -402,17 +402,15 @@ namespace CollisionAlgorithm
 			float Radius = abs(HalfSize[0] * PlaneNormal[0]) + abs(HalfSize[1] * PlaneNormal[1]) + abs(HalfSize[2] * PlaneNormal[2]);
 			if (abs(Distance)<Radius)
 			{
-				Distance -= Radius;
-				if (Distance < 0)
-				{
-					Distance *= -1.0f;
-				}
+				Distance = Radius - abs(Distance);
 				Vector3 CollisionPoint;
 				for (int i = 0; i < 3; ++i)
 				{
 					CollisionPoint[i] = HalfSize[i] * !signbit(PlaneNormal[i]) - HalfSize[i] * signbit(PlaneNormal[i]);
 				}
+
 				QuaternionRotate(first->GetRotation(), CollisionPoint, CollisionPoint);
+				CollisionPoint += first->GetWorldPosition();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(Distance, CollisionPoint, second->GetPlaneNormal());
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
