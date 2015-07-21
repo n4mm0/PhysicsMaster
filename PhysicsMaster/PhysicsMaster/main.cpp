@@ -1,19 +1,20 @@
-//GRAFICA FATTA DI MERDA SENZA SBATTI
+#pragma once
+
 #define _USE_MATH_DEFINES
-#include <gl\GLUT.H>
-#include <math.h>
+
+#include <cmath>
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+#include "GameObject.h"
+#include "RigidBody.h"
 #include "Singleton.h"
 #include "World.h"
-#include "RigidBody.h"
-#include "GameObject.h"
-#include <iostream>
-
-int width = 600;
-int height = 600;
 
 GameObject gameObj[3];
 
-Transform* transform1 = gameObj[0].EditChild<Transform>();
+Transform *transform1 = gameObj[0].EditChild<Transform>();
 Vector3 position1 = transform1->EditPosition();
 Matrix4x4 rotationMatrix1 = transform1->GetRotationMatrix();
 GLfloat rotationGL1[16];
@@ -23,33 +24,23 @@ Vector3 position2 = transform2->EditPosition();
 Matrix4x4 rotationMatrix2 = transform2->GetRotationMatrix();
 GLfloat rotationGL2[16];
 
-World w;
+World world;
 
-void MatrixToGLFloat(Matrix4x4 &matrix, GLfloat *m)
+//CALLBACK
+void error_callback(int error, const char* description)
 {
-	for (int index = 0; index < 16; ++index)
-		m[index] = matrix.getElementAt((index / 4), (index % 4));
-	/*
-	std::cout << std::endl;
-	for (int index = 0; index < 4; ++index)
-	{
-		for (int index2 = 0; index2 < 4; ++index2)
-			std::cout << m[index * 4 + index2] << ", ";
-		std::cout<<std::endl;
-	}
-	*/
-	
+	fputs(description, stderr);
 }
+
 static bool stopped = false;
-void processKeys(unsigned char key, int x, int y)
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	switch (key)
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
-	case 27: // Escape key
-		exit(EXIT_SUCCESS);
-		break;
-				case 32:
-	if (!stopped)
+		if (!stopped)
 		{
 			stopped = !stopped;
 			system("pause");
@@ -59,27 +50,14 @@ void processKeys(unsigned char key, int x, int y)
 			stopped = !stopped;
 			system("play");
 		}
-		break;
 	}
 }
 
-void changeSize(int w, int h)
+//FUNCTION
+void MatrixToGLFloat(Matrix4x4 &matrix, GLfloat *m)
 {
-	int width = w;
-	int height = h;
-
-	if (height == 0.0f)
-		height = 1.0f;
-
-	float ratio = width * 1.0f / height;
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, ratio, 0.1f, 100.0f);
-
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0, 0, -20);
+	for (int index = 0; index < 16; ++index)
+		m[index] = matrix.getElementAt((index / 4), (index % 4));
 }
 
 void drawSphere(Vector3 &position, Matrix4x4 rotation, float radius, int lats, int longs)
@@ -139,7 +117,7 @@ void drawParallelepiped(Vector3 &position, Matrix4x4 rotation, float lX, float l
 	glMaterialfv(GL_FRONT, GL_AMBIENT, green);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
-	glMateriali(GL_FRONT, GL_SHININESS, 16);
+	glMateriali(GL_FRONT, GL_SHININESS, 24);
 
 	glBegin(GL_QUADS);
 	glNormal3f(1, 0, 0);
@@ -199,7 +177,7 @@ void drawFloor(float y, float dimension)
 		glVertex3f(index, y, -dimension);
 		glVertex3f(index, y, dimension);
 	}
-	for (int index = -dimension; index < dimension; ++index)
+	for (int index = -dimension; index <= dimension; ++index)
 	{
 		glVertex3f(-dimension, y, index);
 		glVertex3f(dimension, y, index);
@@ -207,50 +185,8 @@ void drawFloor(float y, float dimension)
 	glEnd();
 }
 
-void drawWallXZ(float axis, float halfHeight, float dimension)
+void render()
 {
-	GLfloat red[] = { 0.8f, 0.4f, 0.2f, 1.0f };
-	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	glMaterialfv(GL_FRONT, GL_AMBIENT, red);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
-	glMateriali(GL_FRONT, GL_SHININESS, 16);
-
-	glBegin(GL_LINES);
-	glNormal3f(0, 1, 0);
-	for (int index = -halfHeight; index < halfHeight; ++index)
-	{
-		glVertex3f(axis, index, -dimension);
-		glVertex3f(axis, index, dimension);
-	}
-	for (int index = -dimension; index <= dimension; ++index)
-	{
-		glVertex3f(axis, -halfHeight, index);
-		glVertex3f(axis, halfHeight, index);
-	}
-	glEnd();
-
-	glBegin(GL_LINES);
-	glNormal3f(0, 1, 0);
-	for (int index = -halfHeight; index < halfHeight; ++index)
-	{
-		glVertex3f(-dimension, index, axis);
-		glVertex3f(dimension, index, axis);
-	}
-	for (int index = -dimension; index <= dimension; ++index)
-	{
-		glVertex3f(index, -halfHeight, axis);
-		glVertex3f(index, halfHeight, axis);
-	}
-	glEnd();
-}
-
-void renderScene()
-{
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	GLfloat aLite[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat dLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 	GLfloat sLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
@@ -261,30 +197,12 @@ void renderScene()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, sLite);
 	glLightfv(GL_LIGHT0, GL_POSITION, posLight);
 
-	//drawFloor(6.0f, 20.0f);
 	drawFloor(-6.0f, 20.0f);
-	/*drawWallXZ(-20.0f, 6.0f, 20.0f);
-	drawWallXZ(20.0f, 6.0f, 20.0f);
-	*/
+	
 	drawParallelepiped(position1, rotationMatrix1, 1.0f, 1.0f, 1.0f);
 	//drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
 	drawParallelepiped(position2, rotationMatrix2, 1.0f, 1.0f, 1.0f);
 	//drawSphere(position2, rotationMatrix2, 1.0f, 64, 64);
-
-	glutSwapBuffers();
-}
-
-void renderIdleScene()
-{
-	w.Update();
-	position1 = gameObj[0].EditChild<Transform>()->EditPosition();
-	position2 = gameObj[1].EditChild<Transform>()->EditPosition();
-	//gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(1, 1, 1), Vector3(5, 10, 2));
-
-	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
-	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
-	system("pause");
-	glutPostRedisplay();
 }
 
 Vector3 CubeInertia(float mass,float semidim)
@@ -292,7 +210,7 @@ Vector3 CubeInertia(float mass,float semidim)
 	return Vector3((2.0f*(semidim*semidim)) * mass / 12.0f, (2.0f*(semidim*semidim)) * mass / 12.0f, (2.0f*(semidim*semidim)) * mass / 12.0f);
 }
 
-int main(int argc, char **argv)
+int main()
 {
 	/*---TEST---*/
 	RigidBody* r1 = new RigidBody(CubeInertia(10.0f,1.0f), 10.0f, 0, true);
@@ -318,49 +236,106 @@ int main(int argc, char **argv)
 	gameObj[0].EditChild<Transform>()->EditRotation()[2] = 0.23f;
 	gameObj[0].EditChild<Transform>()->EditRotation()[3] = 0.1f;
 	gameObj[0].EditChild<Transform>()->EditRotation().normalize();
-
-
-
+	
 	gameObj[1].EditChild<Transform>()->EditRotation()[0] = 0.6781f;
 	gameObj[1].EditChild<Transform>()->EditRotation()[1] = 0.8563f;
 	gameObj[1].EditChild<Transform>()->EditRotation()[2] = 0.7f;
 	gameObj[1].EditChild<Transform>()->EditRotation()[3] = 0.024f;
 	gameObj[1].EditChild<Transform>()->EditRotation().normalize();
 	
-
 	gameObj[0].AddChild<Collider>(*c1);
 	gameObj[1].AddChild<Collider>(*c2);
 	gameObj[2].AddChild<Collider>(*c3);
 
 //	gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(0, 1, 0), Vector3(0, -1, 0));
 
-//	w.addRigidBody(r1);
-	w.addRigidBody(r2);
-	w.addRigidBody(r3);
+//	world.addRigidBody(r1);
+	world.addRigidBody(r2);
+	world.addRigidBody(r3);
 
 	/*---END TEST---*/
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
-	glutInitWindowSize(width, height);
-	glutCreateWindow("Physic Engine");
-//	glutFullScreen();
-
-	glutReshapeFunc(changeSize);
-	glutDisplayFunc(renderScene);
-	glutKeyboardFunc(processKeys);
-	glutIdleFunc(renderIdleScene);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-	GLfloat ambientColor[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-	glEnable(GL_LIGHTING);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_NORMALIZE);
-
-	glutMainLoop();
 	
-	return 0;
+	/*---GLFW---*/
+
+	glfwSetErrorCallback(error_callback);		//SET THE ERROR CALLBACK
+
+	//INIT GLFW
+	if (!glfwInit())
+		exit(GLFW_NOT_INITIALIZED);
+
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+	//HINT FOR WINDOW AND CONTEXT
+	glfwWindowHint(GLFW_SAMPLES, 8);					//MSAA
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+	//GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Physics", monitor, nullptr);	//OPEN FULLSCREEN WINDOW AND CREATE OpenGL CONTEXT
+
+	GLFWwindow *window = glfwCreateWindow(800, 600, "Physic Engine", nullptr, nullptr);		//OPEN WINDOW AND CREATE OpenGL CONTEXT
+	if (!window)
+	{
+		glfwTerminate();
+		exit(GLFW_NO_CURRENT_CONTEXT);
+	}
+
+	glfwMakeContextCurrent(window);				//MAKE THE CONTEXT AS CURRENT
+	
+	//INIT GLEW
+	GLenum res = glewInit();
+	if (res != GLEW_OK)
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+
+	glfwSetKeyCallback(window, key_callback);	//INPUT
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+	while (!glfwWindowShouldClose(window))
+	{
+		int width, height;
+		glfwGetFramebufferSize(window, &width, &height);
+
+		float ratio = ratio = width / (float)height;
+		glViewport(0, 0, width, height);
+				
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+
+		GLfloat ambientColor[] = { 0.4f, 0.4f, 0.4f, 1.0f };
+		glEnable(GL_LIGHTING);
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_NORMALIZE);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0f, ratio, 0.1f, 100.0f);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(0.0f, 0.0f, -20.0f);
+		
+		render();								//RENDER SCENE
+
+		world.Update();
+		position1 = gameObj[0].EditChild<Transform>()->EditPosition();
+		position2 = gameObj[1].EditChild<Transform>()->EditPosition();
+		//gameObj[1].EditChild<RigidBody>()->ApplyForce(Vector3(1, 1, 1), Vector3(5, 10, 2));
+
+		rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
+		rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
+		//system("pause");
+
+		glfwSwapBuffers(window);				//DOUBLE BUFFER
+		glfwPollEvents();						//PROCESS PENDING EVENTS
+	}
+
+	glfwTerminate();
+	exit(EXIT_SUCCESS);
 }
