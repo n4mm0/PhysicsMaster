@@ -283,7 +283,7 @@ void renderIdleScene()
 
 	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
 	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
-	system("pause");
+//	system("pause");
 	glutPostRedisplay();
 }
 

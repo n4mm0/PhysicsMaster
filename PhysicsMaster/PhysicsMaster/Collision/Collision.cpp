@@ -11,7 +11,7 @@ void Collision::Init(float deformation,const Vector3& pointOfApplication, const 
 	m_deformation = deformation;// *500.0f;
 	m_pointOfApplication = pointOfApplication; 
 	m_normal = normal;
-	m_force = m_normal*m_deformation;
+	//m_force = m_normal*m_deformation;
 	//m_force*=deformation;
 };
 
@@ -37,7 +37,7 @@ void Collision::ApplyCollision()
 	m_normal *= f;
 
 	// forza reagente (modulo) -> m = coefficente attrito TO DO
-	f *=500.0f;	
+	f *=.50f;	
 	modVtang = Vtang.sqrMagnitude();
 
 
@@ -63,6 +63,6 @@ void Collision::SetBodies(RigidBody*first,RigidBody*second)
 {
 	m_firstObj = first;
 	m_secondObj = second;
-	//m_force = m_firstObj->GetVelocity() + m_secondObj->GetVelocity();
+	m_force = m_firstObj->GetVelocity() - m_secondObj->GetVelocity();
 	//m_force *= 2.0f*m_deformation;
 }

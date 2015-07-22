@@ -2,6 +2,7 @@
 #include "Utilities.h"
 #include "Transform.h"
 #include "GameObject.h"
+#include "World.h"
 #include <iostream>
 
 RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, float _Mass, int _ID, bool _Static) :/* m_Position(_Position), */m_Inertia(_Inertia), m_Mass(_Mass), m_ID(_ID), m_IsStatic(_Static)
@@ -55,17 +56,22 @@ void RigidBody::UpdatePhysic(float _Dt)
 		
 	*/
 	
-	Vector3 Temp(m_ForceSum * _Dt);
+//	Vector3 Temp(m_ForceSum * _Dt);
 
-	m_QuantityOfMotion += Temp;
-	Temp = m_MomentumSum * _Dt;
-	m_AngularMomentum += Temp;
+//	m_QuantityOfMotion += Temp;
+//	Temp = m_MomentumSum * _Dt;
+//	m_AngularMomentum += Temp;
+//	m_Velocity = m_QuantityOfMotion / m_Mass;
+//	Temp = m_Velocity * _Dt;
+	m_QuantityOfMotion = m_ForceSum * _Dt;
 	m_Velocity = m_QuantityOfMotion / m_Mass;
-	Temp = m_Velocity * _Dt;
-	
-	//m_Position += Temp;
-	EditOwner()->EditChild<Transform>()->EditPosition() += Temp;
+	//m_MomentumSum = m_ForceSum * _Dt;
+	//m_Velocity = m_MomentumSum / m_Mass;
 
+	//m_Position += Temp;
+	EditOwner()->EditChild<Transform>()->EditPosition() += m_Velocity*_Dt;
+
+	m_AngularMomentum += m_MomentumSum * _Dt;
 	//Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
 	//QuaternionRotateT(m_Rotation, m_AngularMomentum, m_AngularVelocity);
 	QuaternionRotateT(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularMomentum, m_AngularVelocity);
@@ -75,24 +81,27 @@ void RigidBody::UpdatePhysic(float _Dt)
 	m_AngularVelocity.setZ(m_AngularVelocity.getZ() / m_Inertia.getZ());
 
 	//Cattani magic drag
-//	m_AngularVelocity[0] = m_AngularVelocity[0] - (m_AngularVelocity[0] * m_AngularVelocity[0] *0.5f*0.05f*_Dt);
-//	m_AngularVelocity[1] = m_AngularVelocity[1] - (m_AngularVelocity[1] * m_AngularVelocity[1] * 0.5f*0.05f*_Dt);
-//	m_AngularVelocity[2] = m_AngularVelocity[2] - (m_AngularVelocity[2] * m_AngularVelocity[2] * 0.5f*0.05f*_Dt);
-
+	/*
+	m_AngularVelocity[0] = m_AngularVelocity[0] - (m_AngularVelocity[0] * m_AngularVelocity[0] * 0.5f * 0.05f * _Dt);
+	m_AngularVelocity[1] = m_AngularVelocity[1] - (m_AngularVelocity[1] * m_AngularVelocity[1] * 0.5f * 0.05f * _Dt);
+	m_AngularVelocity[2] = m_AngularVelocity[2] - (m_AngularVelocity[2] * m_AngularVelocity[2] * 0.5f * 0.05f * _Dt);
+	*/
 
 	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
 	
 	RotQuat.normalize();
+	EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
+	EditOwner()->EditChild<Transform>()->EditRotation().normalize();
 
 	//Matrix4x4::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
 	//QuaternionRotate(m_Rotation, m_AngularVelocity, m_AngularVelocity);
 	QuaternionRotate(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularVelocity, m_AngularVelocity);
 
 	// m_Rotation *= RotQuat;
-	EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
+	//EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
 	
 	//m_Rotation.normalize();
-	EditOwner()->EditChild<Transform>()->EditRotation().normalize();
+	//EditOwner()->EditChild<Transform>()->EditRotation().normalize();
 
 	//m_RotationMatrix = m_Rotation.toMatrix();
 	m_ForceSum = Vector3::Zero;
@@ -114,7 +123,7 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 
 void RigidBody::ApplyGravity(const Vector3& _Gravity)
 {
-	m_ForceSum += _Gravity * m_Mass;
+	m_ForceSum += _Gravity;
 }
 
 int RigidBody::GetID() const

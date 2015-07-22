@@ -5,7 +5,7 @@
 #include "Madness.h"
 
 
-const Vector3 World::m_Gravity = Vector3(0.0f, -0.10f, 0.0f);
+const Vector3 World::m_Gravity = Vector3(0.0f, -9.810f, 0.0f);
 const float World::m_Dt = Constants::DeltaTime;
 
 World::World()
