@@ -4,8 +4,9 @@
 
 #include <cmath>
 #include <iostream>
-#include <GLFW/glfw3.h>
 
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include "GameObject.h"
 #include "RigidBody.h"
 #include "Singleton.h"

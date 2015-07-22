@@ -24,7 +24,7 @@ public:
 	int GetID() const;
 	float GetMass() const;
 	Vector3 GetVelocity() const;
-	
+	Vector3 GetAngularVelocity() const;
 	//Moved to Tranform
 	//Vector3 GetPosition() const;
 	//const Matrix4x4& GetRotationMatrix() const;
@@ -57,9 +57,3 @@ private:
 	RigidBody(const RigidBody& _Other);		// We don't need that atm
 	RigidBody& operator=(const RigidBody& _Other);
 };
-/*
-inline Collider* RigidBody::GetCollider() const
-{
-	return m_Collider;
-};
-*/

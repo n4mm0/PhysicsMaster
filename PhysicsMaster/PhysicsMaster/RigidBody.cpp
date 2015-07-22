@@ -165,3 +165,8 @@ void RigidBody::SetVelocity(const Vector3& _NewVelocity)
 {
 	m_Velocity = _NewVelocity;
 }
+
+Vector3 RigidBody::GetAngularVelocity() const
+{
+	return m_AngularVelocity;
+}
