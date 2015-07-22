@@ -5,11 +5,7 @@ class Matrix4x4
 {
 private:
 	//MEMBER
-    scalar matrix[4][4];
-
-	//MEMBER FUNCTION
-	Matrix4x4 coFactor() const;
-	double determinant() const;
+	scalar matrix[16];
 
 public:
 	//CONSTRUCTORS
@@ -27,14 +23,12 @@ public:
 	void setRow(int row, const Vector4 &vector);
 	void setColumn(int column, const Vector4 &vector);
 	void setElementAt(int row, int column, scalar value);
-	Matrix4x4 inverse();
-	Matrix4x4 transpose();
-	bool isIdentity(const Matrix4x4 &other) const;
+	void transpose();
+	bool isIdentity() const;
 
 	//OPERATORS
 	Vector4 operator *(const Vector4 &vector) const;
 	Matrix4x4 operator *(const Matrix4x4 &other) const;
-	Matrix4x4& operator *=(const Matrix4x4 &other);
 
 	//STATIC MEMBER FUNCTION
 	static Matrix4x4 identity();

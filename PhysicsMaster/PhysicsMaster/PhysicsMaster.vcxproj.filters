@@ -19,9 +19,6 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{e896466d-c442-4725-849f-f5d939da70d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\TRASH">
-      <UniqueIdentifier>{299c0e0e-ea43-42c9-b026-7772d99d96b4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Collision">
       <UniqueIdentifier>{ac0b56b6-5a2c-478a-9a11-fc0be308b71c}</UniqueIdentifier>
     </Filter>
@@ -44,9 +41,6 @@
   <ItemGroup>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrici.h">
-      <Filter>Header Files\TRASH</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\Vector4.h">
       <Filter>Header Files\Utils</Filter>
