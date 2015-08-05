@@ -25,6 +25,7 @@ public:
 	float GetMass() const;
 	Vector3 GetVelocity() const;
 	Vector3 GetAngularVelocity() const;
+	Vector3 GetInertia() const;
 	//Moved to Tranform
 	//Vector3 GetPosition() const;
 	//const Matrix4x4& GetRotationMatrix() const;
@@ -33,7 +34,10 @@ public:
 	// SETTERS
 	void SetPosition(const Vector3& _NewPosition);
 	void SetVelocity(const Vector3& _NewVelocity);
-
+	void AddVelocity(const Vector3& Velocity);
+	void AddAngularVelocity(const Vector3& AngularVelocity);
+	void UpdatePosition(float _Dt);
+	
 private:
 	int				m_ID;
 	float			m_Mass;

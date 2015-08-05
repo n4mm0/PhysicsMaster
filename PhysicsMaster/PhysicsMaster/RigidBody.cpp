@@ -13,8 +13,6 @@ RigidBody::RigidBody(/*const Vector3& _Position, */const Vector3& _Inertia, floa
 	m_AngularMomentum = Vector3::Zero;
 	m_ForceSum = Vector3::Zero;
 	m_MomentumSum = Vector3::Zero;
-
-	//m_RotationMatrix = m_Rotation.toMatrix();
 }
 
 RigidBody::~RigidBody()
@@ -25,88 +23,104 @@ void RigidBody::UpdatePhysic(float _Dt)
 {
 	if (m_IsStatic)
 	{
-		/*
-		Assi Dell'oggetto Normalizzati Nello Spazio del mondo
-			Ax, Ay, Az;
-		Se l'oggetto per ipotesi un Cubo ha gli Assi:
-			Ax = (1, 0, 0)
-			Ay = (0, 1, 0)
-			Az = (0, 0, 1)
-
-			Ai = Ai * Rt
-			i = { x, y, z }
-		Dove Rt Ë la matrice / quaternione di rotazione dell'oggetto
-
-			Scompongo la velocit‡ normalizzata e di segno opposto dell'oggetto lungo i tre assi
-			cx = Ax dot Velocit‡;
-		cy = Ay dot Velocit‡;
-		cz = Az dot Velocit‡;
-
-		Calcolo L'attrito 
-			Fa = 0.5*rho*v ^ 2 * coeffAttrito*Area
-
-			Quindi la velocit‡ diventa
-			Velocit‡Oggetto.x = Velocit‡Oggetto.x*(Fa*cx);
-		Velocit‡Oggetto.y = Velocit‡Oggetto.y*(Fa*cy);
-		Velocit‡Oggetto.z = Velocit‡Oggetto.z*(Fa*cz);
-
-		CosÏ la forza di attrito Ë una ma viene ridimensionata in base
-			a quanta superficie viene esposta al contatto col fluido
-			questo Ë dato dal coefficiente ci i{ x, y, z }
+		//m_ForceSum += World::m_Gravity;
+		m_QuantityOfMotion = m_ForceSum * _Dt;
 		
-	*/
+		m_Velocity += m_QuantityOfMotion / m_Mass;
+		m_Velocity += World::m_Gravity * _Dt;
+		//std::cout << "Velocity: (" << m_Velocity[0] << ", " << m_Velocity[1] << ", " << m_Velocity[2] << ")" << std::endl;
+
+		m_AngularMomentum += m_MomentumSum * _Dt;
 	
-//	Vector3 Temp(m_ForceSum * _Dt);
-
-//	m_QuantityOfMotion += Temp;
-//	Temp = m_MomentumSum * _Dt;
-//	m_AngularMomentum += Temp;
-//	m_Velocity = m_QuantityOfMotion / m_Mass;
-//	Temp = m_Velocity * _Dt;
-	m_QuantityOfMotion = m_ForceSum * _Dt;
-	m_Velocity = m_QuantityOfMotion / m_Mass;
-	//m_MomentumSum = m_ForceSum * _Dt;
-	//m_Velocity = m_MomentumSum / m_Mass;
-
-	//m_Position += Temp;
-	EditOwner()->EditChild<Transform>()->EditPosition() += m_Velocity*_Dt;
-
-	m_AngularMomentum += m_MomentumSum * _Dt;
-	//Matrix4x4::RotateToObjectSpace(m_RotationMatrix, m_AngularMomentum, m_AngularVelocity);
-	//QuaternionRotateT(m_Rotation, m_AngularMomentum, m_AngularVelocity);
-	QuaternionRotateT(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularMomentum, m_AngularVelocity);
-
-	m_AngularVelocity.setX(m_AngularVelocity.getX() / m_Inertia.getX());
-	m_AngularVelocity.setY(m_AngularVelocity.getY() / m_Inertia.getY());
-	m_AngularVelocity.setZ(m_AngularVelocity.getZ() / m_Inertia.getZ());
-
-	//Cattani magic drag
-	/*
-	m_AngularVelocity[0] = m_AngularVelocity[0] - (m_AngularVelocity[0] * m_AngularVelocity[0] * 0.5f * 0.05f * _Dt);
-	m_AngularVelocity[1] = m_AngularVelocity[1] - (m_AngularVelocity[1] * m_AngularVelocity[1] * 0.5f * 0.05f * _Dt);
-	m_AngularVelocity[2] = m_AngularVelocity[2] - (m_AngularVelocity[2] * m_AngularVelocity[2] * 0.5f * 0.05f * _Dt);
-	*/
-
-	Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
+		QuaternionRotateT(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularMomentum, m_AngularVelocity);
+		m_AngularVelocity[0] /= m_Inertia[0];
+		m_AngularVelocity[1] /= m_Inertia[1];
+		m_AngularVelocity[2] /= m_Inertia[2];
 	
-	RotQuat.normalize();
-	EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
-	EditOwner()->EditChild<Transform>()->EditRotation().normalize();
-
-	//Matrix4x4::RotateToWorldSpace(m_RotationMatrix, m_AngularVelocity, m_AngularVelocity);
-	//QuaternionRotate(m_Rotation, m_AngularVelocity, m_AngularVelocity);
-	QuaternionRotate(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularVelocity, m_AngularVelocity);
-
-	// m_Rotation *= RotQuat;
-	//EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
+		Vector3 inverseVelocity(m_Velocity*-1.0f);
+		float drag;
+		float area = 4.0f;
+		float modVelocity = m_Velocity.magnitude();
 	
-	//m_Rotation.normalize();
-	//EditOwner()->EditChild<Transform>()->EditRotation().normalize();
+		//drag cubo 
+		//TO DO based on shape
+		drag = 1.05f;
 
-	//m_RotationMatrix = m_Rotation.toMatrix();
-	m_ForceSum = Vector3::Zero;
-	m_MomentumSum = Vector3::Zero;
+		//drag Sphere
+		//drag = 0.47f;
+
+		// F = 1/2 * area * drag * airD * v^2 
+		inverseVelocity = inverseVelocity * 0.5f * area * drag * 1.0f * modVelocity;
+		inverseVelocity /= m_Mass; // Accelerazione
+		inverseVelocity *= _Dt; // Velocit‡
+
+		m_Velocity += inverseVelocity;
+		// ------ Fine calcolo attrito dell'aria
+	//	std::cout << "v: (" << m_Velocity[0] << ", " << m_Velocity[1] << ", " << m_Velocity[2] << ")" << std::endl;
+	//	EditOwner()->EditChild<Transform>()->EditPosition() += m_Velocity*_Dt;
+		
+		m_ForceSum = Vector3::Zero;
+		m_MomentumSum = Vector3::Zero;
 	}
+}
+void RigidBody::UpdatePosition(float _Dt)
+{
+	if (m_IsStatic)
+	{
+
+	//	std::cout << "oldPosition: (" << EditOwner()->EditChild<Transform>()->EditPosition()[0] << ", " << EditOwner()->EditChild<Transform>()->EditPosition()[1] << ", " << EditOwner()->EditChild<Transform>()->EditPosition()[2] << ")" << std::endl;
+	//	std::cout << "Velocity: (" << m_Velocity[0] << ", " << m_Velocity[1] << ", " << m_Velocity[2] << ")" << std::endl;
+		EditOwner()->EditChild<Transform>()->EditPosition() += m_Velocity*_Dt;
+	//	std::cout << "newPosition: (" << EditOwner()->EditChild<Transform>()->EditPosition()[0] << ", " << EditOwner()->EditChild<Transform>()->EditPosition()[1] << ", " << EditOwner()->EditChild<Transform>()->EditPosition()[2] << ")" << std::endl;
+		
+		Quaternion RotQuat(1, m_AngularVelocity.getX() * _Dt / 2, m_AngularVelocity.getY() * _Dt / 2, m_AngularVelocity.getZ() * _Dt / 2);
+		QuaternionRotate(GetOwner()->GetChild<Transform>()->GetRotation(), m_AngularVelocity, m_AngularMomentum);
+		/*
+		if (GetOwner()->GetChild<Collider>()->GetType() == BoxCollider::getType())
+		{
+			std::cout << "AVelocity: (" << m_AngularVelocity[0] << ", " << m_AngularVelocity[1] << ", " << m_AngularVelocity[2] << ")" << std::endl;
+			std::cout << "RotQuat: (" << RotQuat[0] << ", " << RotQuat[1] << ", " << RotQuat[2] << ", " << RotQuat[3] << ")" << std::endl;
+		}
+		*/
+		RotQuat.normalize();
+		if (!RotQuat.isZero())
+		{
+			EditOwner()->EditChild<Transform>()->EditRotation() *= RotQuat;
+			EditOwner()->EditChild<Transform>()->EditRotation().normalize();
+		}
+		else
+		{
+			m_AngularMomentum = Vector3::Zero;
+		}
+	/*	if (GetOwner()->GetChild<Collider>()->GetType() == BoxCollider::getType())
+		{
+			std::cout << "Velocity: (" << m_Velocity[0] << ", " << m_Velocity[1] << ", " << m_Velocity[2] << ")" << std::endl;
+			std::cout << "Quat: (" << EditOwner()->EditChild<Transform>()->EditRotation()[0] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[1] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[2] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[3] << ")" << std::endl;
+			system("pause");
+		}
+	//	std::cout << "Quat: " << EditOwner()->EditChild<Transform>()->GetRotation()[0] << ", " << EditOwner()->EditChild<Transform>()->GetRotation()[1] << ", " << EditOwner()->EditChild<Transform>()->GetRotation()[2] << ", " << EditOwner()->EditChild<Transform>()->GetRotation()[3] << ")" << std::endl;
+	//	system("pause");*/
+	}
+}
+
+void RigidBody::AddAngularVelocity(const Vector3& AngularVelocity)
+{
+	if (GetOwner()->GetChild<Collider>()->GetType() == SphereCollider::getType())
+	{
+		std::cout << "Quaternion: (" << EditOwner()->EditChild<Transform>()->EditRotation()[0] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[1] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[2] << ", " << EditOwner()->EditChild<Transform>()->EditRotation()[3] << ")" << std::endl;
+
+		std::cout << "AngularVelocityCol: (" << AngularVelocity[0] << ", " << AngularVelocity[1] << ", " << AngularVelocity[2] << ")" << std::endl;
+		std::cout << "AngularMomentum: (" << m_AngularMomentum[0] << ", " << m_AngularMomentum[1] << ", " << m_AngularMomentum[2] << ")" << std::endl;
+		std::cout << "AngularVelocity: (" << m_AngularVelocity[0] << ", " << m_AngularVelocity[1] << ", " << m_AngularVelocity[2] << ")" << std::endl;
+		//system("pause");
+	}
+	if (m_IsStatic)
+		m_AngularVelocity += AngularVelocity;
+}
+
+Vector3 RigidBody::GetInertia() const
+{
+	return m_Inertia;
 }
 
 void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplication)
@@ -115,15 +129,13 @@ void RigidBody::ApplyForce(const Vector3& _Force, const Vector3& _PointOfApplica
 	if (m_IsStatic)
 	{
 		m_ForceSum += _Force;
-		Vector3 Temp(_PointOfApplication - GetOwner()->GetChild<Transform>()->GetPosition());
-		Temp = Temp.cross(_Force);
-		m_MomentumSum += Temp;
+		m_MomentumSum += _PointOfApplication.cross(_Force);
 	}
 }
 
 void RigidBody::ApplyGravity(const Vector3& _Gravity)
 {
-	m_ForceSum += _Gravity;
+	m_ForceSum += _Gravity*m_Mass;
 }
 
 int RigidBody::GetID() const
@@ -135,32 +147,12 @@ float RigidBody::GetMass() const
 {
 	return m_Mass;
 }
-/*
-Vector3 RigidBody::GetPosition() const
-{
-	return m_Position;
-}*/
 
 Vector3 RigidBody::GetVelocity() const
 {
 	return m_Velocity;
 }
-/*
-const Matrix4x4& RigidBody::GetRotationMatrix() const
-{
-	return m_RotationMatrix;
-};
 
-const Quaternion& RigidBody::GetRotationQuaternion() const
-{
-	return m_Rotation;
-};
-
-void RigidBody::SetPosition(const Vector3& _NewPosition)
-{
-	m_Position = _NewPosition;
-}
-*/
 void RigidBody::SetVelocity(const Vector3& _NewVelocity)
 {
 	m_Velocity = _NewVelocity;
@@ -169,4 +161,12 @@ void RigidBody::SetVelocity(const Vector3& _NewVelocity)
 Vector3 RigidBody::GetAngularVelocity() const
 {
 	return m_AngularVelocity;
+}
+
+void RigidBody::AddVelocity(const Vector3& Velocity)
+{
+//	std::cout << "V: (" << Velocity[0] << ", " << Velocity[1] << ", " << Velocity[2] << ")" << std::endl;
+	if (m_IsStatic)
+		m_Velocity += Velocity;
+	//std::cout << "V: (" << m_Velocity[0] << ", " << m_Velocity[1] << ", " << m_Velocity[2] << ")" << std::endl;
 }

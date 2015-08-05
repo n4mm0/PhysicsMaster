@@ -317,8 +317,9 @@ namespace CollisionAlgorithm
 			{
 				float compenetration = radiiSum - sqrtf(distance);
 				CentersDistance.normalize();
+				std::cout << "Sphere-Sphere Detected" << std::endl;
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(compenetration, CentersDistance*first->GetRadius(), CentersDistance);
+				collision.Init(compenetration, first->GetWorldPosition()/2.0f + second->GetWorldPosition()/2.0f, CentersDistance);
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
@@ -342,37 +343,93 @@ namespace CollisionAlgorithm
 			return CollisionComputation(static_cast<BoxCollider*>(&second), static_cast<SphereCollider*>(&first));
 		};
 	private:
-		static int CollisionComputation(BoxCollider* first, SphereCollider* second)
+		static int CollisionComputation(BoxCollider* box, SphereCollider* sphere)
 		{
-	
-			Vector3 SphereCenterInBoxSystem(second->GetWorldPosition());
-			QuaternionRotate(first->GetRotation(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
-			Vector3 Min(first->GetWorldPosition() - first->GetHalfSize());
-			Vector3 Max(first->GetWorldPosition() + first->GetHalfSize());
+			/*
+			Vector3 SphereCenterInBoxSystem(sphere->GetWorldPosition());
+			Vector3 closestPoint(box->GetWorldPosition());
 
-			Vector3 closestPoint;
+			QuaternionRotate(box->GetRotation(), SphereCenterInBoxSystem, SphereCenterInBoxSystem);
+			Vector3 Min(closestPoint - box->GetHalfSize());
+			Vector3 Max(closestPoint + box->GetHalfSize());
+			//std::cout << "ScB: (" << SphereCenterInBoxSystem[0] << ", " << SphereCenterInBoxSystem[1] << ", " << SphereCenterInBoxSystem[2] << ")" << std::endl;
 			
-			closestPoint[0] = ((Min.getX() - SphereCenterInBoxSystem.getX()> 0) ? Min.getX() - SphereCenterInBoxSystem.getX() : 0);
-			closestPoint[1] = ((Min.getY() - SphereCenterInBoxSystem.getY()> 0) ? Min.getY() - SphereCenterInBoxSystem.getY() : 0);
-			closestPoint[2] = ((Min.getZ() - SphereCenterInBoxSystem.getZ()> 0) ? Min.getZ() - SphereCenterInBoxSystem.getZ() : 0);
-			closestPoint[0] += ((SphereCenterInBoxSystem.getX() - Max.getX() > 0) ? SphereCenterInBoxSystem.getX() - Max.getX() : 0);
-			closestPoint[1] += ((SphereCenterInBoxSystem.getY() - Max.getY() > 0) ? SphereCenterInBoxSystem.getY() - Max.getY() : 0);
-			closestPoint[2] += ((SphereCenterInBoxSystem.getZ() - Max.getZ() > 0) ? SphereCenterInBoxSystem.getZ() - Max.getZ() : 0);
-	
-			float distance = closestPoint.dot(closestPoint);
-
-			if (distance < second->GetRadius()*second->GetRadius())
+			for (int i = 0; i < 3; ++i)
 			{
-				
-				Vector3 CentersDistance = first->GetWorldPosition() - SphereCenterInBoxSystem;
+				if (SphereCenterInBoxSystem[i] <= Min[i])
+					closestPoint[i] -= 1.0f;
+				else
+				{
+					if (SphereCenterInBoxSystem[i] >= Max[i])
+						closestPoint[i] += 1.0f;
+				}
+			}
+			//std::cout << "Cp: (" << closestPoint[0] << ", " << closestPoint[1] << ", " << closestPoint[2] << ")" << std::endl;
+			//std::cout << "Min: (" << Min[0] << ", " << Min[1] << ", " << Min[2] << ")" << std::endl;
+			//std::cout << "Max: (" << Max[0] << ", " << Max[1] << ", " << Max[2] << ")" << std::endl;
+
+		//	closestPoint[0] = ((Min.getX() - SphereCenterInBoxSystem.getX()> 0) ? Min.getX() - SphereCenterInBoxSystem.getX() : 0);
+		//	closestPoint[1] = ((Min.getY() - SphereCenterInBoxSystem.getY()> 0) ? Min.getY() - SphereCenterInBoxSystem.getY() : 0);
+		//	closestPoint[2] = ((Min.getZ() - SphereCenterInBoxSystem.getZ()> 0) ? Min.getZ() - SphereCenterInBoxSystem.getZ() : 0);
+		//	closestPoint[0] += ((SphereCenterInBoxSystem.getX() - Max.getX() > 0) ? SphereCenterInBoxSystem.getX() - Max.getX() : 0);
+		//	closestPoint[1] += ((SphereCenterInBoxSystem.getY() - Max.getY() > 0) ? SphereCenterInBoxSystem.getY() - Max.getY() : 0);
+		//	closestPoint[2] += ((SphereCenterInBoxSystem.getZ() - Max.getZ() > 0) ? SphereCenterInBoxSystem.getZ() - Max.getZ() : 0);
+	
+			closestPoint -= SphereCenterInBoxSystem;
+			float distance = closestPoint.sqrMagnitude();
+			//std::cout << "d^2: " << distance << std::endl;
+			if (distance < sphere->GetRadius()*sphere->GetRadius())
+			{
+				std::cout << "Sphere - Box" << std::endl;
+				system("pause");
+				Vector3 CentersDistance = box->GetWorldPosition() - SphereCenterInBoxSystem;
 				CentersDistance.normalize();
 				Collision& collision=Constants::CollisionsCollection::GetSingleton().EditCollision();
 
-				collision.Init(second->GetRadius() - sqrt(distance), CentersDistance*second->GetRadius(), CentersDistance);
-				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				collision.Init(sphere->GetRadius() - sqrt(distance), CentersDistance*sphere->GetRadius(), CentersDistance);
+				collision.SetBodies(box->EditOwner()->EditChild<RigidBody>(), sphere->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
+			*/
+			///*
+			Vector3 CenterDiff(box->GetWorldPosition() - sphere->GetWorldPosition());
+			Vector3 Normal(CenterDiff);
+			Normal.normalize();
+			float Distance = CenterDiff.dot(Normal);
+			CenterDiff = Normal;
+			Distance -= sphere->GetRadius();
+		//	std::cout << "NormalB: (" << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ")" << std::endl;
+		//	std::cout << "CenterDiff: (" << CenterDiff[0] << ", " << CenterDiff[1] << ", " << CenterDiff[2]<<")" << std::endl;
+			QuaternionRotate(box->GetRotation(), Normal, Normal);
+			const Vector3& HalfSize = box->GetHalfSize();
+			float Radius = abs(HalfSize[0] * Normal[0]) + abs(HalfSize[1] * Normal[1]) + abs(HalfSize[2] * Normal[2]);
+		//	std::cout << "distance: " << Distance << std::endl;
+		//	std::cout << "Radius: " << Radius << std::endl;
+			if (abs(Distance)<Radius)
+			{
+				Distance = Radius - abs(Distance);
+				Vector3 CollisionPoint;
+				//TO DO NEED to clamp if value diff is minor than threshold
 
+				//	std::cout << "PlaneNormal: (";
+				for (int i = 0; i < 3; ++i)
+				{
+					//	std::cout << PlaneNormal[i] << ", ";
+					if (abs(Normal[i])>0.01f)
+						CollisionPoint[i] = HalfSize[i] * !signbit(Normal[i]) - HalfSize[i] * signbit(Normal[i]);
+					else
+						CollisionPoint[i] = 0;
+				}
+			//	std::cout << "BSNormal: (" << Normal[0] << ", " << Normal[1] << ", " << Normal[2] << ")" << std::endl;
+				QuaternionRotate(box->GetRotation(), CollisionPoint, CollisionPoint);
+				CollisionPoint += box->GetWorldPosition();
+				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
+
+				collision.Init(Distance*1.50f, CollisionPoint,CenterDiff );
+				collision.SetBodies(box->EditOwner()->EditChild<RigidBody>(), sphere->EditOwner()->EditChild<RigidBody>());
+				return 1;
+			}
+			//*/
 			return 0;
 		};
 	};
@@ -390,6 +447,7 @@ namespace CollisionAlgorithm
 		template<>
 		static int Fire<PlaneCollider, BoxCollider>(Collider& first, Collider& second)
 		{
+			
 			return CollisionComputation(static_cast<BoxCollider*>(&second), static_cast<PlaneCollider*>(&first));
 		}
 	private:
@@ -402,17 +460,22 @@ namespace CollisionAlgorithm
 			float Radius = abs(HalfSize[0] * PlaneNormal[0]) + abs(HalfSize[1] * PlaneNormal[1]) + abs(HalfSize[2] * PlaneNormal[2]);
 			if (abs(Distance)<Radius)
 			{
-				Distance = Radius - abs(Distance);
+				Distance = Radius - sqrt(abs(Distance));
 				Vector3 CollisionPoint;
+
+				//TO DO NEED to clamp if value diff is minor than threshold
 				for (int i = 0; i < 3; ++i)
 				{
-					CollisionPoint[i] = HalfSize[i] * !signbit(PlaneNormal[i]) - HalfSize[i] * signbit(PlaneNormal[i]);
+					if (abs(PlaneNormal[i])>0.01f)
+						CollisionPoint[i] = HalfSize[i] * !signbit(PlaneNormal[i]) - HalfSize[i] * signbit(PlaneNormal[i]);
+					else
+						CollisionPoint[i] = 0;
 				}
 
 				QuaternionRotate(first->GetRotation(), CollisionPoint, CollisionPoint);
 				CollisionPoint += first->GetWorldPosition();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(Distance, CollisionPoint, second->GetPlaneNormal());
+				collision.Init(Distance*250.0f, CollisionPoint, second->GetPlaneNormal());
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
@@ -432,205 +495,25 @@ namespace CollisionAlgorithm
 		}
 		//for symmetry sake
 		template<>
-		static int Fire<SphereCollider, PlaneCollider>(Collider& first, Collider& second)
+		static int Fire<PlaneCollider,SphereCollider>(Collider& first, Collider& second)
 		{
-			return CollisionComputation(static_cast<PlaneCollider*>(&second), static_cast<SphereCollider*>(&first));
+			return CollisionComputation(static_cast<SphereCollider*>(&second), static_cast<PlaneCollider*>(&first));
 		}
 	private:
-		static int CollisionComputation(PlaneCollider* first, SphereCollider* second )
+		static int CollisionComputation(SphereCollider* sphere ,PlaneCollider* plane)
 		{
-			const Vector3& planeNormal = first->GetPlaneNormal();
-			const Vector3& SphereCenter = second->GetWorldPosition();
-			Vector3 d(SphereCenter - first->GetWorldPosition());
-			float distance = d.dot(planeNormal);;
-			if (distance< second->GetRadius()*second->GetRadius()){
-				distance = sqrt(distance) - second->GetRadius();
+			const Vector3& planeNormal = plane->GetPlaneNormal();
+			const Vector3& SphereCenter = sphere->GetWorldPosition();
+			Vector3 d(SphereCenter - plane->GetWorldPosition());
+			float distance = d.dot(planeNormal);
+			if (distance< sphere->GetRadius()*sphere->GetRadius()){
+				distance = sphere->GetRadius() - sqrt(distance);
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(distance, SphereCenter*second->GetRadius(), planeNormal);
-				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
+				collision.Init(distance*30.0f, SphereCenter - planeNormal*sphere->GetRadius(), planeNormal);
+				collision.SetBodies(sphere->EditOwner()->EditChild<RigidBody>(), plane->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
 			return 0;
 		};
 	};
 }
-
-/*
-Box Box SAT for lol sake
-Vector3 const& CenterOfFirstBox = first->GetWorldPosition();
-Vector3 const* AxisesOfFirstBox[3];
-AxisesOfFirstBox[0] = &first->GetAxis(0);
-Vector3 const& FirstBoxHalfSize = first->GetHalfSize();
-Vector3 const& CenterOfSecondBox = second->GetWorldPosition();
-Vector3 const* AxisesOfSecondBox[3];
-AxisesOfSecondBox[0] = &second->GetAxis(0);
-AxisesOfSecondBox[1] = &second->GetAxis(1);
-AxisesOfSecondBox[2] = &second->GetAxis(2);
-Vector3 const& SecondBoxHalfSize = second->GetHalfSize();
-
-//Optimization TO DO
-//for numerical stability 1-epsilon checking for parallelism
-//const float cutoff = 1.0f - 0.00001f;
-//bool existsParallelPair = false;
-
-Vector3 CentersDistance(CenterOfSecondBox - CenterOfFirstBox);
-
-float MatrixOfDotProduct[9];
-float AbsOfDotProduct[9];
-float DotProductCentersAndAxisesOfFirstBox[3];
-float r0, r1, r;
-float r01;
-
-for (int i = 0; i < 3; ++i)
-{
-MatrixOfDotProduct[i] = VectorOp::DotProduct(*(AxisesOfFirstBox[0]), *(AxisesOfSecondBox[i]));
-AbsOfDotProduct[i] = std::abs(MatrixOfDotProduct[i]);
-//	existsParallelPair = AbsOfDotProduct[i] > cutoff;
-}
-DotProductCentersAndAxisesOfFirstBox[0] = VectorOp::DotProduct(CentersDistance, *(AxisesOfFirstBox[0]));
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[0]);
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[0] + SecondBoxHalfSize.getY() * AbsOfDotProduct[1] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[2];
-r01 = FirstBoxHalfSize.getX() + r1;
-if (r > r01)
-{
-return nullptr;
-}
-AxisesOfFirstBox[1]= &first->GetAxis(1);
-for (int i = 0; i < 3; ++i)
-{
-MatrixOfDotProduct[3 + i] = VectorOp::DotProduct(*(AxisesOfFirstBox[1]), *(AxisesOfSecondBox[i]));
-AbsOfDotProduct[3 + i] = std::abs(MatrixOfDotProduct[3 + i]);
-//	existsParallelPair = AbsOfDotProduct[3 + i] > cutoff;
-}
-DotProductCentersAndAxisesOfFirstBox[1] = VectorOp::DotProduct(CentersDistance, *(AxisesOfFirstBox[1]));
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[1]);
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[3] + SecondBoxHalfSize.getY() * AbsOfDotProduct[4] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[5];
-r01 = FirstBoxHalfSize.getY() + r1;
-if (r > r01)
-{
-return nullptr;
-}
-AxisesOfFirstBox[2]= & first->GetAxis(2);
-
-for (int i = 0; i < 3; ++i)
-{
-MatrixOfDotProduct[6 + i] = VectorOp::DotProduct(*(AxisesOfFirstBox[2]), *(AxisesOfSecondBox[i]));
-AbsOfDotProduct[6 + i] = std::abs(MatrixOfDotProduct[6 + i]);
-//	existsParallelPair = AbsOfDotProduct[6 + i] > cutoff;
-}
-DotProductCentersAndAxisesOfFirstBox[2] = VectorOp::DotProduct(CentersDistance, *(AxisesOfFirstBox[2]));
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[2]);
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[6] + SecondBoxHalfSize.getY() * AbsOfDotProduct[7] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[8];
-r01 = FirstBoxHalfSize.getZ() + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(VectorOp::DotProduct(CentersDistance, *(AxisesOfSecondBox[0])));
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[0] + FirstBoxHalfSize.getY() * AbsOfDotProduct[3] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[6];
-r01 = r0 + SecondBoxHalfSize.getX();
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(VectorOp::DotProduct(CentersDistance, *(AxisesOfSecondBox[1])));
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[1] + FirstBoxHalfSize.getY() * AbsOfDotProduct[4] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[7];
-r01 = r0 + SecondBoxHalfSize.getY();
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(VectorOp::DotProduct(CentersDistance, *(AxisesOfSecondBox[2])));
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[2] + FirstBoxHalfSize.getY() * AbsOfDotProduct[5] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[8];
-r01 = r0 + SecondBoxHalfSize.getZ();
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[3] - DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[6]);
-r0 = FirstBoxHalfSize.getY() * AbsOfDotProduct[6] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[3];
-r1 = SecondBoxHalfSize.getY() * AbsOfDotProduct[2] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[1];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[4] - DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[7]);
-r0 = FirstBoxHalfSize.getY() * AbsOfDotProduct[7] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[4];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[2] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[0];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[5] - DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[8]);
-r0 = FirstBoxHalfSize.getY() * AbsOfDotProduct[8] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[5];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[1] + SecondBoxHalfSize.getY() * AbsOfDotProduct[0];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[6] - DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[0]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[6] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[0];
-r1 = SecondBoxHalfSize.getY() * AbsOfDotProduct[5] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[4];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[7] - DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[1]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[7] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[1];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[5] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[3];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[8] - DotProductCentersAndAxisesOfFirstBox[2] * MatrixOfDotProduct[2]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[8] + FirstBoxHalfSize.getZ() * AbsOfDotProduct[2];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[4] + SecondBoxHalfSize.getY() * AbsOfDotProduct[3];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[0] - DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[3]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[3] + FirstBoxHalfSize.getY() * AbsOfDotProduct[0];
-r1 = SecondBoxHalfSize.getY() * AbsOfDotProduct[8] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[7];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[1] - DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[4]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[4] + FirstBoxHalfSize.getY() * AbsOfDotProduct[1];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[8] + SecondBoxHalfSize.getZ() * AbsOfDotProduct[6];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-r = std::abs(DotProductCentersAndAxisesOfFirstBox[1] * MatrixOfDotProduct[2] - DotProductCentersAndAxisesOfFirstBox[0] * MatrixOfDotProduct[5]);
-r0 = FirstBoxHalfSize.getX() * AbsOfDotProduct[5] + FirstBoxHalfSize.getY() * AbsOfDotProduct[2];
-r1 = SecondBoxHalfSize.getX() * AbsOfDotProduct[7] + SecondBoxHalfSize.getY() * AbsOfDotProduct[6];
-r01 = r0 + r1;
-if (r > r01)
-{
-return nullptr;
-}
-
-return new Collision(???,???,???);
-*/
