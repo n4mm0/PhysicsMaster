@@ -83,14 +83,14 @@ void Collision::ApplyCollision()
 		tmpv = (m_pointOfApplication - m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()).cross(m_normal);
 		tmpv *= impulse;
 		
-		if (tmpv.sqrMagnitude() > 0.01f)
-		{
+		//if (tmpv.sqrMagnitude() > 0.0001f)
+	//	{
 			tmpv[0] /= m_firstObj->GetInertia()[0];
 			tmpv[1] /= m_firstObj->GetInertia()[1];
 			tmpv[2] /= m_firstObj->GetInertia()[2];
-			tmpv += DeformationObj1;
+	//		tmpv += DeformationObj1;
 			m_firstObj->AddAngularVelocity(tmpv);
-		}
+	//	}
 
 
 	}
@@ -101,17 +101,20 @@ void Collision::ApplyCollision()
 		tmpv = m_normal*(impulse / m_firstObj->GetMass());
 		tmpv -= DeformationObj2;
 		m_secondObj->AddVelocity(tmpv);
-		tmpv = (m_pointOfApplication - m_secondObj->GetOwner()->GetChild<Transform>()->GetPosition()).cross(m_normal);
+		tmpv = (m_secondObj->GetOwner()->GetChild<Transform>()->GetPosition()-m_pointOfApplication).cross(m_normal);
+		std::cout << "Ang: (" << tmpv[0] << ", " << tmpv[1] << ", " << tmpv[2]<<")" << std::endl;
+		
 		tmpv *= impulse;
 	
-		if (tmpv.sqrMagnitude() > 0.01f)
-		{
+	//	if (tmpv.sqrMagnitude() > 0.0001f)
+	//	{
+	//		system("pause");
 			tmpv[0] /= m_secondObj->GetInertia()[0];
 			tmpv[1] /= m_secondObj->GetInertia()[1];
 			tmpv[2] /= m_secondObj->GetInertia()[2];
-			tmpv += DeformationObj2;
+	//		tmpv += DeformationObj2;
 			m_secondObj->AddAngularVelocity(tmpv);
-		}
+	//	}
 	}
 	/*
 	Vector3 impactSpeed = m_pointOfApplication - m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition();

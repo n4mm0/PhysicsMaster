@@ -221,8 +221,10 @@ Vector3 SphereInertia(float mass, float radius)
 int main()
 {
 	/*---TEST---*/
-	RigidBody* r1 = new RigidBody(SphereInertia(1.0f, 1.0f), 1.0f, 0, true);
-	RigidBody* r2 = new RigidBody(CubeInertia(50.0f, 1.0f), 50.0f, 1, true);
+	RigidBody* r1 = new RigidBody(SphereInertia(10.0f, 1.0f), 10.0f, 0, true);
+	//RigidBody* r1 = new RigidBody(CubeInertia(1.0f, 1.0f), 1.0f, 0, true);
+
+	RigidBody* r2 = new RigidBody(CubeInertia(10.0f, 1.0f), 10.0f, 1, true);
 	//RigidBody* r2 = new RigidBody(SphereInertia(10.0f, 1.0f), 10.0f, 1, true);
 
 	RigidBody* r3 = new RigidBody(Vector3(0.0f, 0.0f, 0.0f), 0.0f, 2, false);

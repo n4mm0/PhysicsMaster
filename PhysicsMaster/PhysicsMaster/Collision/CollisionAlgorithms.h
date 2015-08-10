@@ -38,7 +38,9 @@ namespace CollisionAlgorithm
 		template<typename T, typename U>
 		static int Fire(Collider& first, Collider& second)
 		{
-			return CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
+			int i = CollisionComputation(static_cast<T*>(&first), static_cast<U*>(&second));
+			std::cout << "box - box " << i << std::endl;
+			return i;
 		}
 	private:
 		
@@ -475,7 +477,7 @@ namespace CollisionAlgorithm
 				QuaternionRotate(first->GetRotation(), CollisionPoint, CollisionPoint);
 				CollisionPoint += first->GetWorldPosition();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(Distance*250.0f, CollisionPoint, second->GetPlaneNormal());
+				collision.Init(Distance*100.0f, CollisionPoint, second->GetPlaneNormal());
 				collision.SetBodies(first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
@@ -509,7 +511,7 @@ namespace CollisionAlgorithm
 			if (distance< sphere->GetRadius()*sphere->GetRadius()){
 				distance = sphere->GetRadius() - sqrt(distance);
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
-				collision.Init(distance*30.0f, SphereCenter - planeNormal*sphere->GetRadius(), planeNormal);
+				collision.Init(distance*100.0f, SphereCenter - planeNormal*sphere->GetRadius(), planeNormal);
 				collision.SetBodies(sphere->EditOwner()->EditChild<RigidBody>(), plane->EditOwner()->EditChild<RigidBody>());
 				return 1;
 			}
