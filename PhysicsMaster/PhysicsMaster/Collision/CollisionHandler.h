@@ -3,8 +3,7 @@
 #include "Collision.h"
 #include "Singleton.h"
 #include <assert.h>
-//debug
-#include <iostream>
+
 template<int MaxCollision>
 class CollisionHandler :public Singleton< CollisionHandler<MaxCollision> >
 {
@@ -12,16 +11,7 @@ class CollisionHandler :public Singleton< CollisionHandler<MaxCollision> >
 public:
 	void HandleCollision() 
 	{
-		/*
-		STD VECTOR
-		int i = 0;
-		for (Iterator collision = _CollisionList.begin(); collision != _CollisionList.end(); ++collision,++i)
-		{
-			(*collision)->ApplyCollision();
-		}
-		std::cout << "Total Collision Handled: " << i << std::endl;
-		Clear();
-		*/
+
 		for (int i = 0; i < m_iCollisionDetected; ++i)
 		{
 			m_aoCollisionList[i].ApplyCollision();
@@ -55,35 +45,14 @@ public:
 
 		return m_iCollisionDetected == MaxCollision;
 	}
-	/*		STD VECTOR
-	bool AddCollision(Collision* col,RigidBody* first,RigidBody* second)
-	{
 
-		if (_CollisionList.size() < MaxCollision && col != nullptr)
-		{
-			col->SetBodies(first,second);
-			_CollisionList.push_back(col);
-		}
-		return _CollisionList.size() == MaxCollision;
+	~CollisionHandler()
+	{
+		delete[] m_aoCollisionList;
 	}
-	*/
 
-	/*
-	STD VECTOR
-	void Clear()
-	{
-		for (Iterator collision = _CollisionList.begin(); collision != _CollisionList.end(); ++collision)
-		{
-			delete *collision;
-		}
-		_CollisionList.clear();
-	}*/
-	
 private:
-	//CollisionHandler();
 
-	//CollisionHandler(const CollisionHandler& other);
-	//CollisionHandler& operator=(const CollisionHandler& other);
 	Collision m_aoCollisionList[ MaxCollision ];
 	int m_iCollisionDetected = 0;
 };

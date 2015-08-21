@@ -6,7 +6,6 @@
 
 class Component;
 
-
 class GameObject
 {
 public:
@@ -29,11 +28,9 @@ public:
 		Child.SetOwner(this);
 	};
 
-	GameObject()
-	{
-		++m_iID;
-		AddChild<Transform>(*(new Transform(Vector3(0.0f, 0.0f, 0.0f), Quaternion(1.0f, 0.0f, 0.0f, 0.0f))));
-	};
+	GameObject();
+
+	~GameObject();
 
 private:
 	static int m_iID;
@@ -41,3 +38,4 @@ private:
 	GameObject& operator=(const GameObject& other);
 	Component* m_vpChilds[Components::ComponentListLength::value];
 };
+

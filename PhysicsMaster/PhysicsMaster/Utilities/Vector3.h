@@ -41,15 +41,13 @@ public:
 	void rotationX(const int degree);
 	void rotationY(const int degree);
 	void rotationZ(const int degree);
-	void clamp(clamping clamping);
 
 	//OPERATORS
-
-
 	Vector3 operator-() const;
 	Vector3& operator =(const Vector3 &other);
 	Vector3& operator +=(const Vector3& other);
 	Vector3& operator -=(const Vector3& other);
+	Vector3& operator *=(const Vector3& other);
 	Vector3& operator *=(const scalar k);
 	Vector3& operator /=(const scalar k);
 	bool operator ==(Vector3 const &other) const;
@@ -62,4 +60,5 @@ typedef Vector3 Point3;
 Vector3 operator+(const Vector3 &first,const Vector3& second);
 Vector3 operator-(const Vector3 &first, const Vector3& second);
 Vector3 operator*(const Vector3 &vec,const scalar k);
-Vector3 operator/(const Vector3 &vec, const scalar k);
+Vector3 operator*(const scalar k, const Vector3& vec);
+Vector3 operator/(const Vector3 &vec,const  scalar k);

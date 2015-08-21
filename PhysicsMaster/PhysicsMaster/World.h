@@ -1,7 +1,5 @@
 #pragma once
-/*
-** Mondo di gioco
-*/
+
 #include <vector>
 #include "Collision\CollisionHandler.h"
 #include "Utilities\ColliderUtil.h"
@@ -21,18 +19,8 @@ public:
 	~World();
 
 	void Update();
-
-	RigidBody* CreateRigidBody(const Vector3& _Position, const Vector3& _Inertia, float _Mass, int _ID);
-	void DeleteRigidBody(RigidBody* _body);
-	void addRigidBody(RigidBody* body);
-	static const Vector3 m_Gravity;
-	static const float m_Dt;
-
+	void AddRigidBody(RigidBody* body);
 private:
 	RigidBodyCollection m_RigidBodies;
-	//CollisionCollection m_CollisionCollection;
-
-	//test
-public:
 	ColliderDispatcher m_Dispatcher;
 };

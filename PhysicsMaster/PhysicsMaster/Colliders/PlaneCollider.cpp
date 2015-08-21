@@ -1,19 +1,16 @@
 #include "PlaneCollider.h"
 #include "ColliderUtil.h"
 #include "RigidBody.h"
+DoubleDispatchEnumaration(PlaneCollider);
 
-const int PlaneCollider::_PlaneColliderType = TL::IndexOf<ColliderType::ColliderTypeList, PlaneCollider>::value;
-
-
-const int PlaneCollider::getType()
+PlaneCollider::PlaneCollider(const Vector3& displ, const Vector3& norm)
+:Collider(displ), m_Normal(norm)
 {
-	return PlaneCollider::_PlaneColliderType;
+	ColliderInit
 }
 
-PlaneCollider::PlaneCollider(const Vector3& pos, const Vector3& displ, const Vector3& norm)
-:Collider(_PlaneColliderType, displ), m_Normal(norm)
+const Vector3& PlaneCollider::GetPlaneNormal() const 
 {
-	SetPosition(pos);
-}
-
+	return m_Normal;
+};
 

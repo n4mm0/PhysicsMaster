@@ -1,5 +1,5 @@
 #pragma once
-//Evil macro 
+
 #define IS_SINGLETON(T)public: static void Init(){ if (T::IsNotInit()){ new T(); } };private: T(){}; T(const T& other); T& operator=(const T& other);
 
 template <typename T> class Singleton

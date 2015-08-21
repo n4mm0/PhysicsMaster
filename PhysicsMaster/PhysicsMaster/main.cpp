@@ -11,18 +11,27 @@
 #include "RigidBody.h"
 #include "Singleton.h"
 #include "World.h"
-
-GameObject gameObj[3];
+#include "GameObjectFactory.h"
+static const int GameObjectNumber = 5;
+GameObject gameObj[GameObjectNumber];
+GLfloat rotationGL1[16];
 
 Transform *transform1 = gameObj[0].EditChild<Transform>();
 Vector3 position1 = transform1->EditPosition();
 Matrix4x4 rotationMatrix1 = transform1->GetRotationMatrix();
-GLfloat rotationGL1[16];
 
 Transform *transform2 = gameObj[1].EditChild<Transform>();
 Vector3 position2 = transform2->EditPosition();
 Matrix4x4 rotationMatrix2 = transform2->GetRotationMatrix();
-GLfloat rotationGL2[16];
+
+Transform *transform3 = gameObj[3].EditChild<Transform>();
+Vector3 position3 = transform3->EditPosition();
+Matrix4x4 rotationMatrix3 = transform3->GetRotationMatrix();
+
+Transform *transform4 = gameObj[4].EditChild<Transform>();
+Vector3 position4 = transform4->EditPosition();
+Matrix4x4 rotationMatrix4 = transform4->GetRotationMatrix();
+
 
 World world;
 
@@ -111,8 +120,8 @@ void drawParallelepiped(Vector3 &position, Matrix4x4 rotation, float lX, float l
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glTranslatef(position.getX(), position.getY(), position.getZ());
-	MatrixToGLFloat(rotation, rotationGL2);
-	glMultMatrixf(rotationGL2);
+	MatrixToGLFloat(rotation, rotationGL1);
+	glMultMatrixf(rotationGL1);
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, green);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
@@ -199,77 +208,27 @@ void render()
 
 	drawFloor(-6.0f, 20.0f);
 	
-	//drawParallelepiped(position1, rotationMatrix1, 1.0f, 1.0f, 1.0f);
-	drawSphere(position1, rotationMatrix1, 1.0f, 64, 64);
+	drawParallelepiped(position1, rotationMatrix1, 1.0f, 1.0f, 1.0f);
 	drawParallelepiped(position2, rotationMatrix2, 1.0f, 1.0f, 1.0f);
-	//drawSphere(position2, rotationMatrix2, 1.0f, 64, 64);
+	drawSphere(position3, rotationMatrix3, 1.0f, 64, 64);
+	drawSphere(position4, rotationMatrix4, 1.0f, 64, 64);
 }
 
-
-Vector3 CubeInertia(float mass,float semidim)
-{
-	float inertia = semidim*semidim * mass / 6.0f;
-	return Vector3(inertia, inertia, inertia); 
-}
-
-Vector3 SphereInertia(float mass, float radius)
-{
-	float inertia = ((2.0f / 5.0f) *mass*radius*radius);
-	return Vector3(inertia, inertia, inertia);
-}
 
 int main()
 {
-	/*---TEST---*/
-	RigidBody* r1 = new RigidBody(SphereInertia(10.0f, 1.0f), 10.0f, 0, true);
-	//RigidBody* r1 = new RigidBody(CubeInertia(1.0f, 1.0f), 1.0f, 0, true);
+	/*---ADDING PHYSICS OBJ---*/
+	PhysicsObjectFactory::CreatePhysicsCube(gameObj[0], Vector3(-1.0f,10.0f,0.0f), 0.0f, 0.0f, 0.0f, 10.0f, 0.3f, 2.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
+	PhysicsObjectFactory::CreatePhysicsCube(gameObj[1], Vector3::Zero, 30.0f, 20.0f, 15.0f, 10.0f, 0.3f, 2.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
+	PhysicsObjectFactory::CreatePhysicsSphere(gameObj[2], Vector3(3.0f, 5.0f, 6.0f), 0.0f, 0.0f, 0.0f, 15.0f, 0.7f, 1.0f, 0.3f, 0.4f, 1.0f);
+	PhysicsObjectFactory::CreatePhysicsSphere(gameObj[3], Vector3(1.0f, 10.0f, 8.0f), 0.0f, 0.0f, 0.0f, 10.0f, 0.7f, 1.0f, 0.3f, 0.4f, 1.0f);
+	PhysicsObjectFactory::CreatePhysicsPlane(gameObj[4], Vector3(0.0f, -6.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
 
-	RigidBody* r2 = new RigidBody(CubeInertia(10.0f, 1.0f), 10.0f, 1, true);
-	//RigidBody* r2 = new RigidBody(SphereInertia(10.0f, 1.0f), 10.0f, 1, true);
-
-	RigidBody* r3 = new RigidBody(Vector3(0.0f, 0.0f, 0.0f), 0.0f, 2, false);
-
-	gameObj[0].AddChild<RigidBody>(*r1);
-	gameObj[1].AddChild<RigidBody>(*r2);
-	gameObj[2].AddChild<RigidBody>(*r3);
-
-	//BoxCollider* c1 = new BoxCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0, 0, 0), r1->GetOwner()->GetChild<Transform>()->GetRotation(), Vector3(1.0f, 1.0f, 1.0f));
-	SphereCollider* c1 = new SphereCollider(r1->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
-	BoxCollider* c2 = new BoxCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0, 0, 0), r2->GetOwner()->GetChild<Transform>()->GetRotation(), Vector3(1.0f, 1.0f, 1.0f));
-	//SphereCollider* c2 = new SphereCollider(r2->GetOwner()->GetChild<Transform>()->GetPosition() , Vector3(0, 0, 0), 1);
-	PlaneCollider* c3 = new PlaneCollider(r3->GetOwner()->GetChild<Transform>()->GetPosition(), Vector3(0.0f, -6.0f, 0.0f),Vector3(0,1,0));
-
-	gameObj[0].EditChild<Transform>()->EditPosition()[0] -= 1.0f;
-	gameObj[0].EditChild<Transform>()->EditPosition()[1] += 10.0f;
-	gameObj[0].EditChild<Transform>()->EditPosition()[2] -= 0.0f;
-	/*
-	gameObj[0].EditChild<Transform>()->EditRotation()[0] = 0.11f;
-	gameObj[0].EditChild<Transform>()->EditRotation()[1] = 0.833f;
-	gameObj[0].EditChild<Transform>()->EditRotation()[2] = 0.23f;
-	gameObj[0].EditChild<Transform>()->EditRotation()[3] = 0.1f;
-	gameObj[0].EditChild<Transform>()->EditRotation().normalize();
-	*/
-	
-	gameObj[1].EditChild<Transform>()->EditRotation()[0] = 0.8781f;
-	gameObj[1].EditChild<Transform>()->EditRotation()[1] = 0.0863f;
-	gameObj[1].EditChild<Transform>()->EditRotation()[2] = 0.002f;
-	gameObj[1].EditChild<Transform>()->EditRotation()[3] = 0.024f;
-	gameObj[1].EditChild<Transform>()->EditRotation().normalize();
-	
-	gameObj[0].AddChild<Collider>(*c1);
-	gameObj[1].AddChild<Collider>(*c2);
-	gameObj[2].AddChild<Collider>(*c3);
-
-	//r1->ApplyForce(Vector3(0.0f, 0.0f, -100.0f), Vector3(0.0f, 0.0f, 0.0f));
-
-
-	world.addRigidBody(r1);
-	world.addRigidBody(r2);
-	world.addRigidBody(r3);
-	
-
-
-	/*---END TEST---*/
+	for (int i = 0; i < GameObjectNumber; ++i)
+	{
+		world.AddRigidBody(gameObj[i].EditChild<RigidBody>());
+	}
+	/*---END---*/
 	
 	/*---GLFW---*/
 
@@ -342,17 +301,17 @@ int main()
 		world.Update();
 		position1 = gameObj[0].EditChild<Transform>()->EditPosition();
 		position2 = gameObj[1].EditChild<Transform>()->EditPosition();
+		position3 = gameObj[2].EditChild<Transform>()->EditPosition();
+		position4 = gameObj[3].EditChild<Transform>()->EditPosition();
 
 		rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
 		rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
+		rotationMatrix3 = gameObj[2].EditChild<Transform>()->GetRotationMatrix();
+		rotationMatrix4 = gameObj[3].EditChild<Transform>()->GetRotationMatrix();
 
 		glfwSwapBuffers(window);				//DOUBLE BUFFER
 		glfwPollEvents();						//PROCESS PENDING EVENTS
-
-		std::cout << "( " << position1[0] << ", " << position1[1] << ", " << position1[2] << ")" << std::endl;
-		std::cout << "( " << position2[0] << ", " << position2[1] << ", " << position2[2] << ")" << std::endl;
-
-		//system("pause");
+		
 	}
 
 	glfwTerminate();

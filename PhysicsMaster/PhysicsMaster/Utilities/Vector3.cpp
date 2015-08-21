@@ -170,29 +170,6 @@ void Vector3::rotationZ(const int degree)
 	this->set(x, y, 0);
 }
 
-void Vector3::clamp(clamping clamping)
-{
-	if (clamping == Vector3::clamping::MAX)
-	{
-		float max = vector[0];
-		max = abs(max)>abs(vector[1]) ? max : vector[1];
-		max = abs(max)>abs(vector[2]) ? max : vector[2];
-
-		vector[0] = vector[0] == max ? max : 0;
-		vector[1] = vector[1] == max ? max : 0;
-		vector[2] = vector[2] == max ? max : 0;
-	}
-	else
-	{
-		float min = vector[0];
-		min = abs(min)<abs(vector[1]) ? min : vector[1];
-		min = abs(min)<abs(vector[2]) ? min : vector[2];
-
-		vector[0] = vector[0] == min ? min : 0;
-		vector[1] = vector[1] == min ? min : 0;
-		vector[2] = vector[2] == min ? min : 0;
-	}
-}
 
 //OPERATORS
 Vector3 operator+(const Vector3 &first, const Vector3& second)
@@ -208,6 +185,11 @@ Vector3 operator-(const Vector3 &first, const Vector3& second)
 };
 
 Vector3 operator*(const Vector3 &vector, const scalar k)
+{
+	return Vector3(vector.getX() * k, vector.getY()* k, vector.getZ() * k);
+};
+
+Vector3 operator*(const scalar k, const Vector3 &vector)
 {
 	return Vector3(vector.getX() * k, vector.getY()* k, vector.getZ() * k);
 };
@@ -260,6 +242,16 @@ Vector3& Vector3::operator *= (const scalar k)
 	
 	return *this;
 }
+
+Vector3& Vector3::operator *= (const Vector3& vec)
+{
+	vector[0] *= vec[0];
+	vector[1] *= vec[1];
+	vector[2] *= vec[2];
+
+	return *this;
+}
+
 
 Vector3& Vector3::operator /= (const scalar k)
 {

@@ -81,9 +81,10 @@
     <ClInclude Include="Collision\CollisionHandler.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentList.h" />
+    <ClInclude Include="GameObjectFactory.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="Madness.h" />
+    <ClInclude Include="DispatcherInit.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Transform.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="Colliders\SphereCollider.cpp" />
     <ClCompile Include="Collision\Collision.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectFactory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="Transform.cpp" />
