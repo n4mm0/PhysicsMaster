@@ -117,7 +117,7 @@ namespace CollisionAlgorithm
 				Vertex[indexes[0]][0] /= CompenetrationSum;
 				Vertex[indexes[0]][1] /= CompenetrationSum;
 				Vertex[indexes[0]][2] /= CompenetrationSum;
-
+				
 				CentersDistance.normalize();
 
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
@@ -293,13 +293,9 @@ namespace CollisionAlgorithm
 
 				for (int i = 0; i < 3; ++i)
 				{
-					if (abs(PlaneNormal[i])>0.01f)
-						CollisionPoint[i] = HalfSize[i] * !signbit(PlaneNormal[i]) - HalfSize[i] * signbit(PlaneNormal[i]);
-					else
-						CollisionPoint[i] = 0;
+						CollisionPoint[i] = HalfSize[i] * signbit(PlaneNormal[i]) - HalfSize[i] * !signbit(PlaneNormal[i]);
 				}
-
-				QuaternionRotate(first->GetRotation(), CollisionPoint, CollisionPoint);
+				QuaternionRotateT(first->GetRotation(), CollisionPoint, CollisionPoint);
 				CollisionPoint += first->GetWorldPosition();
 				Collision& collision = Constants::CollisionsCollection::GetSingleton().EditCollision();
 				collision.Init(Distance, CollisionPoint, second->GetPlaneNormal(), first->EditOwner()->EditChild<RigidBody>(), second->EditOwner()->EditChild<RigidBody>());

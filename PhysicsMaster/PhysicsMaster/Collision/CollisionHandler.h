@@ -48,7 +48,6 @@ public:
 
 	~CollisionHandler()
 	{
-		delete[] m_aoCollisionList;
 	}
 
 private:

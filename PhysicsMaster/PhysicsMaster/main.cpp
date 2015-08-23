@@ -12,8 +12,20 @@
 #include "Singleton.h"
 #include "World.h"
 #include "GameObjectFactory.h"
-static const int GameObjectNumber = 5;
-GameObject gameObj[GameObjectNumber];
+#include "Utilities\ColliderUtil.h"
+
+static const int GameObjectNumber = 4;
+
+
+typedef void (*Draw)(const Transform &, const Collider &);
+
+void DrawSphereF(const Transform& transform, const Collider& collider);
+void DrawParallepipedF(const Transform& transform, const Collider& collider);
+void DrawPlaneF(const Transform& transform, const Collider& collider){};
+
+Draw DrawFunction[ColliderType::ColliderTypeListLength::value] = {DrawParallepipedF,DrawSphereF,DrawPlaneF};
+GameObject gameObj[GameObjectNumber + 1];
+World world;
 GLfloat rotationGL1[16];
 
 Transform *transform1 = gameObj[0].EditChild<Transform>();
@@ -32,8 +44,6 @@ Transform *transform4 = gameObj[4].EditChild<Transform>();
 Vector3 position4 = transform4->EditPosition();
 Matrix4x4 rotationMatrix4 = transform4->GetRotationMatrix();
 
-
-World world;
 
 //CALLBACK
 void error_callback(int error, const char* description)
@@ -63,13 +73,13 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 }
 
 //FUNCTION
-void MatrixToGLFloat(Matrix4x4 &matrix, GLfloat *m)
+void MatrixToGLFloat(const Matrix4x4 &matrix, GLfloat *m)
 {
 	for (int index = 0; index < 16; ++index)
 		m[index] = matrix.getElementAt((index / 4), (index % 4));
 }
 
-void drawSphere(Vector3 &position, Matrix4x4 rotation, float radius, int lats, int longs)
+void drawSphere(const Vector3 &position, const Matrix4x4& rotation, float radius, int lats, int longs)
 {
 	GLfloat blue[] = { 0.4f, 0.4f, 1.0f, 1.0f };
 	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -85,22 +95,22 @@ void drawSphere(Vector3 &position, Matrix4x4 rotation, float radius, int lats, i
 	glMaterialfv(GL_FRONT, GL_SPECULAR, white);
 	glMateriali(GL_FRONT, GL_SHININESS, 16);
 
-	for (int indexLat = 0; indexLat <= lats; ++indexLat)
+	for (float indexLat = 0; indexLat <= lats; ++indexLat)
 	{
-		double lat0 = M_PI * (-0.5 + (double)(indexLat - 1) / lats);
-		double z0 = sin(lat0);
-		double zr0 = cos(lat0);
+		float lat0 = M_PI * (-0.5f + (indexLat - 1.0f) / lats);
+		float z0 = sin(lat0);
+		float zr0 = cos(lat0);
 
-		double lat1 = M_PI * (-0.5 + (double)indexLat / lats);
-		double z1 = sin(lat1);
-		double zr1 = cos(lat1);
+		float lat1 = M_PI * (-0.5f + indexLat / lats);
+		float z1 = sin(lat1);
+		float zr1 = cos(lat1);
 
 		glBegin(GL_QUAD_STRIP);
-		for (int indexLng = 0; indexLng <= longs; ++indexLng)
+		for (float indexLng = 0; indexLng <= longs; ++indexLng)
 		{
-			double lng = 2 * M_PI * (double)(indexLng - 1) / longs;
-			double x = cos(lng);
-			double y = sin(lng);
+			float lng = 2.0f * M_PI * (indexLng - 1.0f) / longs;
+			float x = cos(lng);
+			float y = sin(lng);
 
 			glNormal3f(x * zr0, y * zr0, z0);
 			glVertex3f(x * zr0, y * zr0, z0);
@@ -112,7 +122,7 @@ void drawSphere(Vector3 &position, Matrix4x4 rotation, float radius, int lats, i
 	glPopMatrix();
 }
 
-void drawParallelepiped(Vector3 &position, Matrix4x4 rotation, float lX, float lY, float lZ)
+void drawParallelepiped(const Vector3 &position,const Matrix4x4& rotation, float lX, float lY, float lZ)
 {
 	GLfloat green[] = { 0.2f, 0.8f, 0.6f, 1.0f };
 	GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -181,12 +191,12 @@ void drawFloor(float y, float dimension)
 
 	glBegin(GL_LINES);
 	glNormal3f(0, 1, 0);
-	for (int index = -dimension; index <= dimension; ++index)
+	for (float index = -dimension; index <= dimension; ++index)
 	{
 		glVertex3f(index, y, -dimension);
 		glVertex3f(index, y, dimension);
 	}
-	for (int index = -dimension; index <= dimension; ++index)
+	for (float index = -dimension; index <= dimension; ++index)
 	{
 		glVertex3f(-dimension, y, index);
 		glVertex3f(dimension, y, index);
@@ -207,28 +217,44 @@ void render()
 	glLightfv(GL_LIGHT0, GL_POSITION, posLight);
 
 	drawFloor(-6.0f, 20.0f);
-	
-	drawParallelepiped(position1, rotationMatrix1, 1.0f, 1.0f, 1.0f);
-	drawParallelepiped(position2, rotationMatrix2, 1.0f, 1.0f, 1.0f);
-	drawSphere(position3, rotationMatrix3, 1.0f, 64, 64);
-	drawSphere(position4, rotationMatrix4, 1.0f, 64, 64);
+	for (int i = 0; i < GameObjectNumber; ++i)
+	{
+		DrawFunction[ gameObj[i].GetChild<Collider>()->GetType() ] ( *(gameObj[i].GetChild<Transform>()),*(gameObj[i].GetChild<Collider>()) );
+	}
 }
+
+void DrawSphereF(const Transform& transform, const Collider& collider)
+{
+	drawSphere(transform.GetPosition(), transform.GetRotationMatrix(), static_cast<const SphereCollider*>(&collider)->GetRadius(), 64, 64);
+}
+
+void DrawParallepipedF(const Transform& transform, const Collider& collider)
+{
+	const Vector3& Dim = static_cast<const BoxCollider*>(&collider)->GetHalfSize();
+	drawParallelepiped(transform.GetPosition(), transform.GetRotationMatrix(), Dim[0], Dim[1], Dim[2]);
+}
+
+
+
 
 
 int main()
 {
-	/*---ADDING PHYSICS OBJ---*/
-	PhysicsObjectFactory::CreatePhysicsCube(gameObj[0], Vector3(-1.0f,10.0f,0.0f), 0.0f, 0.0f, 0.0f, 10.0f, 0.3f, 2.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
-	PhysicsObjectFactory::CreatePhysicsCube(gameObj[1], Vector3::Zero, 30.0f, 20.0f, 15.0f, 10.0f, 0.3f, 2.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
+	/*---CREATING PHYSICS OBJ---*/
+	
+	PhysicsObjectFactory::CreatePhysicsCube(gameObj[0], Vector3(-1.0f, 10.0f, 0.0f), 0.0f, 0.0f, 0.0f, 10.0f, 0.3f, 10.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
+	PhysicsObjectFactory::CreatePhysicsCube(gameObj[1], Vector3::Zero, -50.0f,10.0f, 0.0f, 10.0f, 0.3f, 10.0f, 0.6f, 0.3f, Vector3(1.0f, 1.0f, 1.0f));
 	PhysicsObjectFactory::CreatePhysicsSphere(gameObj[2], Vector3(3.0f, 5.0f, 6.0f), 0.0f, 0.0f, 0.0f, 15.0f, 0.7f, 1.0f, 0.3f, 0.4f, 1.0f);
 	PhysicsObjectFactory::CreatePhysicsSphere(gameObj[3], Vector3(1.0f, 10.0f, 8.0f), 0.0f, 0.0f, 0.0f, 10.0f, 0.7f, 1.0f, 0.3f, 0.4f, 1.0f);
-	PhysicsObjectFactory::CreatePhysicsPlane(gameObj[4], Vector3(0.0f, -6.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
-
+	
+	/*---END---*/
+	
+	//add terrain and bodies to world
+	PhysicsObjectFactory::CreatePhysicsPlane(gameObj[GameObjectNumber-1], Vector3(0.0f, -6.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f));
 	for (int i = 0; i < GameObjectNumber; ++i)
 	{
 		world.AddRigidBody(gameObj[i].EditChild<RigidBody>());
 	}
-	/*---END---*/
 	
 	/*---GLFW---*/
 
@@ -299,16 +325,16 @@ int main()
 		render();								//RENDER SCENE
 
 		world.Update();
-		position1 = gameObj[0].EditChild<Transform>()->EditPosition();
-		position2 = gameObj[1].EditChild<Transform>()->EditPosition();
-		position3 = gameObj[2].EditChild<Transform>()->EditPosition();
-		position4 = gameObj[3].EditChild<Transform>()->EditPosition();
-
-		rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
-		rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
-		rotationMatrix3 = gameObj[2].EditChild<Transform>()->GetRotationMatrix();
-		rotationMatrix4 = gameObj[3].EditChild<Transform>()->GetRotationMatrix();
-
+	//	position1 = gameObj[0].EditChild<Transform>()->EditPosition();
+	//	position2 = gameObj[1].EditChild<Transform>()->EditPosition();
+	//	position3 = gameObj[2].EditChild<Transform>()->EditPosition();
+	//	position4 = gameObj[3].EditChild<Transform>()->EditPosition();
+//
+	//	rotationMatrix1 = gameObj[0].EditChild<Transform>()->GetRotationMatrix();
+	//	rotationMatrix2 = gameObj[1].EditChild<Transform>()->GetRotationMatrix();
+	//	rotationMatrix3 = gameObj[2].EditChild<Transform>()->GetRotationMatrix();
+//		rotationMatrix4 = gameObj[3].EditChild<Transform>()->GetRotationMatrix();
+	//	system("pause");
 		glfwSwapBuffers(window);				//DOUBLE BUFFER
 		glfwPollEvents();						//PROCESS PENDING EVENTS
 		

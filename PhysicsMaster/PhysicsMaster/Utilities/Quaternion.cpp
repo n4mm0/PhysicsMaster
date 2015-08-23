@@ -103,7 +103,7 @@ bool Quaternion::isZero() const
 {
 	return quaternion[0] == 0 && quaternion[1] == 0 && quaternion[2] == 0 && quaternion[3] == 0;
 }
-#include <iostream>
+
 Matrix4x4 Quaternion::toMatrix() const
 {
 	float X2 = quaternion[1] * quaternion[1];

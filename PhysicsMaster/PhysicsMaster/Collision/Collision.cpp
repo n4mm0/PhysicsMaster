@@ -58,17 +58,18 @@ void Collision::ApplyCollision()
 	tmpv = m_normal*(impulse * m_firstObj->GetInverseMass());
 	tmpv += DeformationObj1;
 	m_firstObj->AddVelocity(tmpv);
-	tmpv = (m_pointOfApplication - m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition()).cross(m_normal);
+	tmpv = (m_firstObj->GetOwner()->GetChild<Transform>()->GetPosition() - m_pointOfApplication).cross(m_normal);
 	tmpv *= impulse;
 	tmpv *= m_firstObj->GetInverseInertia();
 	m_firstObj->AddAngularVelocity(tmpv);
 	tmpv = m_normal*(-impulse * m_secondObj->GetInverseMass());
 	tmpv -= DeformationObj2;
 	m_secondObj->AddVelocity(tmpv);
-	tmpv = (m_secondObj->GetOwner()->GetChild<Transform>()->GetPosition()-m_pointOfApplication).cross(m_normal);
+	tmpv = (m_pointOfApplication - m_secondObj->GetOwner()->GetChild<Transform>()->GetPosition()).cross(m_normal);
 	tmpv *= -impulse;
 	tmpv *= m_secondObj->GetInverseInertia();
 	m_secondObj->AddAngularVelocity(tmpv);
+
 	//COULOMB FRICTION
 	Vab = m_firstObj->GetVelocity() - m_secondObj->GetVelocity();
 	tmpv = Vab - m_normal *Vab.dot(m_normal);
